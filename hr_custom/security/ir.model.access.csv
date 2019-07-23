@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_travel,hr.travel,model_hr_travel,base.group_user,1,1,1,1
+access_hr_tickets,hr.tickets,model_hr_tickets,base.group_user,1,1,1,1
+access_hr_hotels,hr.hotels,model_hr_hotels,base.group_user,1,1,1,1
+access_hr_visas,hr.visas,model_hr_visas,base.group_user,1,1,1,1

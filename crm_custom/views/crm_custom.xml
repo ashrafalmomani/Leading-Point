@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="crm_opportunity_form_view" model="ir.ui.view">
+        <field name="name">crm.lead.opportunity.view</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="before">
+                <group>
+                    <field name="team_member" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" style="display: inline;"/>
+                    <field name="owner"/>
+                </group>
+            </xpath>
+            <xpath expr="//button[@name='action_schedule_meeting']" position="before">
+                <button type="object"
+                        class="oe_stat_button"
+                        name="projects_opportunity"
+                        string="Projects"
+                        icon="fa-pencil-square-o">
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_form_id" model="ir.ui.view">
+        <field name="name">res.partner.view.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website']" position="after">
+                <field name="industry"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_project_form" model="ir.ui.view">
+        <field name="name">project.project.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="opportunity_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_companies_action" model="ir.actions.act_window">
+        <field name="name">Companies</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_company','=', True)]</field>
+    </record>
+
+    <menuitem id="res_partner_companies_customer"
+            name="Companies"
+            parent="crm.crm_menu_sales"
+            action="crm_companies_action"
+            sequence="10"/>
+
+    <record id="crm_contacts_action" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_company','=', False)]</field>
+    </record>
+
+    <menuitem id="res_partner_contacts_customer"
+            name="Contacts"
+            parent="crm.crm_menu_sales"
+            action="crm_contacts_action"
+            sequence="20"/>
+
+</odoo>

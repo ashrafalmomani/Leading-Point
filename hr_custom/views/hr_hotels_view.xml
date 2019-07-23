@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_hotels_tree_view" model="ir.ui.view">
+        <field name="name">Hotels</field>
+        <field name="model">hr.hotels</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Hotels">
+                <field name="travel_hotel"/>
+                <field name="state"/>
+                <field name="cost"/>
+                <field name="hotel_name"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="reservation_num"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_hotels_form_view" model="ir.ui.view">
+        <field name="name">Hotels</field>
+        <field name="model">hr.hotels</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Hotels">
+                <header>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,pending,reserved"/>
+                    <button string="Hotel Reserved" name="action_reserved" type="object" states="draft,pending" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group string="Hotels Information">
+                        <group>
+                            <field name="travel_hotel" required="1" domain="[['state','=','company_approved']]"/>
+                            <field name="hotel_name" attrs="{'invisible':[('state', '=', 'pending')]}"/>
+                            <field name="reservation_num" attrs="{'invisible':[('state', '=', 'pending')]}"/>
+                            <field name="reservation" string="Reservation" attrs="{'invisible':[('state', '=', 'pending')]}"/>
+                        </group>
+                        <group>
+                            <field name="check_in" attrs="{'invisible':[('state', '=', 'pending')]}"/>
+                            <field name="check_out" attrs="{'invisible':[('state', '=', 'pending')]}"/>
+                            <field name="cost" attrs="{'invisible':[('state', '=', 'pending')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+     <record id="employee_hotels_menu_action" model="ir.actions.act_window">
+        <field name="name">Hotels</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.hotels</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Hotels"
+              id="hr_employee_hotels_menu"
+              parent="travel_hr_employee_menu"
+              action="employee_hotels_menu_action"
+              sequence="35"/>
+
+    <record id="employee_all_hotels_action" model="ir.actions.act_window">
+        <field name="name">All Hotels</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.hotels</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="All"
+              id="hr_employee_all_hotels_menu"
+              parent="hr_employee_hotels_menu"
+              action="employee_all_hotels_action"
+              sequence="40"/>
+
+    <record id="employee_pending_hotels_action" model="ir.actions.act_window">
+        <field name="name">Pending Hotels</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.hotels</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'pending')]</field>
+    </record>
+
+    <menuitem name="Pending"
+              id="hr_employee_pending_hotels_menu"
+              parent="hr_employee_hotels_menu"
+              action="employee_pending_hotels_action"
+              sequence="45"/>
+</odoo>

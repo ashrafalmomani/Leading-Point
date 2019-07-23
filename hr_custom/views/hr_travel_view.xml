@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_travel_tree_view" model="ir.ui.view">
+        <field name="name">Travel</field>
+        <field name="model">hr.travel</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Travel">
+                <field name="number"/>
+                <field name="trip_status" string="Trip Stage"/>
+                <field name="reason_for_travel"/>
+                <field name="origin"/>
+                <field name="destination"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_travel_form_view" model="ir.ui.view">
+        <field name="name">Travel</field>
+        <field name="model">hr.travel</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Travel">
+                <header>
+                    <button string="Submit" type="object" name="action_submit" states="draft" class="oe_highlight"/>
+                    <button string="Approve By Manager" type="object" name="action_approve_by_manager" states="submitted" class="oe_highlight"/>
+                    <button string="Approve By Company" type="object" name="action_approve_by_company" states="manager_approved" class="oe_highlight"/>
+                    <button string="Reject" type="object" name="action_reject" states="draft" class="oe_highlight"/>
+                    <button string="Send Back To Draft" type="object" name="action_set_to_draft" states="submitted,manager_approved,company_approved" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,manager_approved,company_approved,rejected"/>
+                </header>
+                <sheet>
+                    <h2><field name="number" readonly="1"/></h2>
+                    <group>
+                        <group string="General Information">
+                            <field name="trip_status" readonly="1"/>
+                            <field name="employee" required="1"/>
+                            <field name="reason_for_travel" required="1"/>
+                            <field name="project" widget="many2many_tags" attrs="{'required': [('reason_for_travel','=', 'project')], 'invisible':[('reason_for_travel','!=', 'project')]}"/>
+                            <field name="lead" widget="many2many_tags" attrs="{'required': [('reason_for_travel','=', 'business_dev')], 'invisible':[('reason_for_travel','!=', 'business_dev')]}"/>
+                        </group>
+                        <group string="Travel Information">
+                            <field name="origin" required="1"/>
+                            <field name="destination" required="1"/>
+                            <field name="from_date" required="1"/>
+                            <field name="to_date" required="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Required Information">
+                            <field name="visa_required"/>
+                            <field name="hotel_required"/>
+                        </group>
+                        <group string="Other Information">
+                            <field name="other_info" nolabel="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tickets">
+                            <field name="travel_ids" context="{'default_travel_ticket': active_id}">
+                                 <tree editable="bottom">
+                                     <field name="travel_ticket"/>
+                                     <field name="state"/>
+                                     <field name="ticket_num"/>
+                                     <field name="departure_date"/>
+                                     <field name="return_date"/>
+                                     <field name="ticket" string="Ticket"/>
+                                 </tree>
+                            </field>
+                        </page>
+                        <page string="Hotels">
+                            <field name="hotel_ids" context="{'default_travel_hotel': active_id}">
+                                 <tree editable="bottom">
+                                     <field name="travel_hotel"/>
+                                     <field name="state"/>
+                                     <field name="hotel_name"/>
+                                     <field name="check_in"/>
+                                     <field name="check_out"/>
+                                 </tree>
+                            </field>
+                        </page>
+                        <page string="Visas" >
+                            <field name="visa_ids" context="{'default_travel_visas': active_id}">
+                                 <tree editable="bottom">
+                                     <field name="travel_visas"/>
+                                     <field name="state"/>
+                                     <field name="valid_form"/>
+                                     <field name="valid_till"/>
+                                     <field name="multiple_entry"/>
+                                     <field name="visa" string="Visa"/>
+                                 </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <menuitem name="Travel"
+              id="travel_hr_employee_menu"
+              parent="hr.menu_hr_root"
+              sequence="90"/>
+
+    <menuitem name="Travel"
+              id="hr_employee_travel_menu"
+              parent="travel_hr_employee_menu"
+              sequence="0"/>
+
+    <record id="employee_my_travel_action" model="ir.actions.act_window">
+        <field name="name">My Travel</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.travel</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee.user_id', '=', uid)]</field>
+    </record>
+
+    <menuitem name="My Travel"
+              id="hr_employee_my_travel_menu"
+              parent="hr_employee_travel_menu"
+              action="employee_my_travel_action"
+              sequence="5"/>
+
+    <record id="employee_all_travel_action" model="ir.actions.act_window">
+        <field name="name">All Travel</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.travel</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="All Travel"
+              id="hr_employee_all_travel_menu"
+              parent="hr_employee_travel_menu"
+              action="employee_all_travel_action"
+              sequence="10"/>
+
+    <record id="employee_to_approve_travel_action" model="ir.actions.act_window">
+        <field name="name">To Approve Travel</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.travel</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('manager_id', '=', uid), ('state', '=', 'submitted')]</field>
+    </record>
+
+    <menuitem name="To Approve"
+              id="hr_employee_to_approve_menu"
+              parent="hr_employee_travel_menu"
+              action="employee_to_approve_travel_action"
+              sequence="15"/>
+
+</odoo>
