@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="my_awarded_days_tree_view" model="ir.ui.view">
+        <field name="name">Awarded Days</field>
+        <field name="model">hr.awarded.days</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Awarded Days">
+                <field name="name"/>
+                <field name="create_date"/>
+                <field name="employee_id"/>
+                <field name="related_to"/>
+                <field name="projects" widget="many2many_tags"/>
+                <field name="lead" widget="many2many_tags"/>
+                <field name="total_hour"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="my_awarded_days_form_view" model="ir.ui.view">
+        <field name="name">Awarded Days</field>
+        <field name="model">hr.awarded.days</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Awarded Days">
+                <header>
+                    <button string="Submit" type="object" name="action_submit" states="draft" class="oe_highlight"/>
+                    <button string="Approve By Manager" type="object" name="action_manager_approved" states="submitted" class="oe_highlight"/>
+                    <button string="HR Approval" type="object" name="action_hr_approved" states="manager_approved" class="oe_highlight"/>
+                    <button string="Reject" type="object" name="action_reject" states="action_manager_approved,submitted" class="oe_highlight"/>
+                    <button string="Send Back To Draft" type="object" name="action_send_to_draft" states="rejected" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,manager_approved,hr_approved,rejected"/>
+                </header>
+                <sheet>
+                    <h2><field name="name" readonly="1"/></h2>
+                    <group>
+                        <group string="Main Information">
+                            <field name="employee_id" attrs="{'readonly':[('state', '!=', 'draft')]}" required="1"/>
+                            <field name="related_to" attrs="{'readonly':[('state', '!=', 'draft')]}" required="1"/>
+                            <field name="projects" widget="many2many_tags" attrs="{'invisible': [('related_to','!=', 'project')], 'readonly':[('state','!=', 'draft')], 'required':[('related_to','=', 'project')]}"/>
+                            <field name="lead" widget="many2many_tags" attrs="{'invisible': [('related_to','!=', 'business_dev')], 'readonly':[('state','!=', 'draft')], 'required':[('related_to','=', 'business_dev')]}"/>
+                            <field name="project_manager" invisible="1"/>
+                            <field name="direct_manager" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="other_des" attrs="{'required':[('related_to', '=', 'other')], 'readonly':[('state','!=', 'draft')], 'invisible': [('related_to','!=', 'other')]}"/>
+                            <field name="reject_des" attrs="{'invisible': [('state','in',['draft','hr_approved'])]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Details">
+                            <field name="awarded_ids" attrs="{'readonly':[('state', '!=', 'draft')]}">
+                                 <tree editable="top">
+                                     <field name="date" required="1"/>
+                                     <field name="description" required="1"/>
+                                     <field name="reason" required="1"/>
+                                     <field name="hours" sum="Hours" required="1"/>
+                                 </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="awarded_days_search_view" model="ir.ui.view">
+        <field name="name">Awarded Days</field>
+        <field name="model">hr.awarded.days</field>
+        <field name="arch" type="xml">
+            <search string="Awarded Days">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="projects"/>
+                <field name="lead"/>
+                <field name="state"/>
+                <group string="Group By">
+                    <filter name="name" string="Travel" context="{'group_by':'name'}"/>
+                    <filter name="employee_id" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="state" string="state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="awarded_days_graph_view" model="ir.ui.view">
+        <field name="name">Awarded Days</field>
+        <field name="model">hr.awarded.days</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Awarded Days" orientation="horizontal" type="bar">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="related_to"/>
+                <field name="total_hour"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="all_awarded_days_menu_action" model="ir.actions.act_window">
+        <field name="name">Awarded Days</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.awarded.days</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="context">{'group_by':'state'}</field>
+    </record>
+
+    <menuitem name="Awarded Days"
+              id="all_awarded_days_hr_employee_menu"
+              parent="travel_awarded_hr_employee_menu"
+              action="all_awarded_days_menu_action"
+              sequence="80"/>
+
+</odoo>

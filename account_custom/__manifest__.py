@@ -9,7 +9,7 @@
     'category': 'Uncategorized',
     'depends': ['base', 'account', 'account_check_printing'],
     'data': [
-        'views/hr_employee_view.xml',
+        'views/account_payment.xml',
     ],
     'installable': True,
 

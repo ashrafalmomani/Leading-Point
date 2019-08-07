@@ -9,7 +9,22 @@ class HumanResourceCustom(models.Model):
     joining_date = fields.Date(string='Joining Date')
     arabic_name = fields.Char(string='Name in Arabic')
     current_contract_start = fields.Date(string='Current Contract Start', compute='compute_current_contract_start')
-    document_ids = fields.One2many('ir.attachment', 'document_id', string='Document')
+    document_ids = fields.One2many('document.line', 'employee_id', string='Document')
+    user_check_tick = fields.Boolean(default=False)
+
+    @api.multi
+    def create_user(self):
+        user_id = self.env['res.users'].create({'name': self.name, 'login': self.work_email})
+        self.address_home_id = user_id.partner_id.id
+        self.user_id = user_id.id
+        self.user_check_tick = True
+
+    @api.onchange('address_home_id')
+    def user_checking(self):
+        if self.address_home_id:
+            self.user_check_tick = True
+        else:
+            self.user_check_tick = False
 
     @api.multi
     def _check_employee_years(self):

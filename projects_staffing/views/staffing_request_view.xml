@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_staffing_form" model="ir.ui.view">
+        <field name="name">project.project.staffing.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_button_box']" position="inside">
+                <button type="object"
+                        class="oe_stat_button"
+                        name="projects_staffing"
+                        string="Projects"
+                        icon="fa-pencil-square-o">
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="opportunity_id"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="staffing_request_form">
+        <field name="name">staffing.request.form</field>
+        <field name="model">staffing.request</field>
+        <field name="arch" type="xml">
+            <form string="Staffing Request">
+                <header>
+                    <button string="Submit" type="object" name="submit_action" states="new" class="oe_highlight"/>
+                    <button string="Confirm" type="object" name="confirm_action" states="submit" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="cancel_action" states="submit" class="oe_highlight"/>
+					<field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <h2><field name="number" readonly="1"/></h2>
+	                <group>
+		                <group string="Project Details">
+	    	                <field name="project_id" required="1"/>
+	    	                <field name="manager_id" invisible="1"/>
+	    	                <field name="start_date" required="1"/>
+	    	                <field name="end_date" required="1"/>
+                        </group>
+                        <group string="Employee Details">
+	    	                <field name="seniority_level" required="1"/>
+                            <field name="category_ids" widget="many2many_tags" required="1"/>
+                            <field name="note" placeholder="Please add your notes ........" required="1"/>
+                        </group>
+                        <group string="Employee Details" attrs="{'invisible': [('state', 'not in', ('submit', 'confirm'))]}">
+	    	                <field name="employee_id" required="1"/>
+	    	                <field name="current_projects_ids" widget="many2many_tags" options="{'no_create': True}"/>
+	    	                <field name="current_projects_managers_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+	    	        </group>
+	            </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" />
+                    <field name="message_ids" widget="mail_thread" />
+                    <field name="activity_ids" widget="mail_activity" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="staffing_request_tree">
+        <field name="name">staffing.request.tree</field>
+        <field name="model">staffing.request</field>
+        <field name="arch" type="xml">
+            <tree string="Staffing Request">
+                <field name="number"/>
+                <field name="project_id"/>
+                <field name="manager_id"/>
+                <field name="employee_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="staffing_request_search" model="ir.ui.view">
+        <field name="name">staffing.request.search</field>
+        <field name="model">staffing.request</field>
+        <field name="arch" type="xml">
+            <search string="Staffing Request">
+                <field name="number" string="Number"/>
+                <field name="employee_id" string="Employee"/>
+                <field name="project_id" string="Project"/>
+                <filter string="Project" name="project_id" context="{'group_by':'project_id'}"/>
+                <filter string="Employee" name="employee_id" context="{'group_by':'employee_id'}"/>
+                <filter string="Status" name="state" context="{'group_by':'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="staffing_request_action">
+        <field name="name">Staffing Request</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">staffing.request</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Staffing"
+    	      parent="project.menu_main_pm"
+    	      id="staffing_menu"
+              sequence="3"/>
+
+    <menuitem action="staffing_request_action"
+    	      parent="staffing_menu"
+    	      id="staffing_request_menu"
+              sequence="1"/>
+
+    <record id="view_project_ganttaps" model="ir.ui.view">
+        <field name="name">staffing.request.ganttaps</field>
+        <field name="model">staffing.request</field>
+        <field name="type">ganttaps</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+           <ganttaps default_group_by="employee_id"
+                     name="number"
+                     main_group_id_name="employee_id"
+                     date_start="start_date"
+                     date_stop="end_date"
+                     sorting_seq="sequence"
+                     project_id="project_id"
+                     no_group_sort_mode="">
+           </ganttaps>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="staffing_ganttaps_view_action">
+        <field name="name">Employees Current Projects</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">staffing.request</field>
+        <field name="view_mode">ganttaps</field>
+        <field name="domain">[('end_date','&gt;', context_today().strftime('%Y-%m-%d'))]</field>
+    </record>
+
+    <menuitem action="staffing_ganttaps_view_action"
+    	      parent="staffing_menu"
+    	      id="staffing_ganttaps_view_action_menu"
+              sequence="2"/>
+
+    <record id="view_project_employeeganttaps" model="ir.ui.view">
+        <field name="name">employee.projects.ganttaps</field>
+        <field name="model">hr.employee</field>
+        <field name="type">ganttaps</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+           <ganttaps default_group_by="employee_id"
+                     name="name"
+                     main_group_id_name="employee_id"
+                     date_start="pstart_date"
+                     date_stop="end_date"
+                     sorting_seq="sequence"
+                     project_id="project_id"
+                     no_group_sort_mode="">
+           </ganttaps>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="staffing_ganttaps_view_action">
+        <field name="name">Employees Current Projects</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">staffing.request</field>
+        <field name="view_mode">ganttaps</field>
+        <field name="domain">[('end_date','&gt;', context_today().strftime('%Y-%m-%d'))]</field>
+    </record>
+
+    <menuitem action="staffing_ganttaps_view_action"
+    	      parent="staffing_menu"
+    	      id="staffing_ganttaps_view_action_menu"
+              sequence="2"/>
+
+
+</odoo>
