@@ -9,3 +9,5 @@ access_document_line,document.line,model_document_line,base.group_user,1,1,1,1
 access_asset_management,asset.management,model_asset_management,base.group_user,1,1,1,1
 access_projects_travels,projects.travels,model_projects_travels,base.group_user,1,1,1,1
 access_hr_appraisal,hr.appraisal,model_hr_appraisal,base.group_user,1,1,1,1
+access_monthly_survey,monthly.survey,model_monthly_survey,base.group_user,1,1,1,1
+access_employee_survey,employee.survey,model_employee_survey,base.group_user,1,1,1,1

@@ -22,12 +22,53 @@ class AppraisalCustom(models.Model):
     salary = fields.Float(string='Salary', track_visibility='always')
     salary_raise = fields.Char(string='Salary Raise', track_visibility='always')
     next_review = fields.Date(string='Next Review Date', track_visibility='always')
+    survey_ids = fields.One2many('employee.survey', 'appraisal_id', string='Employee Survey')
+    monthly_ids = fields.One2many('monthly.survey', 'monthly_id', string='Monthly Survey')
 
     @api.model
     def create(self, vals):
         er_seq = self.env['ir.sequence'].next_by_code('hr.appraisal') or '/'
         vals.update({'er_seq': er_seq})
         return super(AppraisalCustom, self).create(vals)
+
+    @api.multi
+    def answers(self):
+        return {
+            'name': _('Answers'),
+            'res_model': 'survey.user_input',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'domain': [('partner_id', '=', self.employee_id.user_id.partner_id.id)],
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'target': 'current'}
+
+
+class MonthlySurvey(models.Model):
+    _name = 'monthly.survey'
+
+    monthly_id = fields.Many2one('hr.appraisal', string='Monthly')
+    description = fields.Text(string='Description')
+
+
+class EmployeeSurvey(models.Model):
+    _name = 'employee.survey'
+
+    appraisal_id = fields.Many2one('hr.appraisal', string='Appraisal')
+    employee_id = fields.Many2one('hr.employee', string='Employee')
+    response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null", oldname="response")
+    survey_id = fields.Many2one('survey.survey', string="Survey")
+
+    @api.multi
+    def action_start_survey(self):
+        self.ensure_one()
+        if not self.response_id:
+            response = self.env['survey.user_input'].create(
+                {'survey_id': self.survey_id.id, 'partner_id': self.employee_id.user_id.partner_id.id})
+            self.response_id = response.id
+        else:
+            response = self.response_id
+        return self.survey_id.with_context(survey_token=response.token).action_start_survey()
 
 
 class HRContracts(models.Model):
@@ -52,3 +93,9 @@ class HRContracts(models.Model):
         def create(self, vals):
             self.create_appraisal(vals)
             return super(HRContracts, self).create(vals)
+
+
+class HRJob(models.Model):
+    _inherit = 'hr.job'
+
+    surveys_ids = fields.Many2many('survey.survey', 'survey_job_rel', 'survey_id', 'job_id', string='Surveys')
