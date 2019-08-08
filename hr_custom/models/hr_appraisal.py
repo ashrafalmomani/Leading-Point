@@ -18,8 +18,8 @@ class AppraisalCustom(models.Model):
     extra_point = fields.Float(string='Extra Points', track_visibility='always')
     total_score = fields.Float(string='Total Score', track_visibility='always')
     performance_level = fields.Char(string='Performance Level', track_visibility='always')
-    title = fields.Char(string='Title', track_visibility='always')
-    salary = fields.Char(string='Salary', track_visibility='always')
+    job_id = fields.Many2one('hr.job', string='Job Position', track_visibility='always')
+    salary = fields.Float(string='Salary', track_visibility='always')
     salary_raise = fields.Char(string='Salary Raise', track_visibility='always')
     next_review = fields.Date(string='Next Review Date', track_visibility='always')
 
@@ -39,10 +39,10 @@ class HRContracts(models.Model):
             appraisal_obj = self.env['hr.appraisal']
             start_date = datetime.strptime(vals['date_start'], '%Y-%m-%d')
             if 'job_id' in vals:
-                job_id = self.env['hr.job'].browse(vals['job_id']).name
+                job_id = self.env['hr.job'].browse(vals['job_id']).id
             appraisal_obj.sudo().create({
                 'employee_id': vals['employee_id'],
-                'title': job_id,
+                'job_id': job_id,
                 'date_from': vals['date_start'],
                 'date_to': start_date.date() + relativedelta(years=+1),
                 'salary': vals['wage'],

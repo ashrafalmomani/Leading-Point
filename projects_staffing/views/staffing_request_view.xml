@@ -13,9 +13,6 @@
                         icon="fa-pencil-square-o">
                 </button>
             </xpath>
-            <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="opportunity_id"/>
-            </xpath>
         </field>
     </record>
 
