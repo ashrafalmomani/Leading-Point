@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_common" name="l10n_jo_check_printing pdf assets" inherit_id="web.report_assets_common">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/jo_check_printing/static/src/scss/report_check_commons.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/jo_check_printing/static/src/scss/report_check_bottom.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/jo_check_printing/static/src/scss/report_check_middle.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/jo_check_printing/static/src/scss/report_check_top.scss"/>
+            </xpath>
+        </template>
+
+        <template id="check_header">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div style="width:100%; display:table; clear:both; float:left; margin-top:221px; text-align:left; padding-left: 60px;">
+                            <p><strong><span t-field="o.payment_date"/></strong></p>
+                        </div>
+                        <div style="width:100%; display:table; clear:both; float:right; margin-top:25px; text-align:right; padding-right: 50px;">
+                            <p><strong><span t-field="o.partner_id"/></strong></p>
+                        </div>
+                        <div style="width:100%; display:table; clear:both;">
+                            <div style="width:100%; display:table; clear:both; float:right; margin-top:7px; text-align:right; padding-right: 340px;">
+                                <p><strong><span t-field="o.check_amount_in_words"/></strong></p>
+                            </div>
+                            <div style="width:150px; float:right; text-align:right; padding-right: 30px; line-height: 0.1em;">
+                                <p><strong><span t-esc="str(o.amount).split('.')[1]"/></strong></p>
+                            </div>
+                            <div style="width:300px; float:right; text-align:right; padding-right: 10px; line-height: 0.1em;">
+                                <p><strong><span t-esc="'{0:}'.format(int(o.amount))"/></strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
