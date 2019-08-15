@@ -11,3 +11,4 @@ class HrLeave(models.Model):
     project = fields.Many2one('project.project', string='Project')
     opportunities = fields.Many2one('crm.lead', string='Opportunities')
     unpaid_leave = fields.Boolean('Unpaid Leave', related='holiday_status_id.unpaid')
+    working_on = fields.Selection([('project', 'Project'), ('opportunity', 'Opportunity')], string='Working On', track_visibility='always')

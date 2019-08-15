@@ -7,8 +7,9 @@
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='holiday_status_id']" position="after">
-                <field name="project"/>
-                <field name="opportunities"/>
+                <field name="working_on"/>
+                <field name="project" attrs="{'invisible': [('working_on','!=','project')]}"/>
+                <field name="opportunities" attrs="{'invisible': [('working_on','!=','opportunity')]}"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="before">
                 <field name="unpaid_leave" invisible="1"/>

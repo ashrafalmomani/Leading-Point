@@ -51,13 +51,13 @@
                             <field name="employee_id" required="1"/>
                             <field name="job_id"/>
                             <field name="salary"/>
-                            <field name="extra_point"/>
+                            <field name="salary_raise"/>
                         </group>
                         <group string="Score Information">
                             <field name="score_perc"/>
+                            <field name="extra_point"/>
                             <field name="total_score"/>
                             <field name="performance_level"/>
-                            <field name="salary_raise"/>
                             <field name="next_review"/>
                         </group>
                     </group>
@@ -73,10 +73,10 @@
                         </page>
 
                         <page name="employee_survey" string="Employee Survey">
-                            <field name="survey_ids" context="{'default_appraisal_id': active_id, 'default_employee_id': active_id}">
+                            <field name="survey_ids" context="{'default_appraisal_id': active_id, 'default_employee_id': employee_id}">
                                  <tree editable="bottom">
                                      <field name="employee_id" invisible="1"/>
-                                     <field name="survey_id"/>
+                                     <field name="survey_id" required="1"/>
                                      <field name="response_id" invisible="1"/>
                                      <button name="action_start_survey" string="Start Survey" type="object" class="oe_highlight"/>
                                  </tree>
@@ -101,6 +101,18 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='no_of_recruitment']" position="after">
                 <field name="surveys_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="survey_appraisal_id" model="ir.ui.view">
+        <field name="name">Appraisal</field>
+        <field name="model">survey.user_input</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="survey.survey_user_input_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='token']" position="after">
+                <field name="appraisal_id" invisible="1"/>
             </xpath>
         </field>
     </record>
