@@ -91,5 +91,5 @@
               id="hr_employee_pending_visas_menu"
               parent="travel_awarded_hr_employee_menu"
               action="employee_visas_menu_action"
-              sequence="30"/>
+              sequence="2"/>
 </odoo>

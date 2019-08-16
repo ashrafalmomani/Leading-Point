@@ -105,6 +105,6 @@
               id="hr_employee_all_hotels_menu"
               parent="travel_awarded_hr_employee_menu"
               action="employee_all_hotels_action"
-              sequence="50"/>
+              sequence="4"/>
 
 </odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="run_per_diem_view" model="ir.ui.view">
+        <field name="name">Run Per Diem</field>
+        <field name="model">run.per.diem</field>
+        <field name="arch" type="xml">
+            <form string="Run Per Diem">
+                <h3>You can run calculate per diem for this month one time</h3>
+                <footer>
+                    <button name="calculate_per_diem" string="Calculate" type="object" default_focus="1" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_run_per_diem_view" model="ir.actions.act_window">
+        <field name="name">Run Per Diem</field>
+        <field name="res_model">run.per.diem</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="run_per_diem_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_action_run_per_diem_view"
+              name="Run Per Diem"
+              action="action_run_per_diem_view"
+              parent="travel_awarded_hr_employee_menu"
+              sequence="5"/>
+
+</odoo>

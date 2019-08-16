@@ -19,6 +19,7 @@
         'views/hr_leave_view.xml',
         'views/hr_payroll_view.xml',
         'views/hr_appraisal_view.xml',
+        'wizard/run_per_diem_views.xml',
         'data/cron.xml',
         'data/data_tags.xml',
         'data/sequence.xml',

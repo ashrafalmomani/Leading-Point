@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
-    include_in_salary = fields.Boolean(string='Include In Salary')
+    include_in_salary = fields.Boolean(string='Include In Salary', default=True)
     is_deducted = fields.Boolean(string='Is Deducted')
     project = fields.Many2one('project.project', string='Project')
     opportunities = fields.Many2one('crm.lead', string='Opportunities')

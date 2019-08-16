@@ -111,6 +111,11 @@ class HREmployeeTravel(models.Model):
     def _default_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
+    @api.multi
+    def _compute_shipment(self):
+        for per_diem in self:
+            per_diem.per_diem_count = len(per_diem.per_diem_ids)
+
     name = fields.Char(string='Name', required=True, copy=False, default='New', track_visibility='always')
     number = fields.Char('Number', required=True, copy=False, default='New', track_visibility='always')
     employee = fields.Many2one('hr.employee', string='Employee', default=_default_employee, track_visibility='always')
@@ -129,6 +134,8 @@ class HREmployeeTravel(models.Model):
     percentage_ids = fields.One2many('projects.travels', 'travel_id', string='Projects/Leads', track_visibility='always')
     project_manager = fields.Many2one('hr.employee', string='Project Manager', track_visibility='always')
     direct_manager = fields.Many2one('hr.employee', string='Direct Manager', track_visibility='always')
+    per_diem_count = fields.Integer(compute='_compute_per_diem', string='Per Diem Lines')
+    per_diem_ids = fields.One2many('per.diem.line', 'travel_id', string='Per Diem')
     reason_for_travel = fields.Selection([('project', 'Project'), ('business_dev', 'Business Development'),
                                           ('visa_renewal', 'Visa Renewal'), ('other', 'Other')],
                                          string='Reason For Travel', track_visibility='always')
@@ -266,6 +273,16 @@ class HREmployeeTravel(models.Model):
                 composer.write(values)
                 composer.send_mail()
 
+    @api.multi
+    def per_diem_lines_view(self):
+        return {'name': _('Per Diem Lines'),
+                'domain': [('travel_id', '=', self.id)],
+                'res_model': 'per.diem.line',
+                'type': 'ir.actions.act_window',
+                'view_type': 'tree',
+                'view_mode': 'tree,',
+                'target': 'current'}
+
 
 class ProjectsTravels(models.Model):
     _name = "projects.travels"
@@ -277,3 +294,36 @@ class ProjectsTravels(models.Model):
     lead_id = fields.Many2one('crm.lead', string='Lead/Opportunity')
     percentage = fields.Integer('Percentage(%)')
 
+
+class PerDiemLine(models.Model):
+    _name = "per.diem.line"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Travel Per Diem Line'
+    _rec_name = 'travel_id'
+
+    travel_id = fields.Many2one('hr.travel', string='Travel')
+    employee_id = fields.Many2one('hr.employee', string='Employee')
+    contract_id = fields.Many2one('hr.contract', 'Contract')
+    amount = fields.Float('Amount')
+    from_date = fields.Date('From Date')
+    to_date = fields.Date('To Date')
+    state = fields.Selection([('not_paid', 'Not Paid'), ('paid', 'Paid')], 'Status')
+
+    @api.constrains('from_date', 'to_date')
+    def _check_date(self):
+        for perdiem in self:
+            domain = [
+                ('from_date', '=', perdiem.from_date),
+                ('to_date', '>', perdiem.to_date),
+                ('employee', '=', perdiem.employee.id),
+                ('id', '!=', perdiem.id),
+            ]
+            perdiems = self.search_count(domain)
+            if perdiems:
+                raise ValidationError(_('The per diem calculated before.'))
+
+
+class EmployeeContract(models.Model):
+    _inherit = 'hr.contract'
+
+    per_diem_amount = fields.Float('Per Diem Amount')
