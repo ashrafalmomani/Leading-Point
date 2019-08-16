@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_travel_tree_view" model="ir.ui.view">
+        <field name="name">Travel</field>
+        <field name="model">hr.travel</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Travel">
+                <field name="name"/>
+                <field name="reason_for_travel"/>
+                <field name="origin"/>
+                <field name="destination"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="trip_status" string="Trip Stage"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_travel_form_view" model="ir.ui.view">
+        <field name="name">Travel</field>
+        <field name="model">hr.travel</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Travel">
+                <header>
+                    <button string="Submit" type="object" name="action_submit" states="draft" class="oe_highlight"/>
+                    <button string="Approve By Manager" type="object" name="action_approve_by_manager" states="submitted" class="oe_highlight"/>
+                    <button string="HR Approval" type="object" name="action_hr_approve" states="manager_approved" class="oe_highlight"/>
+                    <button string="Reject" type="object" name="action_reject" states="submitted,manager_approved" class="oe_highlight"/>
+                    <button string="Send Back To Draft" type="object" name="action_set_to_draft" states="rejected" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,manager_approved,hr_approved,rejected"/>
+                </header>
+                <sheet>
+                    <h2><field name="name" readonly="1"/></h2>
+                    <group>
+                        <group string="General Information">
+                            <field name="trip_status" readonly="1" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                            <field name="employee" required="1" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                            <field name="reason_for_travel" required="1" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                            <field name="percentage_ids" attrs="{'readonly':[('state','=', 'hr_approved')], 'invisible': [('reason_for_travel','not in', ('project', 'business_dev'))]}"
+                                   context="{'default_travel_id': active_id}">
+                                 <tree editable="bottom">
+                                     <field name="travel_id" invisible="1"/>
+                                     <field name="project_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'project')]}"/>
+                                     <field name="lead_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'business_dev')]}"/>
+                                     <field name="percentage"/>
+                                 </tree>
+                            </field>
+                            <field name="analytic_id" attrs="{'required': [('reason_for_travel', 'in', ('visa_renewal', 'other'))], 'invisible':[('reason_for_travel', 'not in', ('visa_renewal', 'other'))], 'readonly':[('state','=', 'hr_approved')]}"/>
+                            <field name="other_info" attrs="{'required':[('reason_for_travel', '=', 'other')], 'readonly':[('state','=', 'hr_approved')], 'invisible': [('reason_for_travel','!=', 'other')]}"/>
+                            <field name="project_manager" invisible="1"/>
+                            <field name="direct_manager" invisible="1"/>
+                        </group>
+                        <group string="Travel Information">
+                            <field name="origin" required="1" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                            <field name="destination" required="1" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                            <field name="from_date" required="1" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                            <field name="to_date" required="1" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Required Information">
+                            <field name="visa_required" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                            <field name="hotel_required" attrs="{'readonly': [('state','=', 'hr_approved')]}"/>
+                        </group>
+                        <group>
+                            <field name="reject_des" attrs="{'invisible': [('state','in',['draft','hr_approved'])]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tickets" attrs="{'invisible': [('state', '!=', 'hr_approved')]}">
+                            <field name="ticket_ids" context="{'default_travel_id': active_id}">
+                                 <tree>
+                                     <field name="ticket_num"/>
+                                     <field name="departure_date"/>
+                                     <field name="return_date"/>
+                                     <field name="ticket" string="Ticket"/>
+                                     <field name="state"/>
+                                 </tree>
+                            </field>
+                        </page>
+                        <page string="Hotels" attrs="{'invisible': ['|', ('state', '!=', 'hr_approved'), ('hotel_required', '=', False)]}">
+                            <field name="hotel_ids" context="{'default_travel_id': active_id}">
+                                 <tree>
+                                     <field name="hotel_name"/>
+                                     <field name="check_in"/>
+                                     <field name="check_out"/>
+                                     <field name="state"/>
+                                 </tree>
+                            </field>
+                        </page>
+                        <page string="Visas" attrs="{'invisible': ['|', ('state', '!=', 'hr_approved'), ('visa_required', '=', False)]}">
+                            <field name="visa_ids" context="{'default_travel_id': active_id}">
+                                 <tree>
+                                     <field name="valid_form"/>
+                                     <field name="valid_till"/>
+                                     <field name="multiple_entry"/>
+                                     <field name="visa" string="Visa"/>
+                                     <field name="state"/>
+                                 </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="travel_search_view" model="ir.ui.view">
+        <field name="name">Travel</field>
+        <field name="model">hr.travel</field>
+        <field name="arch" type="xml">
+            <search string="Travel">
+                <field name="name"/>
+                <field name="employee"/>
+                <field name="state"/>
+                <field name="destination"/>
+                <field name="reason_for_travel"/>
+                <field name="trip_status"/>
+                <separator/>
+                <filter string="Ready Travels" name="ready_travels" domain="[('trip_status', '=', 'ready')]"/>
+                <filter string="Open Travels" name="open_travels" domain="[('trip_status', '=', 'open')]"/>
+                <filter string="Closed Travels" name="close_travels" domain="[('trip_status', '=', 'closed')]"/>
+                <group string="Group By">
+                    <filter name="name" string="Travel" context="{'group_by':'name'}"/>
+                    <filter name="employee" string="Employee" context="{'group_by':'employee'}"/>
+                    <filter name="state" string="Status" context="{'group_by':'state'}"/>
+                    <filter name="destination" string="Destination" context="{'group_by':'destination'}"/>
+                    <filter name="reason_for_travel" string="Reason for travel" context="{'group_by':'reason_for_travel'}"/>
+                    <filter name="trip_status" string="Trip status" context="{'group_by':'trip_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="travel_graph_view" model="ir.ui.view">
+        <field name="name">Travel</field>
+        <field name="model">hr.travel</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Travel" orientation="horizontal" type="bar">
+                <field name="name"/>
+                <field name="employee"/>
+                <field name="reason_for_travel"/>
+                <field name="destination"/>
+                <field name="visa_required"/>
+                <field name="hotel_required"/>
+                <field name="trip_status"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="employee_travel_action" model="ir.actions.act_window">
+        <field name="name">Travels</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.travel</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
+
+    <menuitem name="Travel and Awarded Days"
+              id="travel_awarded_hr_employee_menu"
+              parent="hr.menu_hr_root"
+              sequence="90"/>
+
+    <menuitem name="Travels"
+              id="hr_employee_all_travel_menu"
+              parent="travel_awarded_hr_employee_menu"
+              action="employee_travel_action"
+              sequence="10"/>
+
+</odoo>

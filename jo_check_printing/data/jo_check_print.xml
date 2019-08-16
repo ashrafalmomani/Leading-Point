@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="paperformat_check_jo" model="report.paperformat">
+            <field name="name">JO check Letter</field>
+            <field name="default" eval="False" />
+            <field name="format">custom</field>
+            <field name="page_height">83</field>
+            <field name="page_width">165</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report id="action_print_check_top"
+            string="Print Check"
+            model="account.payment"
+            name="jo_check_printing.check_top"
+            file="jo_check_printing.check_top"
+            report_type="qweb-pdf"
+            paperformat="jo_check_printing.paperformat_check_jo"
+            menu="False"
+        />
+
+        <report id="action_print_check_middle"
+            string="Print Check"
+            model="account.payment"
+            name="jo_check_printing.check_middle"
+            file="jo_check_printing.check_middle"
+            report_type="qweb-pdf"
+            paperformat="jo_check_printing.paperformat_check_jo"
+            menu="False"
+        />
+
+        <report id="action_print_check_bottom"
+            string="Print Check"
+            model="account.payment"
+            name="jo_check_printing.check_bottom"
+            file="jo_check_printing.check_bottom"
+            report_type="qweb-pdf"
+            paperformat="jo_check_printing.paperformat_check_jo"
+            menu="False"
+        />
+</odoo>

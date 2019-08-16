@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="email_template_open_travel" model="mail.template">
+            <field name="name">Open Travel: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_travel"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.direct_manager.work_email|safe}</field>
+            <field name="subject">Open Travel - ${object.name} - Alert</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.direct_manager.name}
+                        <br /><br />
+                        Here is the alert for travel (<strong>${object.name}</strong>)
+                        <br />
+                        Do not hesitate to contact us if you have any question.
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_close_travel" model="mail.template">
+            <field name="name">Close Travel: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_travel"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.direct_manager.work_email|safe}</field>
+            <field name="subject">Close Travel - ${object.name} - Alert</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.direct_manager.name}
+                        <br /><br />
+                        Here is the alert for travel (<strong>${object.name}</strong>)
+                        <br />
+                        Do not hesitate to contact us if you have any question.
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
