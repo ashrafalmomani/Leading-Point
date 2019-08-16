@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_account_analytic_line_form_timesheet_type_inherit" model="ir.ui.view">
+        <field name="name">view.account.analytic.line.form.timesheet.type.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/*" position="before">
+                <header>
+                    <button name="button_submitted" string="Submitted" states="draft" class="oe_highlight" type="object"/>
+                    <button name="button_approved" string="Approved" states="submitted" type="object"  class="oe_highlight"/>
+                    <button name="button_rejected" string="Rejected" states="submitted,approved" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,rejected"/>
+                </header>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </xpath>
+            <field name="task_id" position="replace"/>
+            <field name="project_id" position="replace">
+                <field name="type_id" required="1"/>
+                <field name="project_id" required="1" attrs="{'required': [('type_id', '=', 'project')], 'invisible': [('type_id', '!=', 'project')]}"/>
+                <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]" attrs="{'required': [('type_id', '=', 'project')], 'invisible': [('type_id', '!=', 'project')]}"/>
+                <field name="lead_id" attrs="{'required': [('type_id', '=', 'opportunity')], 'invisible': [('type_id', '!=', 'opportunity')]}"/>
+            </field>
+            <field name="name" position="replace"/>
+            <field name="amount" position="replace"/>
+            <field name="unit_amount" position="replace">
+                <field name="work_place" required="1"/>
+                <field name="unit_amount" widget="timesheet_uom"/>
+                <field name="name" attrs="{'required': [('type_id', '=', 'unassigned')]}"/>
+                <field name="reason"  attrs="{'required':[('state', '=', 'rejected')]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_search" model="ir.ui.view">
+        <field name="name">account.analytic.line.search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="arch" type="xml">
+            <field name="task_id" position="after">
+                <field name="type_id"/>
+                <field name="work_place"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="tree_timesheet" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.hr_timesheet</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree  string="Timesheet Activities" import="false">
+                    <field name="date"/>
+                    <field name="type_id"/>
+                    <field name="project_id"/>
+                    <field name="lead_id"/>
+                    <field name="work_place"/>
+                    <field name="unit_amount" widget="timesheet_uom" sum="Total"/>
+                    <field name="state"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
+</odoo>

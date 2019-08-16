@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_hotels_tree_view" model="ir.ui.view">
+        <field name="name">Hotels</field>
+        <field name="model">hr.hotels</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Hotels">
+                <field name="travel_id"/>
+                <field name="hotel_name"/>
+                <field name="reservation_num"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="cost"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_hotels_form_view" model="ir.ui.view">
+        <field name="name">Hotels</field>
+        <field name="model">hr.hotels</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Hotels">
+                <header>
+                    <button string="Hotel Reserved" name="action_reserved" type="object" states="draft" class="oe_highlight"/>
+                    <button string="Cancel" name="action_cancel" type="object" states="draft,reserved" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,reserved,cancel"/>
+                </header>
+                <sheet>
+                    <group string="Hotels Information">
+                        <group>
+                            <field name="travel_id" required="1" attrs="{'readonly': [('state','=', 'reserved')]}"/>
+                            <field name="hotel_name" required="1" attrs="{'readonly': [('state','=', 'reserved')]}"/>
+                            <field name="reservation_num" attrs="{'readonly': [('state','=', 'reserved')]}"/>
+                            <field name="reservation" string="Reservation" attrs="{'readonly': [('state','=', 'reserved')]}"/>
+                        </group>
+                        <group>
+                            <field name="check_in" required="1"/>
+                            <field name="check_out" required="1"/>
+                            <field name="cost" required="1" attrs="{'readonly': [('state','=', 'reserved')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hotel_search_view" model="ir.ui.view">
+        <field name="name">Hotel</field>
+        <field name="model">hr.hotels</field>
+        <field name="arch" type="xml">
+            <search string="Hotel">
+                <field name="travel_id"/>
+                <field name="reservation_num"/>
+                <field name="cost"/>
+                <field name="state"/>
+                <group string="Group By">
+                    <filter name="travel_id" string="Travel" context="{'group_by':'travel_id'}"/>
+                    <filter name="reservation_num" string="Reservation Number" context="{'group_by':'reservation_num'}"/>
+                    <filter name="cost" string="Cost" context="{'group_by':'cost'}"/>
+                    <filter name="state" string="Status" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hotels_graph_view" model="ir.ui.view">
+        <field name="name">Hotel</field>
+        <field name="model">hr.hotels</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Hotel" orientation="horizontal" type="bar">
+                <field name="travel_id"/>
+                <field name="reservation_num"/>
+                <field name="cost"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+     <record id="employee_hotels_menu_action" model="ir.actions.act_window">
+        <field name="name">Hotels</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.hotels</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
+
+    <record id="employee_all_hotels_action" model="ir.actions.act_window">
+        <field name="name">Hotels</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.hotels</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
+
+    <menuitem name="Hotels"
+              id="hr_employee_all_hotels_menu"
+              parent="travel_awarded_hr_employee_menu"
+              action="employee_all_hotels_action"
+              sequence="50"/>
+
+</odoo>
