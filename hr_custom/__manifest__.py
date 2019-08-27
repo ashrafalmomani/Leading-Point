@@ -10,7 +10,7 @@
     'depends': ['hr', 'project', 'project_custom', 'om_account_asset', 'crm_custom'],
     'data': [
         'views/hr_employee_view.xml',
-        'views/employee_assets.xml',
+        'views/asset_management_view.xml',
         'views/hr_travel_view.xml',
         'views/hr_awarded_days.xml',
         'views/hr_hotels_view.xml',
@@ -19,6 +19,8 @@
         'views/hr_leave_view.xml',
         'views/hr_payroll_view.xml',
         'views/hr_appraisal_view.xml',
+        'views/hr_expense_view.xml',
+        'wizard/run_per_diem_views.xml',
         'data/cron.xml',
         'data/data_tags.xml',
         'data/sequence.xml',

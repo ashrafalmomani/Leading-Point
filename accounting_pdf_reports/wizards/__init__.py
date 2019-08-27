@@ -9,4 +9,5 @@ from . import account_general_ledger
 from . import account_trial_balance
 from . import account_tax_report
 from . import aged_partner
+from . import customer_vendor_receivable
 from . import account_journal_audit

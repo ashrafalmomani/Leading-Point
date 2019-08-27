@@ -40,3 +40,9 @@ class AssetManagement(models.Model):
     def onchange_is_related_asset_tracked(self):
         if self.is_related_asset_tracked:
             self.env['account.asset.asset'].write({'is_tracked': self.is_related_asset_tracked})
+
+
+class AccountAsset(models.Model):
+    _inherit = 'account.asset.asset'
+
+    is_tracked = fields.Boolean("Is tracked?")

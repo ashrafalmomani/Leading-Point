@@ -29,4 +29,14 @@
         <field name='interval_type'>days</field>
         <field name="numbercall">-1</field>
     </record>
+
+    <record id="check_salary_raise" model="ir.cron">
+        <field name="name">Salary Raise</field>
+        <field name="model_id" ref="model_hr_contract"/>
+        <field name="state">code</field>
+        <field name="code">model.add_salary_raise()</field>
+        <field name='interval_number'>12</field>
+        <field name='interval_type'>months</field>
+        <field name="numbercall">-1</field>
+    </record>
 </odoo>

@@ -11,14 +11,11 @@
                 <field name="id" invisible="1"/>
                 <field name="analytic_id" attrs="{'invisible': [('id','=', False)]}"/>
             </xpath>
+
             <xpath expr="//field[@name='team_id']" position="after">
-                <field name="stakeholder_ids" widget="many2many_tags">
-                     <tree>
-                         <field name="name"/>
-                         <field name="relationship"/>
-                     </tree>
-                </field>
+                <field name="stakeholder_ids" widget="many2many_tags"/>
             </xpath>
+
             <xpath expr="//notebook/page[@name='lead']" position="after">
                 <page name="doc" string="Document">
                     <group>
@@ -54,10 +51,10 @@
     </record>
 
     <menuitem id="res_partner_companies_customer"
-            name="Companies"
-            parent="crm.crm_menu_sales"
-            action="crm_companies_action"
-            sequence="10"/>
+              name="Companies"
+              parent="crm.crm_menu_sales"
+              action="crm_companies_action"
+              sequence="10"/>
 
     <record id="crm_contacts_action" model="ir.actions.act_window">
         <field name="name">Contacts</field>
@@ -69,15 +66,15 @@
     </record>
 
     <menuitem id="res_partner_contacts_customer"
-            name="Contacts"
-            parent="crm.crm_menu_sales"
-            action="crm_contacts_action"
-            sequence="20"/>
+              name="Contacts"
+              parent="crm.crm_menu_sales"
+              action="crm_contacts_action"
+              sequence="20"/>
 
     <menuitem id="crm_lead_opportunities"
-            name="Opportunities"
-            parent="crm.crm_menu_sales"
-            sequence="25"/>
+              name="Opportunities"
+              parent="crm.crm_menu_sales"
+              sequence="25"/>
 
     <record id="crm_my_opportunities_action" model="ir.actions.act_window">
         <field name="name">My Opportunities</field>
@@ -85,15 +82,15 @@
         <field name="res_model">crm.lead</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('type', '=', 'opportunity')]</field>
-        <field name="context">{ 'default_type': 'opportunity', 'default_user_id': uid, 'search_default_assigned_to_me': 1}</field>
+        <field name="domain">[('type', '=', 'opportunity'), ('user_id', '=', uid)]</field>
+        <field name="context">{'default_type': 'opportunity', 'default_user_id': uid, 'search_default_assigned_to_me': 1}</field>
     </record>
 
     <menuitem id="my_opportunities_menu"
-            name="My Opportunities"
-            parent="crm_lead_opportunities"
-            action="crm_my_opportunities_action"
-            sequence="30"/>
+              name="My Opportunities"
+              parent="crm_lead_opportunities"
+              action="crm_my_opportunities_action"
+              sequence="30"/>
 
     <record id="crm_team_opportunities_action" model="ir.actions.act_window">
         <field name="name">Team Opportunities</field>
@@ -105,9 +102,9 @@
     </record>
 
     <menuitem id="team_opportunities_menu"
-            name="Team Opportunities"
-            parent="crm_lead_opportunities"
-            action="crm_team_opportunities_action"
-            sequence="35"/>
+              name="Team Opportunities"
+              parent="crm_lead_opportunities"
+              action="crm_team_opportunities_action"
+              sequence="35"/>
 
 </odoo>

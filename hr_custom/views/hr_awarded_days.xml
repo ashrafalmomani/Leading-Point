@@ -116,8 +116,8 @@
 
     <menuitem name="Awarded Days"
               id="all_awarded_days_hr_employee_menu"
-              parent="travel_awarded_hr_employee_menu"
+              parent="hr.menu_hr_root"
               action="all_awarded_days_menu_action"
-              sequence="80"/>
+              sequence="5"/>
 
 </odoo>

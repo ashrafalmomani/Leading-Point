@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
         <record model="ir.ui.view" id="asset_management_list">
@@ -38,7 +39,7 @@
                                 <field name="is_related_asset_tracked" />
                             </group>
                         </group>
-                        <field name="notes"/>
+                        <field name="notes" placeholder="Enter your note here..."/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -54,13 +55,6 @@
                     view_mode="tree,form,graph,pivot,kanban"/>
 
         <menuitem id="menu_asset_man" name="Asset Management" action="action_asset_man" parent="hr.menu_hr_root"/>
-
-        <record id="asset_sequence_id" model="ir.sequence">
-            <field name="name">Asset Management</field>
-            <field name="code">asset.management</field>
-            <field name="prefix">Asset - </field>
-            <field name="padding">3</field>
-        </record>
 
         <record id="is_tracked_asset_account" model="ir.ui.view">
             <field name="name">account.template.asset.form.inherit</field>

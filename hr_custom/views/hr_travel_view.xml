@@ -30,9 +30,17 @@
                     <button string="HR Approval" type="object" name="action_hr_approve" states="manager_approved" class="oe_highlight"/>
                     <button string="Reject" type="object" name="action_reject" states="submitted,manager_approved" class="oe_highlight"/>
                     <button string="Send Back To Draft" type="object" name="action_set_to_draft" states="rejected" class="oe_highlight"/>
-                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,manager_approved,hr_approved,rejected"/>
+                    <button string="Cancelled" type="object" name="action_cancel_travel" states="hr_approved" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,manager_approved,hr_approved,rejected,cancelled"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object"
+                                class="oe_stat_button"
+                                name="per_diem_lines_view"
+                                string="Per Diem"
+                                icon="fa-pencil-square-o"/>
+                    </div>
                     <h2><field name="name" readonly="1"/></h2>
                     <group>
                         <group string="General Information">
@@ -166,7 +174,7 @@
         <field name="view_mode">tree,form,graph</field>
     </record>
 
-    <menuitem name="Travel and Awarded Days"
+    <menuitem name="Travel"
               id="travel_awarded_hr_employee_menu"
               parent="hr.menu_hr_root"
               sequence="90"/>
@@ -175,6 +183,69 @@
               id="hr_employee_all_travel_menu"
               parent="travel_awarded_hr_employee_menu"
               action="employee_travel_action"
-              sequence="10"/>
+              sequence="1"/>
+
+    <record id="per_diem_tree_view" model="ir.ui.view">
+        <field name="name">per.diem.line.tree</field>
+        <field name="model">per.diem.line</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Per Diem Line" create="false">
+                <field name="employee_id"/>
+                <field name="contract_id"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="per_diem_form_view" model="ir.ui.view">
+        <field name="name">per.diem.line.form</field>
+        <field name="model">per.diem.line</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Per Diem Line" create="false">
+                <header>
+                    <field name="state" widget="statusbar" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group string="General Information">
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="contract_id"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_form_per_diem" model="ir.ui.view">
+	    <field name="name">hr.contract.form.per.diem</field>
+	    <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+	        <xpath expr="//div[@name='wage']" position="after">
+                <field name="salary_raise"/>
+                <label for="per_diem_amount"/>
+                <div class="o_row" name="per_diem">
+                    <field name="per_diem_amount" nolabel="1"/>
+                    <span>$</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>

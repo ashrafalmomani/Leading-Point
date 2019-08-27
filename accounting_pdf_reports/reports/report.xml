@@ -59,6 +59,16 @@
         />
 
         <report
+            id="action_report_receivable_partner_balance"
+            model="res.partner"
+            string="Accounts Receivables/Payables"
+            menu="False"
+            report_type="qweb-pdf"
+            name="accounting_pdf_reports.report_receivablepartnerbalance"
+            file="accounting_pdf_reports.report_receivablepartnerbalance"
+        />
+
+        <report
             id="action_report_journal"
             model="account.common.journal.report"
             string="Journals Audit"

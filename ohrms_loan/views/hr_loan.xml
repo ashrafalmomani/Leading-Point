@@ -98,12 +98,6 @@
         </field>
     </record>
 
-    <!--loan menu-->
-    <menuitem name="Loans And Salary Advance"
-        id="menu_hr_loans_and_advances"
-        parent="hr.menu_hr_root"
-        sequence="90"/>
-
     <record id="action_hr_loan_request" model="ir.actions.act_window">
         <field name="name">Loan Requests</field>
         <field name="res_model">hr.loan</field>
@@ -120,7 +114,7 @@
     </record>
 
     <menuitem name="Loan Requests"
-        parent="menu_hr_loans_and_advances"
+        parent="hr.menu_hr_root"
         id="menu_hr_loan_request"
         action="action_hr_loan_request"/>
 

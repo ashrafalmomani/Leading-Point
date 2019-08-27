@@ -16,7 +16,7 @@ class HREmployeeVisas(models.Model):
     visa = fields.Binary(string='UPLOAD YOUR FILE', track_visibility='always')
     cost = fields.Float(string='Cost', track_visibility='always')
     state = fields.Selection([('draft', 'Draft'), ('pending', 'Pending'), ('applied', 'Applied'),
-                              ('issued', 'Issued'), ('rejected', 'Rejected'), ('cancel', 'Cancel')],
+                              ('issued', 'Issued'), ('rejected', 'Rejected'), ('cancelled', 'Cancelled')],
                              default='draft', store=True, track_visibility='always')
 
     @api.multi
@@ -28,22 +28,24 @@ class HREmployeeVisas(models.Model):
         if self.travel_id.reason_for_travel in ('project', 'business_dev'):
             for rec in self.travel_id.percentage_ids:
                 self.env['account.analytic.line'].create({
-                    'name': "Hotel for (%s) Travel" % self.travel_id.name,
+                    'name': "Visa for (%s) Travel" % self.travel_id.name,
                     'project_id': rec.project_id.id or False,
                     'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
-                    'unit_amount': self.price * (rec.percentage / 100),
+                    'amount': self.cost * (rec.percentage / 100),
+                    'unit_amount': 1,
                     'user_id': self.travel_id.employee.user_id.id,
                     'date': fields.Date.today(),
-                    'employee_id': self.travel_id.employee.id,
+                    'partner_id': self.travel_id.employee.user_id.partner_id.id,
                 })
         else:
             self.env['account.analytic.line'].create({
-                'name': "Hotel for (%s) Travel" % self.travel_id.name,
+                'name': "Visa for (%s) Travel" % self.travel_id.name,
                 'account_id': self.travel_id.analytic_id.id,
-                'unit_amount': self.price,
+                'amount': self.cost,
+                'unit_amount': 1,
                 'user_id': self.travel_id.employee.user_id.id,
                 'date': fields.Date.today(),
-                'employee_id': self.travel_id.employee.id,
+                'partner_id': self.travel_id.employee.user_id.partner_id.id,
             })
         self.state = 'issued'
 
@@ -53,4 +55,4 @@ class HREmployeeVisas(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.state = 'cancel'
+        self.state = 'cancelled'

@@ -21,7 +21,7 @@ class StaffingRequest(models.Model):
     end_date = fields.Date('End Date', track_visibility='always')
     note = fields.Text('Note', track_visibility='always')
     state = fields.Selection([('new', 'New'), ('submit', 'Submitted'), ('confirm', 'Confirmed'), ('cancel', 'Cancel'),
-                              ('start', 'Start'), ('finsh', 'Finished')], 'Status', default='new',
+                              ('start', 'Start'), ('finished', 'Finished')], 'Status', default='new',
                              track_visibility='always')
 
     @api.onchange('project_id')
@@ -64,8 +64,8 @@ class StaffingRequest(models.Model):
     @api.multi
     def confirm_action(self):
         if self.project_id:
-            # self.project_id.write({'staffed_projects': [(4, self.project_id.id)]})
-            self.project_id.write({'members': [(4, self.project_id.id)]})
+            self.project_id.write({'staffed_projects_ids': [(4, self.employee_id.id)]})
+            self.project_id.write({'members': [(4, self.employee_id.id)]})
         self.write({'state': 'confirm'})
 
     @api.multi
@@ -82,8 +82,8 @@ class StaffingRequest(models.Model):
             if start_date == current_day:
                 rec.state = 'start'
             elif end_date == current_day:
-                rec.state = 'finsh'
-                # rec.project_id.write({'staffed_projects': [(3, self.project_id.id)]})
+                rec.state = 'finished'
+                rec.project_id.write({'staffed_projects_ids': [(3, self.employee_id.id)]})
 
 
 class StaffingCategory(models.Model):
@@ -97,7 +97,7 @@ class StaffingCategory(models.Model):
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    # staffed_projects = fields.Many2many('project.project', string='Project')
+    staffed_projects_ids = fields.Many2many('hr.employee', 'project_staff_rel', 'project_id', 'staff_id', string='Staff')
 
     @api.multi
     def projects_staffing(self):

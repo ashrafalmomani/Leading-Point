@@ -25,8 +25,8 @@
             <form string="Hotels">
                 <header>
                     <button string="Hotel Reserved" name="action_reserved" type="object" states="draft" class="oe_highlight"/>
-                    <button string="Cancel" name="action_cancel" type="object" states="draft,reserved" class="oe_highlight"/>
-                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,reserved,cancel"/>
+                    <button string="Cancelled" name="action_cancel" type="object" states="draft,reserved" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,reserved,cancelled"/>
                 </header>
                 <sheet>
                     <group string="Hotels Information">
@@ -105,6 +105,6 @@
               id="hr_employee_all_hotels_menu"
               parent="travel_awarded_hr_employee_menu"
               action="employee_all_hotels_action"
-              sequence="50"/>
+              sequence="4"/>
 
 </odoo>

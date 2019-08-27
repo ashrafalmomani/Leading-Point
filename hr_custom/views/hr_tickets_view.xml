@@ -102,6 +102,6 @@
               id="hr_employee_all_menu"
               parent="travel_awarded_hr_employee_menu"
               action="employee_all_tickets_action"
-              sequence="40"/>
+              sequence="3"/>
 
 </odoo>

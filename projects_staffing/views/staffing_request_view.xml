@@ -16,7 +16,6 @@
         </field>
     </record>
 
-
     <record model="ir.ui.view" id="staffing_request_form">
         <field name="name">staffing.request.form</field>
         <field name="model">staffing.request</field>
@@ -130,7 +129,6 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">staffing.request</field>
         <field name="view_mode">ganttaps</field>
-        <field name="domain">[('end_date','&gt;', context_today().strftime('%Y-%m-%d'))]</field>
     </record>
 
     <menuitem action="staffing_ganttaps_view_action"
@@ -138,36 +136,14 @@
     	      id="staffing_ganttaps_view_action_menu"
               sequence="2"/>
 
-    <record id="view_project_employeeganttaps" model="ir.ui.view">
-        <field name="name">employee.projects.ganttaps</field>
-        <field name="model">hr.employee</field>
-        <field name="type">ganttaps</field>
-        <field eval="2" name="priority"/>
+    <record id="project_stage_form_staffing" model="ir.ui.view">
+        <field name="name">project staffing</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-           <ganttaps default_group_by="employee_id"
-                     name="name"
-                     main_group_id_name="employee_id"
-                     date_start="pstart_date"
-                     date_stop="end_date"
-                     sorting_seq="sequence"
-                     project_id="project_id"
-                     no_group_sort_mode="">
-           </ganttaps>
+            <field name="members" position="after">
+                <field name="staffed_projects_ids" widget="many2many_tags"/>
+            </field>
         </field>
     </record>
-
-    <record model="ir.actions.act_window" id="staffing_ganttaps_view_action">
-        <field name="name">Employees Current Projects</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">staffing.request</field>
-        <field name="view_mode">ganttaps</field>
-        <field name="domain">[('end_date','&gt;', context_today().strftime('%Y-%m-%d'))]</field>
-    </record>
-
-    <menuitem action="staffing_ganttaps_view_action"
-    	      parent="staffing_menu"
-    	      id="staffing_ganttaps_view_action_menu"
-              sequence="2"/>
-
-
 </odoo>

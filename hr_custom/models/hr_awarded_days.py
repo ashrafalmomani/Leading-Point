@@ -19,9 +19,15 @@ class HrAwardedDays(models.Model):
         if total >= 0:
             self.total_hour = total
 
+    def _default_employee_id(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+
+    def _default_direct_manager_id(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1).parent_id
+
     name = fields.Char(string='Name', required=True, copy=False, default='New', track_visibility='always')
     number_seq = fields.Char(string='Number', required=True, copy=False, default='New', track_visibility='always')
-    employee_id = fields.Many2one('hr.employee', string='Employee')
+    employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_id)
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id')
     awarded_ids = fields.One2many('hr.award.line', 'awarded_id', string='Details', track_visibility='always')
     projects = fields.Many2many('project.project', string='Project', track_visibility='always')
@@ -30,7 +36,7 @@ class HrAwardedDays(models.Model):
     reject_des = fields.Text(string='Reject Reason')
     is_paid = fields.Boolean(string='Is Paid?')
     project_manager = fields.Many2one('hr.employee', string='Project/lead Manager', track_visibility='always')
-    direct_manager = fields.Many2one('hr.employee', string='Direct Manager', track_visibility='always')
+    direct_manager = fields.Many2one('hr.employee', string='Direct Manager', track_visibility='always', default=_default_direct_manager_id)
     total_hour = fields.Float(string='Total Hours', compute=_compute_total_hours, track_visibility='always', store=True)
     related_to = fields.Selection([('project', 'Project'),
                                    ('business_dev', 'Business Development'),
@@ -51,10 +57,8 @@ class HrAwardedDays(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_employee_and_manager(self):
-        employee = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-        if employee:
-            self.employee_id = employee.id
-            self.direct_manager = employee.parent_id.id
+        if self.employee_id:
+            self.direct_manager = self.employee_id.parent_id.id
 
     @api.onchange('related_to')
     def _onchange_related_to(self):

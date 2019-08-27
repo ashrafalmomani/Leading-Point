@@ -42,19 +42,21 @@ class HREmployeeTickets(models.Model):
                     'name': "Ticket for (%s) Travel" % self.travel_id.name,
                     'project_id': rec.project_id.id or False,
                     'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
-                    'unit_amount': self.price * (rec.percentage / 100),
+                    'amount': self.price * (rec.percentage / 100),
+                    'unit_amount': 1,
                     'user_id': self.travel_id.employee.user_id.id,
                     'date': fields.Date.today(),
-                    'employee_id': self.travel_id.employee.id,
+                    'partner_id': self.travel_id.employee.user_id.partner_id.id,
                 })
         else:
             self.env['account.analytic.line'].create({
                 'name': "Ticket for (%s) Travel" % self.travel_id.name,
                 'account_id': self.travel_id.analytic_id.id,
-                'unit_amount': self.price,
+                'amount': self.price,
+                'unit_amount': 1,
                 'user_id': self.travel_id.employee.user_id.id,
                 'date': fields.Date.today(),
-                'employee_id': self.travel_id.employee.id,
+                'partner_id': self.travel_id.employee.user_id.partner_id.id,
             })
         self.state = 'issued'
 
