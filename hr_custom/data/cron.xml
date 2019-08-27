@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="check_employee_years" model="ir.cron">
+        <field name="name">Employee Work Years</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model._check_employee_years()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record id="check_ticket_departure_date" model="ir.cron">
+        <field name="name">Ticket Departure Date</field>
+        <field name="model_id" ref="model_hr_tickets"/>
+        <field name="state">code</field>
+        <field name="code">model._check_ticket_departure_date()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record id="check_travel_status" model="ir.cron">
+        <field name="name">Travel Status Alert</field>
+        <field name="model_id" ref="model_hr_travel"/>
+        <field name="state">code</field>
+        <field name="code">model.send_email_before_change_status()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record id="check_salary_raise" model="ir.cron">
+        <field name="name">Salary Raise</field>
+        <field name="model_id" ref="model_hr_contract"/>
+        <field name="state">code</field>
+        <field name="code">model.add_salary_raise()</field>
+        <field name='interval_number'>12</field>
+        <field name='interval_type'>months</field>
+        <field name="numbercall">-1</field>
+    </record>
+</odoo>

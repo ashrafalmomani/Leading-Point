@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hr_expense_sheet_form_inhi" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.inherited</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="include_in_salary"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
