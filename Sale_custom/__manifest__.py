@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'CRM Custom',
-    'summary': """Add fields and menu""",
+    'name': 'Sale Custom',
+    'summary': """Sale order and product template custom""",
     'version': '12.0.1.0.0',
-    'description': """Add fields and menu""",
+    'description': """""",
     'author': 'Digital Assets',
     'website': 'http://www.digitalais.com',
     'category': 'Uncategorized',
-    'depends': ['crm'],
+    'depends': ['sale', 'sales_team'],
     'data': [
-        'views/crm_custom.xml',
+        'views/sale_order_view.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,

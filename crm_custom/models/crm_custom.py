@@ -7,10 +7,9 @@ class CrmAndSales(models.Model):
     _inherit = "crm.lead"
 
     team_member = fields.Many2many('hr.employee', string='Team Members', track_visibility='always')
-    owner = fields.Many2one('hr.employee', string='Owner', track_visibility='always')
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', track_visibility='always')
     document = fields.Char(string='Document', track_visibility='always')
-    stakeholder_ids = fields.Many2many('res.partner', string='Stakeholders', track_visibility='always')
+    stakeholder_ids = fields.One2many('stack.holder', 'crm_id', string='External Stakeholders', track_visibility='always')
 
     @api.model
     def create(self, vals):
@@ -36,3 +35,11 @@ class ResPartner(models.Model):
                                      ('competitor', 'Competitor'),
                                      ('vendor', 'Vendor'),
                                      ('employee', 'Employee')], string="Relationship", default='sale_lead', track_visibility='always')
+
+
+class StackHolder(models.Model):
+    _name = 'stack.holder'
+
+    crm_id = fields.Many2one('crm.lead', string='External Stakeholders')
+    name_id = fields.Many2one('res.partner', string='Name')
+    description = fields.Char(string='Description')

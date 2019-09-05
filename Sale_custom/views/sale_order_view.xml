@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_template_hide_fields" model="ir.ui.view">
+        <field name="name">Product Template</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='taxes_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_hide_fields" model="ir.ui.view">
+        <field name="name">Sale Order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='preview_sale_order']" position="before">
+                <button string="Create Project" type="object" name="action_create_project" class="oe_highlight" attrs="{'invisible':['|',('is_boolean', '=', True), ('state', '!=', 'sale')]}"/>
+            </xpath>
+            <div class="oe_button_box" name="button_box">
+                <button type="object"
+                        class="oe_stat_button"
+                        name="create_project"
+                        string="Project"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('is_boolean','!=',True)]}">
+                </button>
+            </div>
+
+            <xpath expr="//field[@name='client_order_ref']" position="attributes">
+                <attribute name="required">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="payment_ids">
+                    <tree editable="bottom">
+                        <field name="description"/>
+                        <field name="percentage"/>
+                    </tree>
+                </field>
+                <field name="is_boolean" invisible="1"/>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="group_invisible_sales_menus" model="res.groups">
+        <field name="name">Invisible Sales menus</field>
+    </record>
+
+    <record id="sale.sales_team_config" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_sales_menus')] )]"/>
+    </record>
+
+    <record id="sale.menu_sale_invoicing" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_sales_menus')] )]"/>
+    </record>
+
+    <record id="sale.menu_sale_order_upselling" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_sales_menus')] )]"/>
+    </record>
+
+    <record id="sale.report_sales_team" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_sales_menus')] )]"/>
+    </record>
+
+    <menuitem id="sale.menu_sale_order_invoice"
+              action="sale.action_orders_to_invoice"
+              parent="sale.sale_order_menu"
+              sequence="3"/>
+
+</odoo>

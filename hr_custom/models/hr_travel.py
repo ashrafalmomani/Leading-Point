@@ -192,7 +192,8 @@ class HREmployeeTravel(models.Model):
                     if employee:
                         self.project_manager = employee.id
             elif self.reason_for_travel == 'business_dev':
-                self.project_manager = rec.lead_id.owner.id
+                employee = self.env['hr.employee'].search([('user_id', '=', rec.lead_id.user_id.id)])
+                self.project_manager = employee.id
 
     @api.model
     def create(self, vals):

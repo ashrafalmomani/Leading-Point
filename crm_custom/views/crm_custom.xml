@@ -7,13 +7,17 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="before">
                 <field name="team_member" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" style="display: inline;"/>
-                <field name="owner" required="1"/>
                 <field name="id" invisible="1"/>
                 <field name="analytic_id" attrs="{'invisible': [('id','=', False)]}"/>
             </xpath>
 
-            <xpath expr="//field[@name='team_id']" position="after">
-                <field name="stakeholder_ids" widget="many2many_tags"/>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="stakeholder_ids">
+                    <tree editable="bottom">
+                        <field name="name_id"/>
+                        <field name="description"/>
+                    </tree>
+                </field>
             </xpath>
 
             <xpath expr="//notebook/page[@name='lead']" position="after">
@@ -22,6 +26,42 @@
                         <field name="document" widget="url" placeholder="Paste SharePoint Folder's URL"/>
                     </group>
                 </page>
+            </xpath>
+
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="required">True</attribute>
+                <attribute name="string">Owner</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_leads_form_view" model="ir.ui.view">
+        <field name="name">crm.lead.view</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="required">True</attribute>
+                <attribute name="string">Owner</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_change_search_filter_name" model="ir.ui.view">
+        <field name="name">crm.lead.search</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='assigned_to_me']" position="attributes">
+                <attribute name="string">My Opportunities</attribute>
             </xpath>
         </field>
     </record>
@@ -50,12 +90,6 @@
         <field name="domain">[('is_company','=', True)]</field>
     </record>
 
-    <menuitem id="res_partner_companies_customer"
-              name="Companies"
-              parent="crm.crm_menu_sales"
-              action="crm_companies_action"
-              sequence="10"/>
-
     <record id="crm_contacts_action" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="type">ir.actions.act_window</field>
@@ -65,46 +99,125 @@
         <field name="domain">[('is_company','=', False)]</field>
     </record>
 
-    <menuitem id="res_partner_contacts_customer"
-              name="Contacts"
-              parent="crm.crm_menu_sales"
-              action="crm_contacts_action"
-              sequence="20"/>
+    <record id="crm_system_activity_menu_action" model="ir.actions.act_window">
+        <field name="name">System Activities</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
-    <menuitem id="crm_lead_opportunities"
-              name="Opportunities"
-              parent="crm.crm_menu_sales"
-              sequence="25"/>
-
-    <record id="crm_my_opportunities_action" model="ir.actions.act_window">
+    <record model="ir.ui.menu" id="crm.menu_crm_opportunities">
         <field name="name">My Opportunities</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">crm.lead</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="crm.crm_lead_opportunities_tree_view">
         <field name="domain">[('type', '=', 'opportunity'), ('user_id', '=', uid)]</field>
-        <field name="context">{'default_type': 'opportunity', 'default_user_id': uid, 'search_default_assigned_to_me': 1}</field>
+        <field name="name">My Opportunities</field>
     </record>
 
-    <menuitem id="my_opportunities_menu"
-              name="My Opportunities"
-              parent="crm_lead_opportunities"
-              action="crm_my_opportunities_action"
-              sequence="30"/>
-
-    <record id="crm_team_opportunities_action" model="ir.actions.act_window">
-        <field name="name">Team Opportunities</field>
-        <field name="type">ir.actions.act_window</field>
+    <record model="ir.actions.act_window" id="all_crm_lead_opportunities_tree_view">
+        <field name="name">All Opportunities</field>
         <field name="res_model">crm.lead</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{'search_default_my_favorites': 1}</field>
+        <field name="view_mode">kanban,tree,graph,pivot,form,calendar,activity</field>
+        <field name="domain">[('type','=','opportunity')]</field>
+        <field name="context">{'default_type': 'opportunity', 'search_default_assigned_to_me': 1}</field>
     </record>
 
-    <menuitem id="team_opportunities_menu"
-              name="Team Opportunities"
-              parent="crm_lead_opportunities"
-              action="crm_team_opportunities_action"
-              sequence="35"/>
+    <record id="all_crm_lead_opportunities_tree_view_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="act_window_id" ref="all_crm_lead_opportunities_tree_view"/>
+    </record>
 
+    <record id="all_crm_lead_opportunities_tree_view_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="act_window_id" ref="all_crm_lead_opportunities_tree_view"/>
+    </record>
+
+    <record id="all_crm_lead_opportunities_tree_view_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar_view_leads"/>
+        <field name="act_window_id" ref="all_crm_lead_opportunities_tree_view"/>
+    </record>
+
+    <record id="all_crm_lead_opportunities_tree_view_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="crm.crm_lead_view_pivot"/>
+        <field name="act_window_id" ref="all_crm_lead_opportunities_tree_view"/>
+    </record>
+
+    <record id="all_crm_lead_opportunities_tree_view_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="act_window_id" ref="all_crm_lead_opportunities_tree_view"/>
+    </record>
+
+    <record id="all_crm_lead_opportunities_tree_view_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="crm.crm_lead_view_graph"/>
+        <field name="act_window_id" ref="all_crm_lead_opportunities_tree_view"/>
+    </record>
+
+    <menuitem
+        id="menu_all_crm_lead_opportunities_tree_view"
+        action="all_crm_lead_opportunities_tree_view"
+        name="All Opportunities"
+        parent="crm.crm_menu_sales"
+        sequence="1"/>
+
+    <menuitem
+        id="crm.crm_menu_root"
+        name="CRM"
+        action="crm.crm_lead_all_leads"/>
+
+    <menuitem id="crm.menu_crm_leads"
+              parent="crm.crm_menu_sales"
+              action="crm.crm_lead_all_leads"
+              sequence="1"/>
+
+    <menuitem id="crm_system_activity_report_menu"
+              name="System Activities"
+              parent="crm.crm_menu_report"
+              action="crm_system_activity_menu_action"
+              sequence="4"/>
+
+    <menuitem id="crm_lead_contacts" name="Contacts" parent="crm.crm_menu_root" sequence="15"/>
+    <menuitem id="res_partner_companies_customer" name="Companies" parent="crm_lead_contacts" action="crm_companies_action" sequence="17"/>
+    <menuitem id="res_partner_individual_customer" name="Individuals" parent="crm_lead_contacts" action="crm_contacts_action" sequence="16"/>
+
+    <record id="group_invisible_crm_menus" model="res.groups">
+        <field name="name">Invisible CRM menus</field>
+    </record>
+
+    <record id="crm.crm_menu_leads" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_crm_menus')] )]"/>
+    </record>
+
+    <record id="crm.res_partner_menu_customer" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_crm_menus')] )]"/>
+    </record>
+
+    <record id="crm.sales_team_menu_team_pipeline" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_crm_menus')] )]"/>
+    </record>
+
+    <record id="crm.crm_team_config" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_crm_menus')] )]"/>
+    </record>
+
+    <record id="crm.crm_opportunity_report_menu" model="ir.ui.menu">
+        <field name="name">Opportunity</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="crm.crm_opportunity_report_action">
+        <field name="name">Opportunity Analysis</field>
+    </record>
 </odoo>

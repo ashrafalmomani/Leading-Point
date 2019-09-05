@@ -80,7 +80,9 @@ class HrAwardedDays(models.Model):
     @api.onchange('lead')
     def _onchange_lead(self):
         for rec in self.lead:
-            self.project_manager = rec.owner.id
+            employee = self.env['hr.employee'].search([('user_id', '=', rec.user_id.id)])
+            if employee:
+                self.project_manager = employee.id
 
     @api.model
     def create(self, vals):
