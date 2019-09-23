@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_partner_type_info,partner.type.info,model_partner_type_info,base.group_user,1,1,1,1
+access_partner_type_tab,partner.type.tab,model_partner_type_tab,base.group_user,1,1,1,1
+

@@ -42,5 +42,68 @@
             <field name="user_signature" eval="False"/>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <record id="end_of_trial_period_before_two_week" model="mail.template">
+            <field name="name">End Of Trial Period: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_contract"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.employee_id.parent_id.work_email|safe}</field>
+            <field name="subject">Alert End Of Trial Period For - ${object.employee_id.name}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.department_id.manager_id.name}
+                        <br /><br />
+                        The Alert End Of Trial period For (<strong>${object.employee_id.name}</strong>)
+                        <br />
+                        Will End After Two Weeks.
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="end_of_trial_period_before_one_week" model="mail.template">
+            <field name="name">End Of Trial Period: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_contract"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.manager_user_id.email|safe}</field>
+            <field name="subject">Alert End Of Trial Period For - ${object.employee_id.name}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.department_id.manager_id.name}
+                        <br /><br />
+                        The Alert End Of Trial period For (<strong>${object.employee_id.name}</strong>)
+                        <br />
+                        Will End After One Week.
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="alert_email_before_expiry_date_document" model="mail.template">
+            <field name="name">Email Before Expiry Date In Document: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_document_line"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.manager_user_id.email|safe}</field>
+            <field name="subject">Expiry Date For ${object.employee_id.name} Document</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.manager_user_id.name}
+                        <br /><br />
+                        The Expiry Date For (<strong>${object.employee_id.name}</strong>) Document
+                        <br />
+                        Will End After (<strong>${object.alert_before}</strong>) months.
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
     </data>
 </odoo>

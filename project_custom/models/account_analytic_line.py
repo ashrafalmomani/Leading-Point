@@ -9,9 +9,10 @@ class AccountAnalyticLine(models.Model):
     _name = 'account.analytic.line'
     _inherit = ['account.analytic.line', 'mail.thread', 'mail.activity.mixin', 'portal.mixin']
 
+    employee_id = fields.Many2one('hr.employee', string='Employee')
     name = fields.Char(string='Description', track_visibility='always')
     lead_id = fields.Many2one('crm.lead', string='Lead/Opportunity', track_visibility='always')
-    work_place = fields.Selection([('inside', 'Inside'), ('outside', 'Outside')], string="Work Place", track_visibility='always')
+    work_place = fields.Selection([('inside', 'Onsite'), ('outside', 'Offsite')], string="Work Place", track_visibility='always')
     reason = fields.Text('Reject Reason', track_visibility='always')
     type_id = fields.Selection([('project', 'Project'), ('opportunity', 'Opportunity'),
                                 ('Travel', 'travel'), ('Leave', 'Leave'), ('unassigned', 'Unassigned')], string="Type", track_visibility='always')
@@ -46,3 +47,13 @@ class AccountAnalyticLine(models.Model):
     def _onchange_lead_id(self):
         if self.lead_id:
             self.account_id = self.lead_id.analytic_id.id
+
+    @api.onchange('project_id')
+    def _onchange_description_project(self):
+        if self.project_id:
+            self.name = 'Project- %s ' % self.project_id.name
+
+    @api.onchange('lead_id')
+    def _onchange_description_lead(self):
+        if self.lead_id:
+            self.name = 'Lead- %s ' % self.lead_id.name

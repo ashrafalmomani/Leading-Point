@@ -39,7 +39,8 @@ class RunPerDiem(models.TransientModel):
                     diff_day = (last_day - first_day).days
 
             if travel.trip_status in ('open', 'closed') and diff_day > 0:
-                amount = (travel.employee.contract_id.per_diem_amount * 0.708) * diff_day
+                perdiem_amount = self.env['res.config.settings'].search([('per_diem_amount', '>', '0.0')], limit=1, order='id desc').per_diem_amount
+                amount = (perdiem_amount * 0.708) * diff_day
                 per_diem = self.env['per.diem.line'].create({'travel_id': travel.id,
                                                              'employee_id': travel.employee.id,
                                                              'contract_id': travel.employee.contract_id.id,

@@ -30,13 +30,34 @@
         <field name="numbercall">-1</field>
     </record>
 
-    <record id="check_salary_raise" model="ir.cron">
-        <field name="name">Salary Raise</field>
+    <record id="check_end_of_trial_period_email" model="ir.cron">
+        <field name="name">End Of Trial Period Email</field>
         <field name="model_id" ref="model_hr_contract"/>
         <field name="state">code</field>
-        <field name="code">model.add_salary_raise()</field>
+        <field name="code">model.end_of_trial_period_email()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record id="check_expiry_date_for_employee_document" model="ir.cron">
+        <field name="name">Email Before Expiry Date In Document</field>
+        <field name="model_id" ref="model_document_line"/>
+        <field name="state">code</field>
+        <field name="code">model.alert_before_expiry_date_document()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record id="change_wage_in_contract" model="ir.cron">
+        <field name="name">Raise Wage For Employee In Contract</field>
+        <field name="model_id" ref="model_hr_contract"/>
+        <field name="state">code</field>
+        <field name="code">model.add_raise_to_wage_every_first_year()</field>
         <field name='interval_number'>12</field>
         <field name='interval_type'>months</field>
         <field name="numbercall">-1</field>
     </record>
+
 </odoo>

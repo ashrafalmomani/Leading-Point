@@ -27,4 +27,18 @@
         <field name="delay_count">5</field>
         <field name="sequence">12</field>
     </record>
+
+    <record id="mail_activity_reminder_notification" model="mail.activity.type">
+        <field name="name">End Of Trial Period Notification</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="mail_activity_alert_before_notification" model="mail.activity.type">
+        <field name="name">Alert Before Expiry Date In Document</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
 </odoo>

@@ -9,7 +9,7 @@
                 <button type="object"
                         class="oe_stat_button"
                         name="projects_staffing"
-                        string="Projects"
+                        string="Staff"
                         icon="fa-pencil-square-o">
                 </button>
             </xpath>
@@ -24,27 +24,35 @@
                 <header>
                     <button string="Submit" type="object" name="submit_action" states="new" class="oe_highlight"/>
                     <button string="Confirm" type="object" name="confirm_action" states="submit" class="oe_highlight"/>
-                    <button string="Cancel" type="object" name="cancel_action" states="submit" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="cancel_action" states="submit,confirm" class="oe_highlight"/>
+                    <button string="Stop" type="object" name="stopped_action" states="start" class="oe_highlight"/>
 					<field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <h2><field name="number" readonly="1"/></h2>
 	                <group>
 		                <group string="Project Details">
-	    	                <field name="project_id" required="1"/>
-	    	                <field name="manager_id" invisible="1"/>
-	    	                <field name="start_date" required="1"/>
-	    	                <field name="end_date" required="1"/>
+	    	                <field name="project_id" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
+	    	                <field name="manager_id" invisible="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
+	    	                <field name="start_date" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
+	    	                <field name="end_date" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="emails" invisible="1"/>
                         </group>
                         <group string="Employee Details">
-	    	                <field name="seniority_level" required="1"/>
-                            <field name="category_ids" widget="many2many_tags" required="1"/>
-                            <field name="note" placeholder="Please add your notes ........" required="1"/>
+	    	                <field name="seniority_level" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
+                            <field name="category_ids" widget="many2many_tags" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
+                            <field name="note" placeholder="Please add your notes ........" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
                         </group>
                         <group string="Employee Details" attrs="{'invisible': [('state', 'not in', ('submit', 'confirm'))]}">
-	    	                <field name="employee_id" required="1"/>
-	    	                <field name="current_projects_ids" widget="many2many_tags" options="{'no_create': True}"/>
-	    	                <field name="current_projects_managers_ids" widget="many2many_tags" options="{'no_create': True}"/>
+	    	                <field name="employee_id" attrs="{'required': [('state', '!=', 'new')], 'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
+                            <field name="current_projects_managers_ids" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}">
+                                <tree editable="bottom">
+                                    <field name="projects_id"/>
+                                    <field name="manager_id"/>
+                                </tree>
+                            </field>
+                            <!--<field name="current_projects_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>-->
                         </group>
 	    	        </group>
 	            </sheet>
@@ -142,8 +150,19 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <field name="members" position="after">
-                <field name="staffed_projects_ids" widget="many2many_tags"/>
+                <field name="staffed_projects_ids" widget="many2many_tags" readonly="1"/>
             </field>
+        </field>
+    </record>
+
+    <record id="is_staff_director_employee" model="ir.ui.view">
+        <field name="name">hr.employee.is.staff</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='manager']" position="after">
+                <field name="is_staff"/>
+            </xpath>
         </field>
     </record>
 </odoo>

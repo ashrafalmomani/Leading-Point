@@ -25,4 +25,38 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="add_partner_type">
+        <field name="name">res.partner</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position='after'>
+                <page name="partner_doc" string="Partner Document">
+                    <field name="partner_ids">
+                        <tree>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="type"/>
+                            <field name="description"/>
+                            <field name="attachment"/>
+                        </tree>
+                        <form string="Partner Document">
+                            <group>
+                                <group>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="description"/>
+                                </group>
+                                <group>
+                                    <field name="type"/>
+                                    <field name="attachment"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

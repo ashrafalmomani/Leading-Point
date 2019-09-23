@@ -14,3 +14,4 @@ access_employee_survey,employee.survey,model_employee_survey,base.group_user,1,1
 access_per_diem_line,per.diem.line,model_per_diem_line,base.group_user,1,1,1,1
 access_appraisal_levels,appraisal.levels,model_appraisal_levels,base.group_user,1,1,1,1
 access_appraisal_form,appraisal.form,model_appraisal_form,base.group_user,1,1,1,1
+access_document_employee,document.employee,model_document_employee,base.group_user,1,1,1,1

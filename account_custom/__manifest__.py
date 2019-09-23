@@ -10,6 +10,7 @@
     'depends': ['base', 'account', 'account_check_printing'],
     'data': [
         'views/account_payment.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
 

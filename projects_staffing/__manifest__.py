@@ -5,10 +5,12 @@
     'author': 'Digital Asset Team',
     "website": "https://digitalais.com",
     'depends': ['hr', 'project', 'project_custom', 'web_gantt_native'],
-    'data': ['security/ir.model.access.csv',
+    'data': [
              'views/sequence.xml',
              'views/staffing_request_view.xml',
              'data/cron.xml',
+             'data/email_template.xml',
+             'security/ir.model.access.csv',
              ],
     'installable': True,
     'application': False,

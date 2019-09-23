@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
     <record id="project_status_tree_view" model="ir.ui.view">
         <field name="name">Project Status</field>
         <field name="model">project.status</field>
@@ -53,17 +52,17 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                 <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"  readonly="1"/>
+                <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
             </xpath>
-            <page name="settings" position="after">
+            <xpath expr="//notebook/page[1]" position="after">
                 <page string="Team" name="team">
                     <group>
                         <group>
-                            <field name="members" widget="many2many_tags" string="Members"/>
+                            <field name="members" widget="many2many_tags" string="Members" readonly="1"/>
                         </group>
                     </group>
                 </page>
-            </page>
+            </xpath>
         </field>
     </record>
 
@@ -73,10 +72,12 @@
         <field name="inherit_id" ref="project.view_project_kanban"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="stage_id" invisible="1"/>
+                <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
             </field>
             <xpath expr="//kanban" position="attributes">
                 <attribute name="default_group_by">stage_id</attribute>
+                <attribute name="class">oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors</attribute>
+                <attribute name="on_create">project.open_create_project</attribute>
             </xpath>
         </field>
     </record>

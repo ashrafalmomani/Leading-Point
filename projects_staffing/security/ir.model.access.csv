@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_staffing_request,staffing.request,model_staffing_request,project.group_project_manager,1,1,1,1
 access_staffing_category,staffing.category,model_staffing_category,project.group_project_manager,1,1,1,1
+access_seniority_level,seniority.level,model_seniority_level,project.group_project_manager,1,1,1,1
+access_current_project,current.project,model_current_project,project.group_project_manager,1,1,1,1

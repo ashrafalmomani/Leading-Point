@@ -44,6 +44,9 @@
                     </div>
                     <h2><field name="er_seq" readonly="1"/></h2>
                     <group>
+                        <field name="employee_id" required="1"/>
+                    </group>
+                    <group>
                         <group>
                             <field name="date_from" required="1"/>
                         </group>
@@ -52,18 +55,20 @@
                         </group>
                     </group>
                     <group>
-                        <group string="Employee Information">
-                            <field name="employee_id" required="1"/>
-                            <field name="job_id"/>
-                            <field name="salary"/>
-                            <field name="salary_raise"/>
+                        <group string="Current Level">
+                            <field name="job_id" readonly="1" force_save="1"/>
+                            <field name="salary" readonly="1" force_save="1"/>
+                            <field name="effective_date"/>
                         </group>
-                        <group string="Score Information">
+                        <group string="Next Level">
+                            <field name="salary_raise"/>
                             <field name="score_perc"/>
                             <field name="extra_points"/>
                             <field name="total_score"/>
                             <field name="performance_level"/>
                             <field name="next_review"/>
+                            <field name="next_job_id"/>
+                            <field name="total_salary"/>
                         </group>
                     </group>
                     <notebook>
@@ -78,10 +83,12 @@
                         </page>
 
                         <page name="employee_survey" string="Employee Survey">
-                            <field name="survey_ids" context="{'default_appraisal_id': active_id, 'default_employee_id': employee_id}">
+                            <field name="survey_ids" context="{'default_appraisal_id': active_id}">
                                  <tree editable="bottom">
-                                     <field name="employee_id" invisible="1"/>
                                      <field name="survey_id" required="1"/>
+                                     <field name="employee_id" required="1"/>
+                                     <field name="num_of_month" required="1"/>
+                                     <field name="status" required="1"/>
                                      <field name="response_id" invisible="1"/>
                                      <button name="action_start_survey" string="Start Survey" type="object" class="oe_highlight"/>
                                  </tree>
@@ -258,5 +265,11 @@
     <record model="ir.ui.menu" id="hr.menu_hr_root">
         <field name="name">HR</field>
     </record>
+
+    <template id="back_custom" name="Back" inherit_id="survey.back">
+        <xpath expr="//a[hasclass('btn-secondary')]" position="replace">
+            <a role="button" t-attf-href="/web#view_type=form&amp;model=hr.appraisal&amp;id=#{survey.id}&amp;action=hr_custom.hr_appraisal_action" class="btn btn-secondary">Back to Appraisal</a>
+        </xpath>
+    </template>
 
 </odoo>
