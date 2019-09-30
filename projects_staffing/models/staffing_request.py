@@ -51,24 +51,14 @@ class StaffingRequest(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         if self.employee_id:
-            employee_projects = []
-            employee_managers = []
+            lst_projects = []
             projects = self.env['project.project'].search([('stage_id.close_stage', '!=', True)])
             for proj in projects:
                 if self.employee_id.id in proj.members.ids:
-                    employee_projects.append(proj.id)
                     manager_id = self.env['hr.employee'].search([('user_id', '=', proj.user_id.id)])
                     if manager_id:
-                        employee_managers.append(manager_id.id)
-            for rec in employee_projects:
-                rec.current_projects_managers_ids.projects_id = [(6, 0, employee_projects)]
-            for record in employee_managers:
-                record.current_projects_managers_ids.manager_id = [(6, 0, employee_managers)]
-                return {'domain': {'current_projects_managers_ids.projects_id': [('id', 'in', employee_projects)],
-                                   'current_projects_managers_ids.manager_id': [('id', 'in', employee_managers)]}}
-            else:
-                return {'domain': {'current_projects_managers_ids.projects_id': [('id', '=', [])],
-                                   'current_projects_managers_ids.manager_id': [('id', '=', [])]}}
+                        lst_projects.append([(6, 0, {'projects_id': proj.id, 'manager_id': manager_id.id})])
+        self.current_projects_managers_ids = lst_projects
 
     @api.model
     def create(self, vals):
