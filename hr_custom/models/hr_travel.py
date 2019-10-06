@@ -341,6 +341,8 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     per_diem_amount = fields.Float('Per Diem Amount')
+    awarded_account_id = fields.Many2one('account.account', string='Awarded Days Account')
+    awarded_days_journal_id = fields.Many2one('account.journal', string='Journal')
 
     @api.multi
     def set_values(self):
@@ -350,6 +352,8 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res['per_diem_amount'] = self.search([], limit=1, order='id desc').per_diem_amount
+        res['awarded_account_id'] = self.search([], limit=1, order='id desc').awarded_account_id.id
+        res['awarded_days_journal_id'] = self.search([], limit=1, order='id desc').awarded_days_journal_id.id
         return res
 
 

@@ -125,6 +125,30 @@ class AppraisalCustom(models.Model):
                     'Quantity': 1.0,
                 })
 
+
+                alert_notification = {
+                    'activity_type_id': self.env.ref('hr_custom.appraisal_done_notification_for_employee').id,
+                    'res_id': self.id,
+                    'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.appraisal')], limit=1).id,
+                    'icon': 'fa-pencil-square-o',
+                    'date_deadline': self.date_to,
+                    'user_id': self.employee_id.user_id.id,
+                    'note': 'Your appraisal is done by manager'
+                }
+                self.env['mail.activity'].create(alert_notification)
+
+                template_id = self.env.ref('hr_custom.email_after_appraisal_done_to_employee')
+                composer = self.env['mail.compose.message'].sudo().with_context({
+                    'default_composition_mode': 'mass_mail',
+                    'default_notify': False,
+                    'default_model': 'hr.appraisal',
+                    'default_res_id': self.id,
+                    'default_template_id': template_id.id,
+                }).create({})
+                values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.appraisal', self.id)['value']
+                composer.write(values)
+                composer.send_mail()
+
     @api.onchange('employee_id')
     def _onchange_job_and_salary_appraisal(self):
         if self.employee_id:
@@ -149,6 +173,8 @@ class EmployeeSurvey(models.Model):
     survey_id = fields.Many2one('survey.survey', string="Survey")
     status = fields.Selection([('draft', 'Draft'), ('done', 'Done')], string='Status', default='draft')
     num_of_month = fields.Integer(string='No. Of Month')
+    from_date = fields.Date(string='From Date')
+    to_date = fields.Date(string='To Date')
 
     @api.onchange('survey_id')
     def _onchange_survey_id(self):
@@ -180,12 +206,15 @@ class HRContracts(models.Model):
     def create_appraisal(self, vals):
         appraisal_obj = self.env['hr.appraisal']
         start_date = datetime.strptime(vals['date_start'], '%Y-%m-%d')
+        to_date = start_date.date() + relativedelta(years=+1)
+        effective_date = to_date.replace(day=1)
         appraisal_obj.sudo().create({
             'employee_id': vals['employee_id'],
             'job_id': vals['job_id'],
             'date_from': vals['date_start'],
-            'date_to': start_date.date() + relativedelta(years=+1),
+            'date_to': to_date,
             'salary': vals['wage'],
+            'effective_date': effective_date,
         })
 
     @api.model

@@ -167,6 +167,9 @@
             <xpath expr="//notebook/page[@name='other']//group[2]" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//label[@for='wage']" position="attributes">
+                <attribute name="string">Salary</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

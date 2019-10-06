@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _, exceptions
 from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 
 class HrAwardedDays(models.Model):
@@ -35,6 +36,7 @@ class HrAwardedDays(models.Model):
     other_des = fields.Text(string='Other Description')
     reject_des = fields.Text(string='Reject Reason')
     is_paid = fields.Boolean(string='Is Paid?')
+    include_salary = fields.Boolean(string='Include Salary', default=True)
     project_manager = fields.Many2one('hr.employee', string='Project/lead Manager', track_visibility='always')
     direct_manager = fields.Many2one('hr.employee', string='Direct Manager', track_visibility='always', default=_default_direct_manager_id)
     total_hour = fields.Float(string='Total Hours', compute=_compute_total_hours, track_visibility='always', store=True)
@@ -118,26 +120,61 @@ class HrAwardedDays(models.Model):
         self.state = 'hr_approved'
 
     @api.multi
-    def action_reject(self):
-        if not self.reject_des:
-            raise ValidationError('You must insert the reject reason!')
-        else:
-            self.state = 'rejected'
-
-        reject_notification = {
-            'activity_type_id': self.env.ref('hr_custom.mail_activity_reject_notification').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.awarded.days')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Datetime.now(),
-            'user_id': self.employee_id.user_id.id,
-            'note': self.reject_des
+    def action_reject(self, data):
+        data['form'] = {}
+        return {
+            'name': _('Reject Reason'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'reject.reason',
+            'view_id': self.env.ref('hr_custom.view_reject_reason_wizard').id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
         }
-        self.env['mail.activity'].create(reject_notification)
+
 
     @api.multi
     def action_send_to_draft(self):
         self.state = 'draft'
+
+    @api.multi
+    def action_generate_entries(self):
+        config_id = self.env['res.config.settings'].search([('awarded_account_id', '!=', False), ('awarded_days_journal_id', '!=', False)])
+        if not config_id.awarded_account_id or not config_id.awarded_days_journal_id:
+            raise UserError(_('Please set up awarded days account and journal from settings menu.'))
+        credit_emp_acc = self.employee_id.user_id.partner_id.property_account_payable_id.id
+        move_line_values = []
+        move_obj = self.env['account.move']
+        journal_id = config_id.awarded_days_journal_id.id
+        contract_id = self.employee_id.contract_id
+        amount = ((contract_id.wage + contract_id.salary_raise) / 30 / 8) * self.total_hour
+        debit_value = {
+            'name': 'Awarded Days for ' + self.employee_id.name + ' #' + self.number_seq,
+            'account_id': config_id.awarded_account_id.id,
+            'debit': amount,
+            'credit': 0.0,
+            'journal_id': journal_id,
+            'partner_id': self.employee_id.user_id.partner_id.id}
+        move_line_values.append([0, False, debit_value])
+        credit_value = {
+            'name': 'Awarded Days for ' + self.employee_id.name + ' #' + self.number_seq,
+            'account_id': credit_emp_acc,
+            'debit': 0.0,
+            'credit': amount,
+            'journal_id': journal_id,
+            'partner_id': self.employee_id.user_id.partner_id.id}
+        move_line_values.append([0, False, credit_value])
+        if move_line_values:
+            move_id = move_obj.create({
+                'date': fields.Date.today(),
+                'ref': 'Awarded Days #' + self.number_seq,
+                'journal_id': journal_id,
+                'company_id': self.env.user.company_id.id,
+                'partner_id': self.employee_id.user_id.partner_id.id,
+                'line_ids': move_line_values
+            })
+            move_id.post()
+        self.is_paid = True
 
 
 class HrAwardLine(models.Model):
@@ -158,3 +195,35 @@ class HrAwardLine(models.Model):
             if rec.reason == 'travel':
                 if rec.hours > 8:
                     raise exceptions.ValidationError(_("The maximum hours for travel reason is 8 hours !"))
+
+    @api.onchange('reason')
+    def _set_default_hour(self):
+        for rec in self:
+            if rec.reason == 'travel':
+                rec.hours = 8.0
+
+
+class RejectReason(models.TransientModel):
+    _name = "reject.reason"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    reject_reason = fields.Text(string='Reason')
+
+    @api.multi
+    def confirm_reject_reason(self):
+        active_id = self._context.get('active_id')
+        awarded_days_id = self.env['hr.awarded.days'].browse(active_id)
+        awarded_days_id.write({'reject_des': self.reject_reason, 'state': 'rejected'})
+
+        for rec in self.env['hr.awarded.days'].search([('state', '=', 'rejected')], limit=1, order="id desc"):
+            reject_notification = {
+                'activity_type_id': self.env.ref('hr_custom.mail_activity_reject_notification').id,
+                'res_id': rec.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.awarded.days')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Datetime.now(),
+                'user_id': rec.employee_id.user_id.id,
+                'note': rec.reject_des
+            }
+            self.env['mail.activity'].create(reject_notification)
+

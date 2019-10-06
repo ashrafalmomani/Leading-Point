@@ -6,13 +6,15 @@
         <field name="model">hr.awarded.days</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Awarded Days">
+            <tree string="Awarded Days" editable="bottom">
                 <field name="name"/>
                 <field name="create_date"/>
                 <field name="employee_id"/>
                 <field name="related_to"/>
                 <field name="projects" widget="many2many_tags"/>
                 <field name="lead" widget="many2many_tags"/>
+                <field name="is_paid"/>
+                <field name="include_salary"/>
                 <field name="total_hour"/>
                 <field name="state"/>
             </tree>
@@ -31,6 +33,7 @@
                     <button string="HR Approval" type="object" name="action_hr_approved" states="manager_approved" class="oe_highlight"/>
                     <button string="Reject" type="object" name="action_reject" states="action_manager_approved,submitted" class="oe_highlight"/>
                     <button string="Send Back To Draft" type="object" name="action_send_to_draft" states="rejected" class="oe_highlight"/>
+                    <button string="Generate Entries" type="object" name="action_generate_entries" attrs="{'invisible': ['|', ('state','!=', 'hr_approved'), ('is_paid', '=', True)]}" class="oe_highlight"/>
                     <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,manager_approved,hr_approved,rejected"/>
                 </header>
                 <sheet>
@@ -39,13 +42,14 @@
                         <group string="Main Information">
                             <field name="employee_id" attrs="{'readonly':[('state', '!=', 'draft')]}" required="1"/>
                             <field name="related_to" attrs="{'readonly':[('state', '!=', 'draft')]}" required="1"/>
+                            <field name="other_des" attrs="{'required':[('related_to', '=', 'other')], 'readonly':[('state','!=', 'draft')], 'invisible': [('related_to','!=', 'other')]}"/>
                             <field name="projects" widget="many2many_tags" attrs="{'invisible': [('related_to','!=', 'project')], 'readonly':[('state','!=', 'draft')], 'required':[('related_to','=', 'project')]}"/>
                             <field name="lead" widget="many2many_tags" attrs="{'invisible': [('related_to','!=', 'business_dev')], 'readonly':[('state','!=', 'draft')], 'required':[('related_to','=', 'business_dev')]}"/>
                             <field name="project_manager" invisible="1"/>
                             <field name="direct_manager" invisible="1"/>
+                            <field name="is_paid"/>
                         </group>
                         <group>
-                            <field name="other_des" attrs="{'required':[('related_to', '=', 'other')], 'readonly':[('state','!=', 'draft')], 'invisible': [('related_to','!=', 'other')]}"/>
                             <field name="reject_des" attrs="{'invisible': [('state','in',['draft','hr_approved'])]}"/>
                         </group>
                     </group>
@@ -70,6 +74,22 @@
             </form>
         </field>
     </record>
+
+    <record id="view_reject_reason_wizard" model="ir.ui.view">
+    <field name="name">Reject Reason</field>
+    <field name="model">reject.reason</field>
+    <field name="arch" type="xml">
+        <form>
+            <group string="Reason">
+                <field name="reject_reason" required="1" nolabel="1"/>
+            </group>
+            <footer>
+                <button name="confirm_reject_reason" string="Confirm" type="object" class="btn-primary"/>
+                <button string="Cancel" class="btn-default" special="cancel"/>
+            </footer>
+        </form>
+    </field>
+</record>
 
     <record id="awarded_days_search_view" model="ir.ui.view">
         <field name="name">Awarded Days</field>

@@ -267,6 +267,33 @@
                             </div>
                         </div>
                     </div>
+                    <h2>Awarded Days Configuration</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="row">
+                                    <div class="text-muted col-lg-8">
+                                        Set Account For Awarded Days.
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="awarded_account_id"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="text-muted col-lg-8">
+                                        Set Journal For Awarded Days.
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="awarded_days_journal_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </xpath>
         </field>

@@ -57,18 +57,18 @@
                     <group>
                         <group string="Current Level">
                             <field name="job_id" readonly="1" force_save="1"/>
-                            <field name="salary" readonly="1" force_save="1"/>
+                            <field name="salary" readonly="1" force_save="1" groups="hr.group_hr_manager"/>
                             <field name="effective_date"/>
                         </group>
                         <group string="Next Level">
-                            <field name="salary_raise"/>
+                            <field name="salary_raise" groups="hr.group_hr_manager"/>
                             <field name="score_perc"/>
                             <field name="extra_points"/>
                             <field name="total_score"/>
                             <field name="performance_level"/>
                             <field name="next_review"/>
                             <field name="next_job_id"/>
-                            <field name="total_salary"/>
+                            <field name="total_salary" groups="hr.group_hr_manager"/>
                         </group>
                     </group>
                     <notebook>
@@ -87,6 +87,8 @@
                                  <tree editable="bottom">
                                      <field name="survey_id" required="1"/>
                                      <field name="employee_id" required="1"/>
+                                     <field name="from_date"/>
+                                     <field name="to_date"/>
                                      <field name="num_of_month" required="1"/>
                                      <field name="status" required="1"/>
                                      <field name="response_id" invisible="1"/>

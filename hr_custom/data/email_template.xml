@@ -105,5 +105,24 @@
             <field name="user_signature" eval="False"/>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <record id="email_after_appraisal_done_to_employee" model="mail.template">
+            <field name="name">Email to employee after appraisal done: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_appraisal"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.employee_id.work_email|safe}</field>
+            <field name="subject">Appraisal Done</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.employee_id.name}
+                        <br /><br />
+                        The Appraisal is done by your manager
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
     </data>
 </odoo>
