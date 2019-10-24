@@ -52,13 +52,13 @@ class StaffingRequest(models.Model):
     def _onchange_employee_id(self):
         if self.employee_id:
             lst_projects = []
-            projects = self.env['project.project'].search([('stage_id.close_stage', '!=', True)])
+            projects = self.env['project.project'].search([])
             for proj in projects:
                 if self.employee_id.id in proj.members.ids:
                     manager_id = self.env['hr.employee'].search([('user_id', '=', proj.user_id.id)])
                     if manager_id:
                         lst_projects.append([(6, 0, {'projects_id': proj.id, 'manager_id': manager_id.id})])
-        self.current_projects_managers_ids = lst_projects
+                        self.current_projects_managers_ids = lst_projects
 
     @api.model
     def create(self, vals):

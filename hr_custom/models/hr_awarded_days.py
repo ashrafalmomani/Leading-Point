@@ -227,3 +227,13 @@ class RejectReason(models.TransientModel):
             }
             self.env['mail.activity'].create(reject_notification)
 
+
+class AwardedChangeStateWiz(models.TransientModel):
+    _name = 'awarded.change.state.wiz'
+
+    @api.multi
+    def confirm_calculated_rec(self):
+        awarded_ids = self.env['hr.awarded.days'].browse(self._context.get('active_ids'))
+        for rec in awarded_ids:
+            if rec.include_salary:
+                rec.include_salary = False

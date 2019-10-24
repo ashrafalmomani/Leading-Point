@@ -140,4 +140,36 @@
               action="all_awarded_days_menu_action"
               sequence="5"/>
 
+    <record id="awarded_days_change_state_view_wiz" model="ir.ui.view">
+        <field name="name">awarded.change.state.wiz.form.view</field>
+        <field name="model">awarded.change.state.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Confirm">
+                <h3>Click on confirm to not calculate the awarded days in payslip. </h3>
+                <footer>
+                    <button name="confirm_calculated_rec" string="Confirm" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_awarded_days_change_state_view_wiz" model="ir.actions.act_window">
+        <field name="name">Awarded Days Calculated</field>
+        <field name="res_model">awarded.change.state.wiz</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <act_window id="multiple_awarded_days_change_state_view_wiz"
+                multi="True"
+                name="Exclude from payslip"
+                res_model="awarded.change.state.wiz"
+                src_model="hr.awarded.days"
+                view_mode="form"
+                target="new"
+                view_type="form"/>
+
 </odoo>

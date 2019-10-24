@@ -6,9 +6,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Hotels">
-                <field name="employee_id"/>
-                <field name="reason_for_travel"/>
-                <field name="country_id"/>
+                <field name="travel_id"/>
                 <field name="hotel_name"/>
                 <field name="reservation_num"/>
                 <field name="check_in"/>
@@ -27,39 +25,24 @@
             <form string="Hotels">
                 <header>
                     <button string="Submit" name="action_submitted" type="object" states="draft" class="oe_highlight"/>
-                    <button string="Hotel Reserved" name="action_reserved" type="object" states="submitted" class="oe_highlight"/>
-                    <button string="Reject" name="action_hotel_rejected" type="object" states="submitted" class="oe_highlight"/>
-                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,reserved"/>
+                    <button string="Reserved" name="action_reserved" type="object" states="submitted" class="oe_highlight"/>
+                    <button string="Cancelled" name="action_cancel" type="object" states="draft,reserved" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,reserved,cancelled"/>
                 </header>
                 <sheet>
                     <group string="Hotels Information">
                         <group>
-                            <field name="employee_id" required="1"/>
-                            <field name="reason_for_travel" required="1"/>
-                            <field name="percentage_ids" attrs="{'invisible': [('reason_for_travel','not in', ('project', 'business_dev'))]}">
-                                <tree editable="bottom">
-                                     <field name="visa_id" invisible="1"/>
-                                     <field name="project_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'project')]}"/>
-                                     <field name="lead_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'business_dev')]}"/>
-                                     <field name="percentage"/>
-                                </tree>
-                            </field>
-                            <field name="analytic_id" attrs="{'required': [('reason_for_travel', 'in', ('visa_renewal', 'other'))], 'invisible':[('reason_for_travel', 'not in', ('visa_renewal', 'other'))]}"/>
-                            <field name="other_info" attrs="{'required':[('reason_for_travel', '=', 'other')], 'invisible': [('reason_for_travel','!=', 'other')]}"/>
-                            <field name="officer_user_id" invisible="1"/>
-                            <field name="project_manager" invisible="1"/>
+                            <field name="travel_id" required="1" attrs="{'readonly': [('state','=', 'reserved')]}"/>
+                            <field name="hotel_name" required="1" attrs="{'readonly': [('state','=', 'reserved')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_hotel_officer"/>
+                            <field name="reservation_num" attrs="{'readonly': [('state','=', 'reserved')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_hotel_officer"/>
+                            <field name="reservation" string="Reservation" attrs="{'readonly': [('state','=', 'reserved')]}" groups="hr_custom.group_hotel_officer"/>
                         </group>
                         <group>
-                            <field name="country_id" required="1"/>
-                            <field name="check_in"/>
-                            <field name="check_out"/>
-                            <field name="hotel_name" groups="hr_custom.group_hotel_officer"/>
-                            <field name="reservation_num" groups="hr_custom.group_hotel_officer"/>
-                            <field name="reservation" string="Reservation" groups="hr_custom.group_hotel_officer"/>
-                            <field name="cost" groups="hr_custom.group_hotel_officer"/>
+                            <field name="check_in" required="1"/>
+                            <field name="check_out" required="1"/>
+                            <field name="cost" required="1" attrs="{'readonly': [('state','=', 'reserved')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_hotel_officer"/>
                         </group>
                     </group>
-                    <field name="reject_des" attrs="{'invisible': [('state','in',['draft','issued'])]}"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -75,16 +58,12 @@
         <field name="model">hr.hotels</field>
         <field name="arch" type="xml">
             <search string="Hotel">
-                <field name="employee_id"/>
-                <field name="reason_for_travel"/>
-                <field name="country_id"/>
+                <field name="travel_id"/>
                 <field name="reservation_num"/>
                 <field name="cost"/>
                 <field name="state"/>
                 <group string="Group By">
-                    <filter name="employee_id" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="reason_for_travel" string="Reason for travel" context="{'group_by':'reason_for_travel'}"/>
-                    <filter name="country_id" string="Country" context="{'group_by':'country_id'}"/>
+                    <filter name="travel_id" string="Travel" context="{'group_by':'travel_id'}"/>
                     <filter name="reservation_num" string="Reservation Number" context="{'group_by':'reservation_num'}"/>
                     <filter name="cost" string="Cost" context="{'group_by':'cost'}"/>
                     <filter name="state" string="Status" context="{'group_by':'state'}"/>
@@ -99,14 +78,20 @@
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Hotel" orientation="horizontal" type="bar">
-                <field name="employee_id"/>
-                <field name="reason_for_travel"/>
-                <field name="country_id"/>
+                <field name="travel_id"/>
                 <field name="reservation_num"/>
                 <field name="cost"/>
                 <field name="state"/>
             </graph>
         </field>
+    </record>
+
+     <record id="employee_hotels_menu_action" model="ir.actions.act_window">
+        <field name="name">Hotels</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.hotels</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
     </record>
 
     <record id="employee_all_hotels_action" model="ir.actions.act_window">

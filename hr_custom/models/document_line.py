@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 class DocumentLine(models.Model):
     _name = "document.line"
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Employee Document'
 
     @api.model
     def _get_default_user_manager(self):

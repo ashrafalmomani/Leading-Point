@@ -51,12 +51,12 @@ class PayrollCustom(models.Model):
                                                'contract_id': payslip.employee_id.contract_id.id,
                                                'expense_id': expense.id})
 
-            for per_diem in self.env[''].search([('employee_id', '=', payslip.employee_id.id),
+            for per_diem in self.env['per.diem.line'].search([('employee_id', '=', payslip.employee_id.id),
                                                               ('state', '=', 'not_paid'),
                                                               ('from_date', '>=', payslip.date_from),
                                                               ('to_date', '<=', payslip.date_to)]):
                 payslip.input_line_ids.create({'payslip_id': payslip.id,
-                                               'name': per_diem.name,
+                                               'name': 'Per Diem for %s' % per_diem.employee_id.name,
                                                'code': 'PerDiem',
                                                'amount': per_diem.amount,
                                                'contract_id': payslip.employee_id.contract_id.id,
@@ -70,6 +70,7 @@ class HrPayslipInput(models.Model):
 
     leave_id = fields.Many2one('hr.leave', string='Leave')
     awarded_id = fields.Many2one('hr.awarded.days', string='Awarded Days')
+    per_diem_id = fields.Many2one('per.diem.line', string='Per Diem')
     expense_id = fields.Many2one('hr.expense.sheet', string='Expense')
 
 

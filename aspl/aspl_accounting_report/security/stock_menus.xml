@@ -1,0 +1,21 @@
+<odoo>
+    <data noupdate="0">
+        <!-- Stock Dashboard Menu -->
+        <record id="group_menu_stock_inventory_control" model="res.groups">
+            <field name="category_id" ref="base.module_category_usability"/>
+            <field name="name">Show Master Date Menu</field>
+        </record>
+        <record id="group_menu_warehouse_report" model="res.groups">
+            <field name="category_id" ref="base.module_category_usability"/>
+            <field name="name">Show Reporting Menu</field>
+        </record>
+        <record id="group_menu_stock_config_settings" model="res.groups">
+            <field name="category_id" ref="base.module_category_usability"/>
+            <field name="name">Show Configuration Menu</field>
+        </record>
+        <record id="group_menu_stock_warehouse_mgmt" model="res.groups">
+            <field name="category_id" ref="base.module_category_usability"/>
+            <field name="name">Show opertions Menu</field>
+        </record>
+    </data>
+</odoo>

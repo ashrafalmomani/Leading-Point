@@ -1,0 +1,1095 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* aspl_accounting_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-13 05:39+0000\n"
+"PO-Revision-Date: 2019-10-13 05:39+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid ": General ledger"
+msgstr ": دفتر الأستاذ العام"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid ": Trial Balance"
+msgstr ": ميزان المراجعة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "<b>Partner's:</b>"
+msgstr "الشريك"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "<b>Period Length (days)</b>"
+msgstr ""طول الفترة (أيام)
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "<b>Start Date:</b>"
+msgstr ":تاريخ البدء"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "<b>Target Moves:</b>"
+msgstr ":التحركات المستهدفة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "<span>All Entries</span>"
+msgstr " :جميع القيود"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "<span>All Posted Entries</span>"
+msgstr "جميع القيود المرحلة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "<span>Not due</span>"
+msgstr "<span>ليس بسبب</span>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+msgid "<span>Payable Accounts</span>"
+msgstr "الحسابات الدائنة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "<span>Receivable Accounts</span>"
+msgstr "حسابات المدينة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+msgid "<strong>Company:</strong>"
+msgstr "<strong>المؤسسة:</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "<strong>Date from :</strong>"
+msgstr "<strong>التاريخ من :</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "<strong>Date to :</strong>"
+msgstr "<strong>التاريخ الى :</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "<strong>Display Account:</strong>"
+msgstr "<strong> عرض الحساب:</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid "<strong>Display Account</strong>"
+msgstr "<strong>عرض الحساب</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_template
+msgid "<strong>From</strong>"
+msgstr "<strong>من</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid "<strong>Journals:</strong>"
+msgstr "<strong>دفتر اليومية</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_template
+msgid "<strong>Purchase</strong>"
+msgstr "<strong>مشتريات</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_template
+msgid "<strong>Sale</strong>"
+msgstr "المبيعات"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid "<strong>Sorted By:</strong> Date"
+msgstr "الترتيب حسب: التاريخ"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid "<strong>Sorted By:</strong> Journal and Partner"
+msgstr "مرتبة حسب: القيود الاشركاء"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "<strong>Target Moves:</strong>"
+msgstr "<strong>الحركات المستهدفة:</strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_template
+msgid "<strong>to </strong>"
+msgstr "<strong>الى </strong>"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "Account"
+msgstr "الحساب"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_aged_payable
+msgid "Account Aged Payble Report"
+msgstr "تقرير اعمار الدائنون"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_aged_receivable
+msgid "Account Aged Receivable Report"
+msgstr "تقرير اعمار المدينون"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_report_wiz_view
+msgid "Account General Ledger Report"
+msgstr "تقرير دفتر الأستاذ العام"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.act_window,name:aspl_accounting_report.action_general_ledger_report_wiz
+msgid "Account General ledger"
+msgstr "دفتر الأستاذ العام"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_account_report_partner_ledger
+msgid "Account Partner Ledger"
+msgstr "حساب دفتر الأستاذ"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_account_financial_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__children_ids
+msgid "Account Report"
+msgstr "تقرير المحاسبة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__account_report_id
+msgid "Account Reports"
+msgstr "تقارير المحاسبة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "Account Total"
+msgstr "مجموع الحسابات"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,type:0
+msgid "Account Type"
+msgstr "نوع الحساب"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__account_type_ids
+msgid "Account Types"
+msgstr "انواع الحسابات"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,type:0
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__account_ids
+msgid "Accounts"
+msgstr "الحسابات"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.act_window,name:aspl_accounting_report.aspl_action_report_aged_payble
+#: model:ir.ui.menu,name:aspl_accounting_report.menu_aged_payable
+msgid "Aged Payable"
+msgstr "اعمار الدائنون"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+msgid "Aged Payable:"
+msgstr " اعمار الدائنون"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.report,name:aspl_accounting_report.report_aged_payble
+#: model:ir.model,name:aspl_accounting_report.model_report_aspl_accounting_report_aged_payble_template
+msgid "Aged Payble"
+msgstr "اعمار الدائنون"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.act_window,name:aspl_accounting_report.action_report_aged_receivable
+#: model:ir.actions.report,name:aspl_accounting_report.report_aged_receivable
+#: model:ir.model,name:aspl_accounting_report.model_report_aspl_accounting_report_aged_receivable_template
+#: model:ir.ui.menu,name:aspl_accounting_report.aspl_account_aged_recievable
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_aged_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aspl_account_payable_receivable_view
+msgid "Aged Receivable"
+msgstr "اعمار المدينون"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "Aged Receivable:"
+msgstr "اعمار المدينون"
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,display_account:0
+#: selection:trial.balance.wiz,display_account:0
+msgid "All"
+msgstr "الجميع"
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,target_move:0
+#: selection:account.report.partner.ledger,target_move:0
+#: selection:accounting.report.profit.loss,target_move:0
+#: selection:aged.payable,target_move:0
+#: selection:aged.receivable,target_move:0
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+#: selection:trial.balance.wiz,target_move:0
+msgid "All Entries"
+msgstr "كافة القيود"
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,target_move:0
+#: selection:account.report.partner.ledger,target_move:0
+#: selection:accounting.report.profit.loss,target_move:0
+#: selection:aged.payable,target_move:0
+#: selection:aged.receivable,target_move:0
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+#: selection:trial.balance.wiz,target_move:0
+msgid "All Posted Entries"
+msgstr "القيود المرحلة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "All accounts"
+msgstr "جميع الحسابات"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid "All accounts'"
+msgstr "جميع الحسابات"
+
+#. module: aspl_accounting_report
+#: model:account.financial.report,name:aspl_accounting_report.account_financial_report_assets0
+msgid "Assets"
+msgstr "الأصول"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,style_overwrite:0
+msgid "Automatic formatting"
+msgstr "التنسيق التلقائي"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "Balance"
+msgstr "الرصيد"
+
+#. module: aspl_accounting_report
+#: model:account.financial.report,name:aspl_accounting_report.account_financial_report_balancesheet0
+#: model:ir.actions.act_window,name:aspl_accounting_report.action_report_balance_sheet
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__balance_sheet
+#: model:ir.ui.menu,name:aspl_accounting_report.menu_account_report_bs
+msgid "Balance Sheet"
+msgstr "ورقة التوازن"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_aged_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_report_partner_ledger_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_1
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_balance_sheet
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aspl_account_payable_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_wiz_view
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "Code"
+msgstr "الكود"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__label_filter
+msgid "Column Label"
+msgstr "تسمية العمود"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__company_id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__company_id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__company_id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__company_id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__company_id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__company_id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__company_id
+msgid "Company"
+msgstr "المؤسسة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_1
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_balance_sheet
+msgid "Comparison"
+msgstr "مقارنة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__create_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__create_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__create_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__create_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__create_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__create_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__create_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__create_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__create_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__create_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__create_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__create_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__create_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__create_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "Credit"
+msgstr "الدائن"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+msgid "Currency"
+msgstr "العملة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__data
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__data
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__data
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__data
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__data
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__data
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__data
+msgid "Data"
+msgstr "التاريخ "
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,sortby:0
+#: selection:accounting.report.profit.loss,filter_cmp:0
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_1
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_balance_sheet
+msgid "Dates"
+msgstr "التواريخ"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "Debit"
+msgstr "المدين"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__display_account
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__display_account
+msgid "Display Accounts"
+msgstr "عرض الحسابات"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__debit_credit
+msgid "Display Debit/Credit Columns"
+msgstr "عرض أعمدة الخصم / الائتمان"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_aged_payble_template__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_aged_receivable_template__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_general_ledger_template__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_partner_ledger_template__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_report_financial__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_tax_report_template__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_trial_balance_template__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__display_name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,display_detail:0
+msgid "Display children flat"
+msgstr "عرض الحسابات الفرعية"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,display_detail:0
+msgid "Display children with hierarchy"
+msgstr "عرض الحساب الفرعي مع التسلسل الهرمي"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__display_detail
+msgid "Display details"
+msgstr "عرض التفاصيل"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__enable_filter
+msgid "Enable Comparison"
+msgstr "تمكين المقارنة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__date_to
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__date_to
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__date_to
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__date_to_cmp
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__date_to
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__date_to
+msgid "End Date"
+msgstr "تاريخ الإنتهاء"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid "Entry Label"
+msgstr "تسمية الدخول"
+
+#. module: aspl_accounting_report
+#: model:account.financial.report,name:aspl_accounting_report.account_financial_report_expense0
+msgid "Expense"
+msgstr "مصروف"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__name
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__name
+msgid "File Name"
+msgstr "اسم الملف"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__filter_cmp
+msgid "Filter by"
+msgstr "مصنف بواسطة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__style_overwrite
+msgid "Financial Report Style"
+msgstr "أسلوب التقرير المالي"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.report,name:aspl_accounting_report.action_report_financial
+msgid "Financial report"
+msgstr "تقرير مالي"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,help:aspl_accounting_report.field_account_financial_report__sign
+msgid "For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account."
+msgstr "بالنسبة للحسابات التي عادة ما تكون مدينًا من الرصيد وتريد طباعتها كمبالغ سلبية في تقاريرك ، يجب عليك عكس علامة الرصيد ؛ على سبيل المثال: حساب المصاريف. وينطبق الشيء نفسه على الحسابات التي عادة ما تكون أكثر من الأرصدة الدائنة والتي ترغب في طباعة مبالغ إيجابية في تقاريرك ؛ على سبيل المثال: حساب الدخل."
+
+#. module: aspl_accounting_report
+#: code:addons/aspl_accounting_report/report/account_aged_payble.py:251
+#: code:addons/aspl_accounting_report/report/account_aged_receivable.py:243
+#: code:addons/aspl_accounting_report/report/partner_ledger_report.py:82
+#: code:addons/aspl_accounting_report/report/report_financial.py:149
+#: code:addons/aspl_accounting_report/report/report_general_ledger.py:51
+#: code:addons/aspl_accounting_report/report/report_tax.py:16
+#: code:addons/aspl_accounting_report/report/report_trial_balance.py:100
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr "محتوى النموذج مفقود ، لا يمكن طباعة هذا التقرير"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.report,name:aspl_accounting_report.report_general_ledger
+#: model:ir.ui.menu,name:aspl_accounting_report.menu_action_general_ledger_report_wiz
+msgid "General Ledger"
+msgstr "دفتر الأستاذ العام"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_account_general_ledger_wiz
+msgid "General Ledger Report"
+msgstr "تقرير دفتر الأستاذ العام"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_aged_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_report_partner_ledger_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_1
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_balance_sheet
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aspl_account_payable_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_wiz_view
+msgid "Here is the Xls File :"
+msgstr " XLS هنا هو ملف "
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_aged_payble_template__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_aged_receivable_template__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_general_ledger_template__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_partner_ledger_template__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_report_financial__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_tax_report_template__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_trial_balance_template__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__id
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__id
+msgid "ID"
+msgstr "المعرف"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__include_init_balance
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__include_init_balance
+msgid "Include Initial Balance"
+msgstr "تشمل الرصيد الأولي"
+
+#. module: aspl_accounting_report
+#: model:account.financial.report,name:aspl_accounting_report.account_financial_report_income0
+msgid "Income"
+msgstr "الإيرادات"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "Initial Balance"
+msgstr "الرصيد الافتتاحي"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,help:aspl_accounting_report.field_account_report_partner_ledger__amount_currency
+msgid "It adds the currency column on report if the currency differs from the company currency."
+msgstr "ويضيف عمود العملة في التقرير إذا كانت العملة تختلف عن عملة الشركة."
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,style_overwrite:0
+msgid "Italic Text (smaller)"
+msgstr "نص مائل (أصغر)"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+msgid "JRNL"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,sortby:0
+msgid "Journal & Partner"
+msgstr "دفتر اليومية & الاشركاء "
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__journal_ids
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__journal_ids
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__journal_ids
+msgid "Journals"
+msgstr "دفاتر اليومية"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_aged_payble_template____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_aged_receivable_template____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_general_ledger_template____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_partner_ledger_template____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_report_financial____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_tax_report_template____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_report_aspl_accounting_report_trial_balance_template____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz____last_update
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz____last_update
+msgid "Last Modified on"
+msgstr "آخر تعديل في"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__write_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__write_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__write_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__write_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__write_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__write_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__write_uid
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__write_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__write_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__write_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__write_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__write_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__write_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__write_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__level
+msgid "Level"
+msgstr "المستوى"
+
+#. module: aspl_accounting_report
+#: model:account.financial.report,name:aspl_accounting_report.account_financial_report_liability0
+#: model:account.financial.report,name:aspl_accounting_report.account_financial_report_liabilitysum0
+msgid "Liability"
+msgstr "مسؤولية"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,style_overwrite:0
+msgid "Main Title 1 (bold, underlined)"
+msgstr "العنوان الرئيسي 1 (غامق ، مسطر)"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid "Move"
+msgstr "حركة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.report_financial
+msgid "Name"
+msgstr "الاسم"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_template
+msgid "Net"
+msgstr "شبكة"
+
+#. module: aspl_accounting_report
+#: selection:accounting.report.profit.loss,filter_cmp:0
+msgid "No Filters"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,display_detail:0
+msgid "No detail"
+msgstr "لا تفاصيل"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,style_overwrite:0
+msgid "Normal Text"
+msgstr "نص عادي"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_report_partner_ledger_view
+msgid "OR"
+msgstr "أو"
+
+#. module: aspl_accounting_report
+#: model:ir.ui.menu,name:aspl_accounting_report.menu_finance_legal_statement
+msgid "PDF Reports"
+msgstr "تقارير PDF"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__parent_id
+msgid "Parent"
+msgstr "الأصل"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+msgid "Partner"
+msgstr "الشريك"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.report,name:aspl_accounting_report.report_partner_ledger
+#: model:ir.ui.menu,name:aspl_accounting_report.account_partner_ledger_menu_id
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+msgid "Partner Ledger"
+msgstr "دفتر الأستاذ"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.act_window,name:aspl_accounting_report.action_report_partner_ledger
+msgid "Partner Ledger Report"
+msgstr "دفتر الاستاذ العام "
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__result_selection
+msgid "Partner's"
+msgstr "الشركاء"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "Partners"
+msgstr "الشركاء"
+
+#. module: aspl_accounting_report
+#: selection:account.report.partner.ledger,result_selection:0
+msgid "Payable Accounts"
+msgstr "الحسابات الدائنة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__period_length
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__period_length
+msgid "Period Length (days)"
+msgstr "طول الفترة (أيام)"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,sign:0
+msgid "Preserve balance sign"
+msgstr "الحفاظ على علامة التوازن"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_report_partner_ledger_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_1
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_balance_sheet
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_wiz_view
+msgid "Print"
+msgstr "طباعة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_aged_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aspl_account_payable_receivable_view
+msgid "Print PDF"
+msgstr " pdf طباعة "
+
+#. module: aspl_accounting_report
+#: model:account.financial.report,name:aspl_accounting_report.account_financial_report_profitloss_toreport0
+msgid "Profit (Loss) to report"
+msgstr "الربح (الخسارة) لتقرير"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__profit_loss
+msgid "Profit Loss"
+msgstr "خسارة الأرباح"
+
+#. module: aspl_accounting_report
+#: model:account.financial.report,name:aspl_accounting_report.account_financial_report_profitandloss0
+#: model:ir.actions.act_window,name:aspl_accounting_report.action_account_report_pl
+#: model:ir.ui.menu,name:aspl_accounting_report.menu_account_report_pl
+msgid "Profit and Loss"
+msgstr "الربح والخسارة"
+
+#. module: aspl_accounting_report
+#: selection:account.report.partner.ledger,result_selection:0
+msgid "Receivable Accounts"
+msgstr "الحسابات المدينة"
+
+#. module: aspl_accounting_report
+#: selection:account.report.partner.ledger,result_selection:0
+msgid "Receivable and Payable Accounts"
+msgstr "حسابات القبض وحسابات الدفع"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__reconciled
+msgid "Reconciled Entries"
+msgstr "التوفيق بين الإدخالات"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.partner_ledger_template
+msgid "Ref"
+msgstr "رقم الإشارة"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_report_partner_ledger_view
+msgid "Report"
+msgstr "التقرير"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_aged_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_report_partner_ledger_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_1
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_balance_sheet
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aspl_account_payable_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_wiz_view
+msgid "Report Complete"
+msgstr "تقرير كامل"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_report_aspl_accounting_report_general_ledger_template
+msgid "Report GL"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__name
+msgid "Report Name"
+msgstr "اسم التقرير"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_accounting_report_profit_loss
+msgid "Report Profit Loss"
+msgstr "تقرير خسارة الأرباح"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_report_aspl_accounting_report_tax_report_template
+msgid "Report Tax"
+msgstr "تقرير الضريبة"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,type:0
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__account_report_id
+msgid "Report Value"
+msgstr "قيمة التقرير"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,sign:0
+msgid "Reverse balance sign"
+msgstr "عكس علامة التوازن"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__sequence
+msgid "Sequence"
+msgstr "التسلسل"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__sign
+msgid "Sign on Reports"
+msgstr "التوقيع على التقارير"
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,style_overwrite:0
+msgid "Smallest Text"
+msgstr "أصغر نص"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__sortby
+msgid "Sort by"
+msgstr "مرتبة حسب"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__date_from
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__date_from
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__date_from
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__date_from_cmp
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__start_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__start_date
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__date_from
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__date_from
+msgid "Start Date"
+msgstr "تاريخ البدء"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__state
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__state
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__state
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__state
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__state
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_tax_report_wiz__state
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__state
+msgid "State"
+msgstr "الحالة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_general_ledger_wiz__target_move
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__target_move
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_accounting_report_profit_loss__target_move
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_payable__target_move
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_aged_receivable__target_move
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_trial_balance_wiz__target_move
+msgid "Target Moves"
+msgstr "تحركات الهدف"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_template
+msgid "Tax"
+msgstr "الضريبة"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.act_window,name:aspl_accounting_report.action_tax_report_wiz_menu
+#: model:ir.actions.report,name:aspl_accounting_report.report_tax
+#: model:ir.model,name:aspl_accounting_report.model_tax_report_wiz
+#: model:ir.ui.menu,name:aspl_accounting_report.menu_action_tax_report_wiz_menu_menu
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_wiz_view
+msgid "Tax Report"
+msgstr "تقرير الضرائب"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,help:aspl_accounting_report.field_accounting_report_profit_loss__label_filter
+msgid "This label will be displayed on report to show the balance computed for the given comparison filter."
+msgstr "سيتم عرض هذه التسمية في التقرير لإظهار الرصيد المحسوب لمرشح المقارنة المحدد."
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,help:aspl_accounting_report.field_accounting_report_profit_loss__debit_credit
+msgid "This option allows you to get more details about the way your balances are computed. Because it is space consuming, we do not allow to use it while doing a comparison."
+msgstr "يتيح لك هذا الخيار الحصول على مزيد من التفاصيل حول طريقة حساب أرصدةك. لأنه يستهلك مساحة ، لا نسمح باستخدامه أثناء إجراء المقارنة."
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,style_overwrite:0
+msgid "Title 2 (bold)"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,style_overwrite:0
+msgid "Title 3 (bold, smaller)"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_payble_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aged_receivable_template
+msgid "Total"
+msgstr "الإجمالي"
+
+#. module: aspl_accounting_report
+#: model:ir.actions.act_window,name:aspl_accounting_report.action_trial_balance_wiz_menu
+#: model:ir.actions.report,name:aspl_accounting_report.report_trial_balance
+#: model:ir.ui.menu,name:aspl_accounting_report.menu_action_trial_balance_wiz_menu
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_wiz_view
+msgid "Trial Balance"
+msgstr "ميزان المراجعة"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_trial_balance_wiz
+msgid "Trial Balance Wizard"
+msgstr " ميزان المراجعة"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_financial_report__type
+msgid "Type"
+msgstr "النوع"
+
+#. module: aspl_accounting_report
+#: code:addons/aspl_accounting_report/report/account_aged_payble.py:212
+#: code:addons/aspl_accounting_report/report/account_aged_receivable.py:205
+#, python-format
+msgid "Unknown Partner"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: selection:account.financial.report,type:0
+msgid "View"
+msgstr "منظر"
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,field_description:aspl_accounting_report.field_account_report_partner_ledger__amount_currency
+msgid "With Currency"
+msgstr "مع العملة"
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,display_account:0
+#: selection:trial.balance.wiz,display_account:0
+msgid "With balance is not equal to 0"
+msgstr "مع التوازن لا يساوي 0"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+msgid "With balance not equal to zero"
+msgstr "مع التوازن لا يساوي الصفر"
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,display_account:0
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_template
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_template
+#: selection:trial.balance.wiz,display_account:0
+msgid "With movements"
+msgstr "مع الحركات"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_aged_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_report_partner_ledger_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_1
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.accounting_report_view_balance_sheet
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aspl_account_payable_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.general_ledger_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.tax_report_wiz_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.trial_balance_wiz_view
+msgid "XLS"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: model:ir.model.fields,help:aspl_accounting_report.field_account_financial_report__style_overwrite
+msgid "You can set up here the format you want this record to be displayed. If you leave the automatic formatting, it will be computed based on the financial reports hierarchy (auto-computed field 'level')."
+msgstr "يمكنك إعداد التنسيق الذي تريد عرض هذا السجل عليه هنا. إذا تركت التنسيق التلقائي ، فسيتم حسابه استنادًا إلى التسلسل الهرمي للتقارير المالية (الحقل المحسوب تلقائيًا 'المستوى')."
+
+#. module: aspl_accounting_report
+#: code:addons/aspl_accounting_report/wizard/aged_payble.py:36
+#: code:addons/aspl_accounting_report/wizard/report_aged_receivable.py:35
+#, python-format
+msgid "You must set a period length greater than 0."
+msgstr "يجب عليك تعيين طول فترة أكبر من 0"
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,state:0
+#: selection:account.report.partner.ledger,state:0
+#: selection:accounting.report.profit.loss,state:0
+#: selection:aged.payable,state:0
+#: selection:aged.receivable,state:0
+#: selection:tax.report.wiz,state:0
+#: selection:trial.balance.wiz,state:0
+msgid "choose"
+msgstr "اختار"
+
+#. module: aspl_accounting_report
+#: selection:account.general.ledger.wiz,state:0
+#: selection:account.report.partner.ledger,state:0
+#: selection:accounting.report.profit.loss,state:0
+#: selection:aged.payable,state:0
+#: selection:aged.receivable,state:0
+#: selection:tax.report.wiz,state:0
+#: selection:trial.balance.wiz,state:0
+msgid "get"
+msgstr "احصل على"
+
+#. module: aspl_accounting_report
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.account_aged_receivable_view
+#: model_terms:ir.ui.view,arch_db:aspl_accounting_report.aspl_account_payable_receivable_view
+msgid "or"
+msgstr "أو"
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_report_aspl_accounting_report_partner_ledger_template
+msgid "report.aspl_accounting_report.partner_ledger_template"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_report_aspl_accounting_report_report_financial
+msgid "report.aspl_accounting_report.report_financial"
+msgstr ""
+
+#. module: aspl_accounting_report
+#: model:ir.model,name:aspl_accounting_report.model_report_aspl_accounting_report_trial_balance_template
+msgid "report_trial_balance"
+msgstr ""
+

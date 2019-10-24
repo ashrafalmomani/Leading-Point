@@ -22,5 +22,49 @@
             <field name="sale_line_warn">no-message</field>
         </record>
 
+        <record id="hr_payslip_rule_awarded" model="hr.salary.rule">
+            <field name="code">AWA</field>
+            <field name="name">Awarded Days</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.AwardedDays and (inputs.AwardedDays.amount) > 0.0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.AwardedDays and (inputs.AwardedDays.amount)</field>
+            <field name="sequence" eval="20"/>
+        </record>
+
+        <record id="hr_payslip_rule_perdiem" model="hr.salary.rule">
+            <field name="code">PDA</field>
+            <field name="name">Per Diem</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.PerDiem and (inputs.PerDiem.amount) > 0.0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.PerDiem and (inputs.PerDiem.amount)</field>
+            <field name="sequence" eval="21"/>
+        </record>
+
+        <record id="hr_payslip_rule_expense" model="hr.salary.rule">
+            <field name="code">EXA</field>
+            <field name="name">Expense</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.Expense and (inputs.Expense.amount) > 0.0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.Expense and (inputs.Expense.amount)</field>
+            <field name="sequence" eval="22"/>
+        </record>
+
+        <record id="hr_payslip_rule_leaves" model="hr.salary.rule">
+            <field name="code">ULD</field>
+            <field name="name">Unpaid Leave</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.Unpaid and (inputs.Unpaid.amount) > 0.0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.Unpaid and (inputs.Unpaid.amount)</field>
+            <field name="sequence" eval="110"/>
+        </record>
+
     </data>
 </odoo>
