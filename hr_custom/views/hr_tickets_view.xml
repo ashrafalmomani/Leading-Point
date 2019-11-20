@@ -6,12 +6,14 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Tickets">
-                <field name="travel_id"/>
+                <field name="employee_id"/>
+                <field name="reason_for_travel"/>
+                <field name="country_id"/>
                 <field name="ticket_num"/>
                 <field name="type"/>
                 <field name="departure_date"/>
                 <field name="return_date"/>
-                <field name="price" sum="Total"/>
+                <field name="cost" sum="Total"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -24,26 +26,113 @@
         <field name="arch" type="xml">
             <form string="Tickets">
                 <header>
-                    <button string="Ticket Cancelled" name="action_cancel" type="object" states="issued" class="oe_highlight"/>
-                    <button string="Ticket Issued" name="travel_update_ticket_status" type="object" states="draft" class="oe_highlight"/>
-                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,issued,cancelled"/>
+                    <button string="Submit" name="action_submit" type="object" states="draft" class="oe_highlight"/>
+                    <button string="Ticket Issued" name="action_issued" type="object" states="submitted" class="oe_highlight"/>
+                    <button string="Reject" name="action_ticket_rejected" type="object" states="submitted" class="oe_highlight"/>
+                    <button string="Change Reservation" name="action_change_reservation" type="object" states="issued" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,issued,closed,rejected"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object"
+                                class="oe_stat_button"
+                                name="per_diem_lines_view"
+                                string="Per Diem"
+                                icon="fa-pencil-square-o"/>
+                    </div>
                     <group string="Ticket Information">
                         <group>
-                            <field name="travel_id" required="1" attrs="{'readonly': [('state','=', 'issued')]}"/>
-                            <field name="type" required="1" attrs="{'readonly': [('state','=', 'issued')]}"/>
-                            <field name="ticket_num" attrs="{'readonly': [('state','=', 'issued')]}"/>
-                            <field name="airline" required="1" attrs="{'readonly': [('state','=', 'issued')]}"/>
+                            <field name="employee_id" required="1"/>
+                            <field name="reason_for_travel" required="1"/>
+                            <field name="percentage_ids" attrs="{'invisible': [('reason_for_travel','not in', ('project', 'business_dev'))]}">
+                                <tree editable="bottom">
+                                     <field name="ticket_id" invisible="1"/>
+                                     <field name="project_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'project')]}"/>
+                                     <field name="lead_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'business_dev')]}"/>
+                                     <field name="percentage"/>
+                                </tree>
+                            </field>
+                            <field name="analytic_id" attrs="{'required': [('reason_for_travel', 'in', ('visa_renewal', 'other'))], 'invisible':[('reason_for_travel', 'not in', ('visa_renewal', 'other'))]}"/>
+                            <field name="other_info" attrs="{'required':[('reason_for_travel', '=', 'other')], 'invisible': [('reason_for_travel','!=', 'other')]}"/>
+                            <field name="officer_user_id" invisible="1"/>
+                            <field name="project_manager" invisible="1"/>
+                            <field name="is_confirm_true" invisible="1"/>
                         </group>
                         <group>
+                            <field name="country_id" required="1"/>
                             <field name="departure_date" required="1"/>
                             <field name="return_date" required="1"/>
-                            <field name="price" required="1" attrs="{'readonly': [('state','=', 'issued')]}"/>
-                            <field name="ticket" string="Ticket" attrs="{'readonly': [('state','=', 'issued')]}"/>
+                            <field name="type" required="1"/>
+                            <field name="ticket_num" groups="hr_custom.group_ticket_officer"/>
+                            <field name="airline" groups="hr_custom.group_ticket_officer"/>
+                            <field name="cost" groups="hr_custom.group_ticket_officer"/>
+                            <field name="ticket" string="Ticket" groups="hr_custom.group_ticket_officer"/>
+                            <field name="new_departure_date" readonly="1" force_save="1"/>
+                            <field name="new_return_date" readonly="1" force_save="1"/>
                         </group>
                     </group>
+                    <field name="reject_des" attrs="{'invisible': [('state','in',['draft','issued'])]}"/>
                     <field name="notes" placeholder="Enter your note here..."/>
+                    <notebook>
+                        <page string="Reservation Update" attrs="{'invisible': [('is_confirm_true','=', False)]}">
+                            <field name="reservation_ids">
+                                 <tree create="0">
+                                     <field name="departure_date"/>
+                                     <field name="return_date"/>
+                                     <field name="cost"/>
+                                     <field name="create_uid"/>
+                                     <field name="create_date"/>
+                                 </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="per_diem_tree_view" model="ir.ui.view">
+        <field name="name">per.diem.line.tree</field>
+        <field name="model">per.diem.line</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Per Diem Line" create="false">
+                <field name="employee_id"/>
+                <field name="contract_id"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="per_diem_form_view" model="ir.ui.view">
+        <field name="name">per.diem.line.form</field>
+        <field name="model">per.diem.line</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Per Diem Line" create="false">
+                <header>
+                    <field name="state" widget="statusbar" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group string="General Information">
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="contract_id"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -59,13 +148,17 @@
         <field name="model">hr.tickets</field>
         <field name="arch" type="xml">
             <search string="Ticket">
-                <field name="travel_id"/>
+                <field name="employee_id"/>
+                <field name="reason_for_travel"/>
+                <field name="country_id"/>
                 <field name="ticket_num"/>
                 <field name="airline"/>
                 <field name="type"/>
                 <field name="state"/>
                 <group string="Group By">
-                    <filter name="travel_id" string="Travel" context="{'group_by':'travel_id'}"/>
+                    <filter name="employee_id" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="reason_for_travel" string="Reason for travel" context="{'group_by':'reason_for_travel'}"/>
+                    <filter name="country_id" string="Country" context="{'group_by':'country_id'}"/>
                     <filter name="ticket_num" string="Ticket Number" context="{'group_by':'ticket_num'}"/>
                     <filter name="airline" string="Airline" context="{'group_by':'airline'}"/>
                     <filter name="type" string="Type" context="{'group_by':'type'}"/>
@@ -81,12 +174,38 @@
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Ticket" orientation="horizontal" type="bar">
-                <field name="travel_id"/>
+                <field name="employee_id"/>
+                <field name="reason_for_travel"/>
+                <field name="country_id"/>
                 <field name="ticket_num"/>
                 <field name="airline"/>
                 <field name="type"/>
                 <field name="state"/>
             </graph>
+        </field>
+    </record>
+
+    <record id="change_reservation_view_wizard" model="ir.ui.view">
+        <field name="name">New Reservation</field>
+        <field name="model">change.reservation</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="departure_date"/>
+                    </group>
+                    <group>
+                        <field name="return_date"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="cost"/>
+                </group>
+                <footer>
+                    <button name="confirm_change_reservation" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
         </field>
     </record>
 

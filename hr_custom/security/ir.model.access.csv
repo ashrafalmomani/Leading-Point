@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_travel,hr.travel,model_hr_travel,base.group_user,1,1,1,1
 access_hr_tickets,hr.tickets,model_hr_tickets,base.group_user,1,1,1,1
 access_hr_hotels,hr.hotels,model_hr_hotels,base.group_user,1,1,1,1
 access_hr_visas,hr.visas,model_hr_visas,base.group_user,1,1,1,1
@@ -7,12 +6,14 @@ access_hr_awarded_days,hr.awarded.days,model_hr_awarded_days,base.group_user,1,1
 access_hr_awardline,hr.award.line,model_hr_award_line,base.group_user,1,1,1,1
 access_document_line,document.line,model_document_line,base.group_user,1,1,1,1
 access_asset_management,asset.management,model_asset_management,base.group_user,1,1,1,1
-access_projects_travels,projects.travels,model_projects_travels,base.group_user,1,1,1,1
 access_hr_appraisal,hr.appraisal,model_hr_appraisal,base.group_user,1,1,1,1
 access_monthly_survey,monthly.survey,model_monthly_survey,base.group_user,1,1,1,1
 access_employee_survey,employee.survey,model_employee_survey,base.group_user,1,1,1,1
-access_per_diem_line,per.diem.line,model_per_diem_line,base.group_user,1,1,1,1
 access_appraisal_levels,appraisal.levels,model_appraisal_levels,base.group_user,1,1,1,1
 access_appraisal_form,appraisal.form,model_appraisal_form,base.group_user,1,1,1,1
 access_document_employee,document.employee,model_document_employee,base.group_user,1,1,1,1
 access_reject_reason,reject.reason,model_reject_reason,base.group_user,1,1,1,1
+access_projects_travels,projects.travels,model_projects_travels,base.group_user,1,1,1,1
+access_change_reservation,change.reservation,model_change_reservation,base.group_user,1,1,1,1
+access_change_reservation_list,change.reservation.list,model_change_reservation_list,base.group_user,1,1,1,1
+access_per_diem_line,per.diem.line,model_per_diem_line,base.group_user,1,1,1,1

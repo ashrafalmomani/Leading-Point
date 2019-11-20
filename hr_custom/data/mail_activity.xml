@@ -14,13 +14,6 @@
         <field name="sequence">12</field>
     </record>
 
-    <record id="mail_activity_travel_reject_notification" model="mail.activity.type">
-        <field name="name">Reject Reason</field>
-        <field name="icon">fa-pencil-square-o</field>
-        <field name="delay_count">5</field>
-        <field name="sequence">12</field>
-    </record>
-
     <record id="mail_activity_ticket_notification" model="mail.activity.type">
         <field name="name">Next Day Travel Notification</field>
         <field name="icon">fa-pencil-square-o</field>
@@ -44,6 +37,69 @@
 
     <record id="appraisal_done_notification_for_employee" model="mail.activity.type">
         <field name="name">Notify to employee after appraisal done</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_after_visa_submitted" model="mail.activity.type">
+        <field name="name">Request For Visa</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_after_visa_issued" model="mail.activity.type">
+        <field name="name">Visa Issued</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_after_ticket_submitted" model="mail.activity.type">
+        <field name="name">Notify to ticket officer after ticket submitted</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_after_ticket_issued" model="mail.activity.type">
+        <field name="name">Notify to project manager after ticket issued</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_after_hotel_submitted" model="mail.activity.type">
+        <field name="name">Notify to hotel officer after ticket submitted</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_after_hotel_reserved" model="mail.activity.type">
+        <field name="name">Notify to project manager after hotel reserved</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_when_reject_visa" model="mail.activity.type">
+        <field name="name">Reject Reason</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_when_reject_ticket" model="mail.activity.type">
+        <field name="name">Reject Reason</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="delay_count">5</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="notification_when_reject_hotel" model="mail.activity.type">
+        <field name="name">Reject Reason</field>
         <field name="icon">fa-pencil-square-o</field>
         <field name="delay_count">5</field>
         <field name="sequence">12</field>

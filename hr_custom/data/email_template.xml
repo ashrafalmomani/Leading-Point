@@ -1,47 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="0">
-        <record id="email_template_open_travel" model="mail.template">
-            <field name="name">Open Travel: Send by email</field>
-            <field name="model_id" ref="hr_custom.model_hr_travel"/>
-            <field name="email_from">${(user.email or '')|safe}</field>
-            <field name="email_to">${object.direct_manager.work_email|safe}</field>
-            <field name="subject">Open Travel - ${object.name} - Alert</field>
-            <field name="body_html" type="html">
-                <div style="margin: 0px; padding: 0px;">
-                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear ${object.direct_manager.name}
-                        <br /><br />
-                        Here is the alert for travel (<strong>${object.name}</strong>)
-                        <br />
-                        Do not hesitate to contact us if you have any question.
-                    </p>
-                </div>
-            </field>
-            <field name="user_signature" eval="False"/>
-            <field name="auto_delete" eval="True"/>
-        </record>
-
-        <record id="email_template_close_travel" model="mail.template">
-            <field name="name">Close Travel: Send by email</field>
-            <field name="model_id" ref="hr_custom.model_hr_travel"/>
-            <field name="email_from">${(user.email or '')|safe}</field>
-            <field name="email_to">${object.direct_manager.work_email|safe}</field>
-            <field name="subject">Close Travel - ${object.name} - Alert</field>
-            <field name="body_html" type="html">
-                <div style="margin: 0px; padding: 0px;">
-                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear ${object.direct_manager.name}
-                        <br /><br />
-                        Here is the alert for travel (<strong>${object.name}</strong>)
-                        <br />
-                        Do not hesitate to contact us if you have any question.
-                    </p>
-                </div>
-            </field>
-            <field name="user_signature" eval="False"/>
-            <field name="auto_delete" eval="True"/>
-        </record>
 
         <record id="end_of_trial_period_before_two_week" model="mail.template">
             <field name="name">End Of Trial Period: Send by email</field>
@@ -118,6 +77,179 @@
                         Dear ${object.employee_id.name}
                         <br /><br />
                         The Appraisal is done by your manager
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_after_visa_submitted" model="mail.template">
+            <field name="name">Email to visa officer after visa submitted: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_visas"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.officer_user_id.email|safe}</field>
+            <field name="subject">Request For Visa</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.officer_user_id.name}
+                        <br />
+                        <br />
+                        The manager ${object.project_manager.name} request a visa for ${object.employee_id.name} employee
+                        <br />
+                        <br />
+                         From ${object.valid_form} To ${object.valid_till}
+                        <br />
+                        <br />
+                        Please get a visa for employee
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_after_visa_issued" model="mail.template">
+            <field name="name">Email to project manager after visa issued: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_visas"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.project_manager.work_email|safe}</field>
+            <field name="subject">Visa Issued</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.project_manager.name}
+                        <br />
+                        <br />
+                        The requested visa for ${object.employee_id.name} employee has been issued
+                        <br />
+                        <br />
+                        Visa Information:
+                        <br />
+                        <br />
+                        From : ${object.valid_form}
+                        <br />
+                        To : ${object.valid_till}
+                        <br />
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_after_ticket_submitted" model="mail.template">
+            <field name="name">Email to ticket officer after ticket submitted: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_tickets"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.officer_user_id.email|safe}</field>
+            <field name="subject">Request For Ticket</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.officer_user_id.email}
+                        <br />
+                        <br />
+                        The manager ${object.project_manager.name} request a ticket for ${object.employee_id.name} employee
+                        <br />
+                        <br />
+                         From ${object.departure_date} To ${object.return_date}
+                        <br />
+                        <br />
+                        Please get a ticket for employee
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_after_ticket_issued" model="mail.template">
+            <field name="name">Email to project manager after ticket issued: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_tickets"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.project_manager.work_email|safe}</field>
+            <field name="subject">Ticket Issued</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.project_manager.name}
+                        <br />
+                        <br />
+                        The requested ticket for ${object.employee_id.name} employee has been issued
+                        <br />
+                        <br />
+                        Ticket Information:
+                        <br />
+                        <br />
+                        From : ${object.departure_date}
+                        <br />
+                        To : ${object.return_date}
+                        <br />
+                        Airline : ${object.airline}
+                        <br />
+                        Ticket number : ${object.ticket_num}
+                        <br />
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_after_hotel_submitted" model="mail.template">
+            <field name="name">Email to hotel officer after ticket submitted: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_hotels"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.officer_user_id.email|safe}</field>
+            <field name="subject">Request For Hotel</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.officer_user_id.email}
+                        <br />
+                        <br />
+                        The manager ${object.project_manager.name} request a hotel for ${object.employee_id.name} employee
+                        <br />
+                        <br />
+                         From ${object.check_in} To ${object.check_out}
+                        <br />
+                        <br />
+                        Please get a hotel for employee
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_after_hotel_reserved" model="mail.template">
+            <field name="name">Email to project manager after hotel reserved: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_hotels"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.project_manager.work_email|safe}</field>
+            <field name="subject">Hotel Reserved</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.project_manager.name}
+                        <br />
+                        <br />
+                        The requested hotel for ${object.employee_id.name} employee has been reserved
+                        <br />
+                        <br />
+                        Hotel Information:
+                        <br />
+                        <br />
+                        From : ${object.check_in}
+                        <br />
+                        To : ${object.check_out}
+                        <br />
+                        Hotel Name : ${object.hotel_name}
+                        <br />
+                        Reservation Number : ${object.reservation_num}
+                        <br />
                     </p>
                 </div>
             </field>
