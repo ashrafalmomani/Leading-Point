@@ -4,7 +4,6 @@
     <record model="ir.ui.view" id="account_payment_add_bank">
         <field name="name">account.payment.add.bank</field>
         <field name="model">account.payment</field>
-        <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_transaction_id']" position="after">
                 <field name="bank_name" widget="selection" attrs="{'invisible':[('payment_method_code', '!=', 'check_printing')], 'required': [('payment_method_code', '=', 'check_printing')],}"/>

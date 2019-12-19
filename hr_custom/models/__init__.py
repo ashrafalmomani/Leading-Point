@@ -10,3 +10,4 @@ from . import hr_leave
 from . import asset_management
 from . import hr_payroll
 from . import hr_appraisal
+# from . import test_salary_rule

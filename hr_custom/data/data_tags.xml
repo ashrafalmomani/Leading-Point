@@ -10,6 +10,11 @@
             <field name="name">More Than 5 Years</field>
         </record>
 
+        <record forcecreate="True" id="appraisal_level" model="decimal.precision">
+            <field name="name">Appraisal Level</field>
+            <field name="digits">3</field>
+        </record>
+
         <record id="product_for_expense" model="product.product">
             <field name="name">Salary Raise</field>
             <field name="available_in_pos">False</field>

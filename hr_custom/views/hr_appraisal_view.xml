@@ -56,8 +56,8 @@
                     </group>
                     <group>
                         <group string="Current Level">
-                            <field name="job_id" readonly="1" force_save="1"/>
-                            <field name="salary" readonly="1" force_save="1" groups="hr.group_hr_manager"/>
+                            <field name="job_id" force_save="1"/>
+                            <field name="salary" force_save="1" groups="hr.group_hr_manager"/>
                             <field name="effective_date"/>
                         </group>
                         <group string="Next Level">
@@ -89,6 +89,8 @@
                                      <field name="employee_id" required="1"/>
                                      <field name="from_date"/>
                                      <field name="to_date"/>
+                                     <field name="score_percentage"/>
+                                     <field name="performance_levels"/>
                                      <field name="num_of_month" required="1"/>
                                      <field name="status" required="1"/>
                                      <field name="response_id" invisible="1"/>
@@ -270,7 +272,7 @@
 
     <template id="back_custom" name="Back" inherit_id="survey.back">
         <xpath expr="//a[hasclass('btn-secondary')]" position="replace">
-            <a role="button" t-attf-href="/web#view_type=form&amp;model=hr.appraisal&amp;id=#{survey.id}&amp;action=hr_custom.hr_appraisal_action" class="btn btn-secondary">Back to Appraisal</a>
+            <a role="button" t-attf-href="/web#action=559&amp;model=hr.appraisal&amp;view_type=list&amp;menu_id=109" class="btn btn-secondary">Back to Appraisal</a>
         </xpath>
     </template>
 

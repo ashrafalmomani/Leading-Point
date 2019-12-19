@@ -163,7 +163,7 @@
     </record>
 
     <record id="employee_change_ticket_action" model="ir.actions.act_window">
-        <field name="name">Tickets</field>
+        <field name="name">Change Ticket</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.change.ticket</field>
         <field name="view_type">form</field>

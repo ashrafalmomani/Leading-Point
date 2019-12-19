@@ -4,6 +4,7 @@ from odoo import models, fields, api, _, exceptions
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from odoo.exceptions import UserError
+from odoo.addons import decimal_precision as dp
 
 
 class AppraisalCustom(models.Model):
@@ -16,16 +17,17 @@ class AppraisalCustom(models.Model):
         tot_in_months = 0.0
         total_num_of_month = 0.0
         for answer in self.answer_ids:
-            count = 0
             question_result = 0.0
+            max_total = 0.0
             for input in answer.user_input_line_ids:
                 list_marks = []
                 for label in input.question_id.labels_ids:
                     list_marks.append(label.quizz_mark)
-                count += 1
                 max_num = max(list_marks) if list_marks else 0
-                question_result += input.quizz_mark / max_num if max_num > 0.0 else 1
-            tot_question_result = question_result / count if count > 0.0 else 1
+                max_total += max_num
+                if max_num > 0.0:
+                    question_result += input.quizz_mark
+            tot_question_result = question_result / max_total
             num_of_month = self.env['employee.survey'].search([('response_id', '=', answer.id)]).num_of_month
             tot_in_months += tot_question_result * num_of_month
             total_num_of_month += num_of_month
@@ -54,9 +56,9 @@ class AppraisalCustom(models.Model):
     date_from = fields.Date(string='Date From', track_visibility='always')
     date_to = fields.Date(string='Date To', track_visibility='always')
     effective_date = fields.Date(string='Effective Date')
-    extra_points = fields.Float(string='Extra Points', track_visibility='always')
-    score_perc = fields.Float(string='Score Percantage', track_visibility='always', compute='_compute_total_score')
-    total_score = fields.Float(string='Total Score', track_visibility='always', compute='_compute_total_score')
+    extra_points = fields.Float(string='Extra Points', track_visibility='always', digits=dp.get_precision('Appraisal Level'))
+    score_perc = fields.Float(string='Score Percantage', track_visibility='always', compute='_compute_total_score', digits=dp.get_precision('Appraisal Level'))
+    total_score = fields.Float(string='Total Score', track_visibility='always', compute='_compute_total_score', digits=dp.get_precision('Appraisal Level'))
     job_id = fields.Many2one('hr.job', string='Current Job Position', track_visibility='always')
     next_job_id = fields.Many2one('hr.job', string='Next Job Position')
     salary = fields.Float(string='Salary', track_visibility='always')
@@ -175,12 +177,18 @@ class EmployeeSurvey(models.Model):
     num_of_month = fields.Integer(string='No. Of Month')
     from_date = fields.Date(string='From Date')
     to_date = fields.Date(string='To Date')
+    score_percentage = fields.Float(string='Score Percantage', track_visibility='always', digits=dp.get_precision('Appraisal Level'))
+    performance_levels = fields.Selection([('far_exceed', 'Far Exceed'),
+                                          ('exceed', 'Exceed'),
+                                          ('accomplish', 'Accomplish'),
+                                          ('poor', 'Poor'),
+                                          ('under_perf', 'Under Performance')], string='Performance Level', track_visibility='always')
 
-    @api.onchange('survey_id')
-    def _onchange_survey_id(self):
-        if self.appraisal_id:
-            surveys_ids = self.appraisal_id.job_id.surveys_ids.ids
-            return {'domain': {'survey_id': [('id', '=', surveys_ids)]}}
+    # @api.onchange('survey_id')
+    # def _onchange_survey_id(self):
+    #     if self.appraisal_id:
+    #         surveys_ids = self.appraisal_id.job_id.surveys_ids.ids
+    #         return {'domain': {'survey_id': [('id', '=', surveys_ids)]}}
 
     @api.multi
     def action_start_survey(self):
@@ -256,8 +264,8 @@ class AppraisalForm(models.Model):
     _name = 'appraisal.form'
 
     appraisal_id = fields.Many2one('appraisal.levels', string='Appraisal Levels', track_visibility='always')
-    score_from = fields.Float(string='Score From', track_visibility='always')
-    score_to = fields.Float(string='Score To', track_visibility='always')
+    score_from = fields.Float(string='Score From', track_visibility='always', digits=dp.get_precision('Appraisal Level'))
+    score_to = fields.Float(string='Score To', track_visibility='always', digits=dp.get_precision('Appraisal Level'))
     next_review = fields.Integer(string='Next Review After', track_visibility='always')
     performance_level = fields.Selection([('far_exceed', 'Far Exceed'),
                                           ('exceed', 'Exceed'),

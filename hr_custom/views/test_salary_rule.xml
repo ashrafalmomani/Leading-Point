@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="salary_rule_test_form" model="ir.ui.view">
+        <field name="name">Salary Rule Test</field>
+        <field name="model">salary.rule.test</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Test Salary Rule">
+                <header>
+                    <button string="Calculate Salary" type="object" name="action_calculate_salary" class="oe_highlight"/>
+                </header>
+                <group>
+                    <field name="basic_salary"/>
+                    <field name="single"/>
+                    <field name="married"/>
+                    <field name="result"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="salary_test_rule" model="ir.actions.act_window">
+        <field name="name">Salary Rule Test</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">salary.rule.test</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
+
+    <menuitem name="Salary Rule Test"
+              id="salary_rule_test"
+              parent="hr.menu_hr_root"
+              action="salary_test_rule"
+              sequence="20"/>
+
+</odoo>

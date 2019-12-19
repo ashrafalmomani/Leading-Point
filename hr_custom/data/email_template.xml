@@ -182,7 +182,7 @@
                         Dear ${object.officer_user_id.name}
                         <br />
                         <br />
-                        The manager ${object.project_manager.name} request a visa for ${object.travel_id.employee.name} employee
+                        The manager ${object.project_manager.name} request a visa for employee
                         <br />
                         <br />
                          From ${object.valid_form} To ${object.valid_till}
@@ -206,7 +206,7 @@
                         Dear ${object.project_manager.name}
                         <br />
                         <br />
-                        The request to visa for ${object.travel_id.employee.name} employee is approved
+                        The request to visa for employee is approved
                         <br />
                     </p>
                 </div>

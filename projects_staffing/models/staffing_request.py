@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, exceptions
 
 
 class StaffingRequest(models.Model):
@@ -34,6 +34,12 @@ class StaffingRequest(models.Model):
     user_ids = fields.Many2many('res.users', string='Users', default=_default_user_ids)
     emails = fields.Char('Emails', default='')
 
+    @api.one
+    @api.constrains('start_date', 'end_date')
+    def check_dates(self):
+        if self.end_date < self.start_date:
+            raise exceptions.ValidationError(_("End date must be greater than start date!"))
+
     @api.onchange('user_ids')
     def onchange_user_ids(self):
         if self.user_ids:
@@ -43,7 +49,8 @@ class StaffingRequest(models.Model):
     @api.onchange('project_id')
     def _onchange_project_id(self):
         if self.project_id:
-            self.emails += self.project_id.user_id.email + ','
+            if self.project_id.user_id.email:
+                self.emails += self.project_id.user_id.email + ','
             manager_id = self.env['hr.employee'].search([('user_id', '=', self.project_id.user_id.id)])
             if manager_id:
                 self.manager_id = manager_id.id
@@ -51,14 +58,14 @@ class StaffingRequest(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         if self.employee_id:
-            lst_projects = []
-            projects = self.env['project.project'].search([])
+            lines = []
+            id = self.search([('number', '=', self.number)]).id
+            projects = self.env['project.project'].search([('stage_id.close_stage', '!=', True)])
             for proj in projects:
-                if self.employee_id.id in proj.members.ids:
+                if self.employee_id.id in proj.staffed_projects_ids.ids:
                     manager_id = self.env['hr.employee'].search([('user_id', '=', proj.user_id.id)])
-                    if manager_id:
-                        lst_projects.append([(6, 0, {'projects_id': proj.id, 'manager_id': manager_id.id})])
-                        self.current_projects_managers_ids = lst_projects
+                    lines.append([0, False, {'project_id': id, 'projects_id': proj.id, 'manager_id': manager_id.id or False}])
+            self.current_projects_managers_ids = lines
 
     @api.model
     def create(self, vals):

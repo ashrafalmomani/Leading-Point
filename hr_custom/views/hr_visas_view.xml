@@ -6,7 +6,11 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Visas">
+                <field name="type"/>
                 <field name="travel_id"/>
+                <field name="employee_id"/>
+                <field name="country"/>
+                <field name="analytic_id"/>
                 <field name="valid_form"/>
                 <field name="valid_till"/>
                 <field name="multiple_entry"/>
@@ -26,20 +30,33 @@
                     <button string="Submit" name="action_visa_submitted" type="object" states="draft" class="oe_highlight"/>
                     <button string="Issued" name="action_visa_issued" type="object" states="submitted" class="oe_highlight"/>
                     <button string="Rejected" name="action_visa_rejected" type="object" states="submitted" class="oe_highlight"/>
+                    <button string="Link Visa With Travel" name="action_visa_with_travel" type="object" attrs="{'invisible': ['|', '|', ('state','!=','issued'), ('type', '!=', 'depend_on_travel'), ('linked', '=', True)]}" class="oe_highlight"/>
                     <button string="Cancelled" name="action_cancel" type="object" states="submitted,issued" class="oe_highlight"/>
                     <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,issued,rejected,cancelled"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <group string="Visa Information">
                         <group>
-                            <field name="travel_id" domain="[['state','=','hr_approved']]" attrs="{'readonly': [('state','=', 'issued')]}"/>
+                            <field name="type" required="1"/>
+                            <field name="travel_id" domain="[['state','=','hr_approved']]" attrs="{'invisible': [('type','!=','depend_on_travel')], 'required': [('type','!=', 'just_visa')]}"/>
+                            <field name="employee_id" attrs="{'invisible': [('type','!=','just_visa')], 'required': [('type','!=', 'depend_on_travel')]}"/>
+                            <field name="country" attrs="{'invisible': [('type','!=','just_visa')], 'required': [('type','!=', 'depend_on_travel')]}"/>
                             <field name="multiple_entry" attrs="{'invisible': [('state','in','pending')], 'readonly': [('state','=', 'issued')]}"/>
-                            <field name="cost" attrs="{'invisible': [('state','in','pending')], 'required': [('state','=', 'submitted')], 'readonly': [('state','=', 'issued')]}" groups="hr_custom.group_visa_officer"/>
+                            <field name="analytic_id" attrs="{'required': [('state','=', 'submitted'), ('type', '!=', 'depend_on_travel')], 'invisible':[('type', '!=', 'just_visa')], 'readonly':[('state','=', 'issued')]}" groups="hr_custom.group_visa_officer"/>
+                            <field name="cost" attrs="{'required': [('state','=', 'submitted')], 'readonly': [('state','=', 'issued')]}" groups="hr_custom.group_visa_officer"/>
                         </group>
                         <group>
-                            <field name="valid_form" attrs="{'invisible': [('state','in','pending')], 'required': [('state','=', 'applied')]}"/>
-                            <field name="valid_till" attrs="{'invisible': [('state','in','pending')], 'required': [('state','=', 'applied')]}"/>
-                            <field name="visa" string="Visa" attrs="{'invisible': [('state','in','pending')], 'readonly': [('state','=', 'issued')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_visa_officer"/>
+                            <field name="valid_form" attrs="{'required': [('state','=', 'submitted')], 'readonly': [('state', '=', 'issued')]}"/>
+                            <field name="valid_till" attrs="{'required': [('state','=', 'submitted')], 'readonly': [('state', '=', 'issued')]}"/>
+                            <field name="visa" string="Visa" attrs="{'readonly': [('state','=', 'issued')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_visa_officer"/>
+                            <field name="linked" invisible="1"/>
                         </group>
                     </group>
                 </sheet>

@@ -7,7 +7,7 @@
     'author': 'Digital Assets',
     'website': 'http://www.digitalais.com',
     'category': 'Human Resource',
-    'depends': ['hr', 'project', 'project_custom', 'om_account_asset', 'crm_custom', 'survey', 'hr_timesheet'],
+    'depends': ['hr', 'project', 'project_custom', 'om_account_asset', 'crm_custom', 'survey', 'hr_timesheet', 'hr_contract', 'hr_holidays', 'hr_payroll', 'hr_expense'],
     'data': [
         'security/ir.model.access.csv',
         'security/hr_security.xml',
@@ -22,6 +22,7 @@
         'views/hr_payroll_view.xml',
         'views/hr_appraisal_view.xml',
         'views/hr_expense_view.xml',
+        # 'views/test_salary_rule.xml',
         'wizard/run_per_diem_views.xml',
         'data/cron.xml',
         'data/data_tags.xml',

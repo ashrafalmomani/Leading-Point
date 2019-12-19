@@ -163,19 +163,6 @@ class HREmployeeTravel(models.Model):
         if self.origin == self.destination:
             raise exceptions.ValidationError(_("Origin and Destination are same!"))
 
-    @api.constrains('from_date', 'to_date')
-    def _check_date(self):
-        for travel in self:
-            domain = [
-                ('from_date', '<', travel.to_date),
-                ('to_date', '>', travel.from_date),
-                ('employee', '=', travel.employee.id),
-                ('id', '!=', travel.id),
-                ('state', '!=', 'rejected'),
-            ]
-            travels = self.search_count(domain)
-            if travels:
-                raise ValidationError(_('You can not have 2 travel that overlaps on the same day.'))
 
     @api.constrains('percentage_ids',)
     def check_percentages(self):
@@ -242,28 +229,29 @@ class HREmployeeTravel(models.Model):
 
     @api.multi
     def action_hr_approve(self):
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_travel_approved').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.project_manager.id,
-            'note': 'The request for travel is approved'
-        }
-        self.env['mail.activity'].create(notification)
+        if self.reason_for_travel in ('project', 'business_dev'):
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_travel_approved').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.project_manager.id,
+                'note': 'The request for travel is approved'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_travel_approved')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.travel',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.travel', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
+            template_id = self.env.ref('hr_custom.email_after_travel_approved')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.travel',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.travel', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
 
         self.state = 'hr_approved'
 
