@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Account Custom',
+    'name': 'Account custom',
     'summary': """Add cheque details on the payment voucher""",
     'version': '12.0.1.0.0',
     'description': """Add cheque number and bank name""",
