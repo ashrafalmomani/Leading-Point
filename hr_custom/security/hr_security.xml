@@ -13,5 +13,10 @@
         <record id="group_travel_officer" model="res.groups">
             <field name="name">Travel Officer</field>
         </record>
+        <record id="contact_menu" model="res.groups">
+            <field name="category_id" ref="base.module_category_usability"/>
+            <field name="name">Show Contact Menu</field>
+        </record>
+
     </data>
 </odoo>

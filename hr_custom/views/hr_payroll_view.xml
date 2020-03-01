@@ -15,4 +15,16 @@
             </field>
         </field>
     </record>
+
+    <record id="group_invisible_payroll_menus" model="res.groups">
+        <field name="name">Invisible Payroll menus</field>
+    </record>
+
+    <record id="hr_payroll.menu_action_hr_contribution_register_form" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_payroll_menus')] )]"/>
+    </record>
+
+    <record id="hr_payroll.hr_contract_advantage_template_menu_action" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_invisible_payroll_menus')] )]"/>
+    </record>
 </odoo>

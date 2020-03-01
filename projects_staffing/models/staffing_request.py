@@ -48,24 +48,27 @@ class StaffingRequest(models.Model):
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
-        if self.project_id:
-            if self.project_id.user_id.email:
-                self.emails += self.project_id.user_id.email + ','
-            manager_id = self.env['hr.employee'].search([('user_id', '=', self.project_id.user_id.id)])
-            if manager_id:
-                self.manager_id = manager_id.id
+        for rec in self:
+            if rec.project_id:
+                if rec.project_id.user_id.email:
+                    rec.emails += rec.project_id.user_id.email + ','
+                manager_id = self.env['hr.employee'].search([('user_id', '=', rec.project_id.user_id.id)])
+                if manager_id:
+                    rec.manager_id = manager_id.id
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         if self.employee_id:
             lines = []
             id = self.search([('number', '=', self.number)]).id
-            projects = self.env['project.project'].search([('stage_id.close_stage', '!=', True)])
+            projects = self.env['project.project'].search([])
             for proj in projects:
                 if self.employee_id.id in proj.staffed_projects_ids.ids:
-                    manager_id = self.env['hr.employee'].search([('user_id', '=', proj.user_id.id)])
-                    lines.append([0, False, {'project_id': id, 'projects_id': proj.id, 'manager_id': manager_id.id or False}])
-            self.current_projects_managers_ids = lines
+                    lines.append([0, False, {'project_id': id or False, 'projects_id': proj.id or False}])
+            if lines:
+                self.current_projects_managers_ids = lines
+            else:
+                self.current_projects_managers_ids = False
 
     @api.model
     def create(self, vals):
@@ -139,6 +142,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     staffed_projects_ids = fields.Many2many('hr.employee', 'project_staff_rel', 'project_id', 'staff_id', string='Staff')
+    project_value = fields.Float(string='Project Value')
 
     @api.multi
     def projects_staffing(self):
@@ -168,6 +172,12 @@ class EmployeeDirector(models.Model):
 class CurrentProjects(models.Model):
     _name = 'current.project'
 
+    @api.depends('projects_id')
+    def _compute_manager_id(self):
+        for rec in self:
+            if rec.projects_id:
+                rec.manager_id = rec.projects_id.user_id.id
+
     project_id = fields.Many2one('staffing.request', string='Project')
     projects_id = fields.Many2one('project.project', string='Projects')
-    manager_id = fields.Many2one('res.users', string='Managers')
+    manager_id = fields.Many2one('res.users', string='Managers', compute='_compute_manager_id')

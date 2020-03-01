@@ -39,9 +39,9 @@ class HREmployeeTravel(models.Model):
                     if rec.ticket_ids:
                         ticket_id = rec.ticket_ids.ids[-1]
                         last_ticket = self.env['hr.tickets'].browse(ticket_id)
-                        if fields.Date.today() >= last_ticket.departure_date.date() and fields.Date.today() <= last_ticket.return_date.date() and last_ticket.state == 'issued':
+                        if fields.Date.today() >= last_ticket.new_departure_date.date() and fields.Date.today() <= last_ticket.new_return_date.date() and last_ticket.state == 'issued':
                             open_travel = True
-                        elif fields.Date.today() > last_ticket.return_date.date() and last_ticket.state == 'issued':
+                        elif fields.Date.today() > last_ticket.new_return_date.date() and last_ticket.state == 'issued':
                             close_travel = True
                         elif last_ticket.state == 'issued':
                             ticket = True
@@ -62,9 +62,9 @@ class HREmployeeTravel(models.Model):
                     if rec.ticket_ids:
                         ticket_id = rec.ticket_ids.ids[-1]
                         last_ticket = self.env['hr.tickets'].browse(ticket_id)
-                        if fields.Date.today() >= last_ticket.departure_date.date() and fields.Date.today() <= last_ticket.return_date.date() and last_ticket.state == 'issued':
+                        if fields.Date.today() >= last_ticket.new_departure_date.date() and fields.Date.today() <= last_ticket.new_return_date.date() and last_ticket.state == 'issued':
                             open_travel = True
-                        elif fields.Date.today() > last_ticket.return_date.date() and last_ticket.state == 'issued':
+                        elif fields.Date.today() > last_ticket.new_return_date.date() and last_ticket.state == 'issued':
                             close_travel = True
                         elif last_ticket.state == 'issued':
                             ticket = True
@@ -85,9 +85,9 @@ class HREmployeeTravel(models.Model):
                     if rec.ticket_ids:
                         ticket_id = rec.ticket_ids.ids[-1]
                         last_ticket = self.env['hr.tickets'].browse(ticket_id)
-                        if fields.Date.today() >= last_ticket.departure_date.date() and fields.Date.today() <= last_ticket.return_date.date() and last_ticket.state == 'issued':
+                        if fields.Date.today() >= last_ticket.new_departure_date.date() and fields.Date.today() <= last_ticket.new_return_date.date() and last_ticket.state == 'issued':
                             open_travel = True
-                        elif fields.Date.today() > last_ticket.return_date.date() and last_ticket.state == 'issued':
+                        elif fields.Date.today() > last_ticket.new_return_date.date() and last_ticket.state == 'issued':
                             close_travel = True
                         elif last_ticket.state == 'issued':
                             ticket = True
@@ -103,9 +103,9 @@ class HREmployeeTravel(models.Model):
                     if rec.ticket_ids:
                         ticket_id = rec.ticket_ids.ids[-1]
                         last_ticket = self.env['hr.tickets'].browse(ticket_id)
-                        if fields.Date.today() >= last_ticket.departure_date.date() and fields.Date.today() <= last_ticket.return_date.date() and last_ticket.state == 'issued':
+                        if fields.Date.today() >= last_ticket.new_departure_date.date() and fields.Date.today() <= last_ticket.new_return_date.date() and last_ticket.state == 'issued':
                             rec.trip_status = 'open'
-                        elif fields.Date.today() > last_ticket.return_date.date() and last_ticket.state == 'issued':
+                        elif fields.Date.today() > last_ticket.new_return_date.date() and last_ticket.state == 'issued':
                             rec.trip_status = 'closed'
                         elif last_ticket.state == 'issued':
                             rec.trip_status = 'ready'
@@ -113,12 +113,10 @@ class HREmployeeTravel(models.Model):
             if rec.state in ('cancelled', 'rejected'):
                 rec.trip_status = 'cancel'
 
-
     @api.multi
     def _compute_per_diem(self):
         for per_diem in self:
             per_diem.per_diem_count = len(per_diem.per_diem_ids)
-
 
     @api.model
     def _get_default_travel_officer(self):
@@ -162,7 +160,6 @@ class HREmployeeTravel(models.Model):
     def check_origin_and_destination(self):
         if self.origin == self.destination:
             raise exceptions.ValidationError(_("Origin and Destination are same!"))
-
 
     @api.constrains('percentage_ids',)
     def check_percentages(self):
@@ -226,7 +223,6 @@ class HREmployeeTravel(models.Model):
 
         self.state = 'submitted'
 
-
     @api.multi
     def action_hr_approve(self):
         if self.reason_for_travel in ('project', 'business_dev'):
@@ -236,7 +232,7 @@ class HREmployeeTravel(models.Model):
                 'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
                 'icon': 'fa-pencil-square-o',
                 'date_deadline': fields.Date.today(),
-                'user_id': self.project_manager.id,
+                'user_id': self.project_manager.user_id.id,
                 'note': 'The request for travel is approved'
             }
             self.env['mail.activity'].create(notification)
@@ -268,7 +264,7 @@ class HREmployeeTravel(models.Model):
             'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
             'icon': 'fa-pencil-square-o',
             'date_deadline': fields.Datetime.now(),
-            'user_id': self.project_manager.id,
+            'user_id': self.project_manager.user_id.id,
             'note': self.reject_des
         }
         self.env['mail.activity'].create(reject_notification)

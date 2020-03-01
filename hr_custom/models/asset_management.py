@@ -16,6 +16,8 @@ class AssetManagement(models.Model):
     assigned_employee = fields.Many2one('hr.employee', string="Assigned Employee", track_visibility='always')
     notes = fields.Text("Notes", track_visibility='always')
     is_related_asset_tracked = fields.Boolean("Is tracked", track_visibility='always')
+    brand = fields.Char(string='Brand', track_visibility='always')
+    model_name = fields.Char(string='Model', track_visibility='always')
     state = fields.Selection([("unassign", "Unassign"), ("assign", "Assign"), ("deprecated", "Deprecated")], default='unassign', track_visibility='always')
 
     @api.model

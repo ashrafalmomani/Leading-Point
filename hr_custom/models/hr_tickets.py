@@ -17,9 +17,6 @@ class HREmployeeTickets(models.Model):
                                             limit=1,
                                             order="id desc")
 
-    def _default_manager_id(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-
     travel_id = fields.Many2one('hr.travel', string='Travel', track_visibility='always', domain="[('state', '=', 'hr_approved'), ('trip_status', 'in', ['preparing', 'ready', 'open'])]")
     ticket_num = fields.Char(string='Ticket Number', track_visibility='always')
     departure_date = fields.Datetime(string='Departure Date', track_visibility='always')
@@ -34,14 +31,11 @@ class HREmployeeTickets(models.Model):
                                       track_visibility='always')
     is_confirm_true = fields.Boolean(string='True', default=False)
     officer_user_id = fields.Many2one('res.users', default=_default_officer_user_id)
-    project_manager = fields.Many2one('hr.employee', string='Project Manager', default=_default_manager_id,
-                                      track_visibility='always')
     airline = fields.Selection([('emirates', 'Emirates Airlines'), ('saudi', 'Saudi Airlines'),
                                 ('royal', 'Royal Jordanian'), ('qatar', 'Qatar Airways'), ('oman', 'Oman Air'),
                                 ('gulf', 'Gulf Air')], string='Airline', track_visibility='always')
     state = fields.Selection([('draft', 'Draft'), ('submitted', 'Submitted'), ('issued', 'Issued'), ('cancelled', 'Cancelled')],
                              default='draft', store=True, track_visibility='always')
-
 
     @api.onchange('departure_date', 'return_date')
     def _onchange_new_departure_and_return(self):
@@ -77,7 +71,6 @@ class HREmployeeTickets(models.Model):
 
         self.state = 'submitted'
 
-
     @api.multi
     def action_ticket_issued(self):
         self.travel_id.write({'from_date': self.new_departure_date.date(), 'to_date': self.new_return_date.date()})
@@ -110,7 +103,7 @@ class HREmployeeTickets(models.Model):
             'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.tickets')], limit=1).id,
             'icon': 'fa-pencil-square-o',
             'date_deadline': fields.Date.today(),
-            'user_id': self.project_manager.id,
+            'user_id': self.travel_id.project_manager.user_id.id,
             'note': 'The request for ticket is approved'
         }
         self.env['mail.activity'].create(notification)
@@ -169,11 +162,20 @@ class HREmployeeChangeTicket(models.Model):
     def _default_manager_id(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
 
+    @api.depends('cost', 'ticket_id.cost')
+    def _compute_total_cost(self):
+        total_cost = 0.0
+        for rec in self:
+            if rec.cost:
+                total_cost += rec.cost
+        self.total_costs = total_cost + rec.ticket_id.cost
+
     ticket_id = fields.Many2one('hr.tickets', string='Ticket', track_visibility='always')
     type = fields.Selection([('departure_and_return', 'Departure/Return Date'), ('return', 'Return Date'), ('open_return', 'Open Return Date')], string='Type', track_visibility='always')
     departure_date = fields.Datetime(string='Departure Date', track_visibility='always')
     return_date = fields.Datetime(string='Return Date', track_visibility='always')
     cost = fields.Float(string='Cost', track_visibility='always')
+    total_costs = fields.Float(string='Total Cost', compute='_compute_total_cost')
     officer_user_id = fields.Many2one('res.users', default=_default_officer_user_id)
     notes = fields.Char(string='Notes', track_visibility='always')
     project_manager = fields.Many2one('hr.employee', string='Project Manager', default=_default_manager_id,
@@ -213,11 +215,11 @@ class HREmployeeChangeTicket(models.Model):
     @api.multi
     def action_ticket_issued(self):
         if self.type == 'departure_and_return':
-            self.ticket_id.write({'new_departure_date': self.departure_date.date(), 'new_return_date': self.return_date.date()})
-            self.ticket_id.travel_id.write({'from_date': self.departure_date.date(), 'to_date': self.return_date.date()})
+            self.ticket_id.write({'new_departure_date': self.departure_date, 'new_return_date': self.return_date})
+            self.ticket_id.travel_id.write({'from_date': self.departure_date, 'to_date': self.return_date})
         elif self.type == 'return':
-            self.ticket_id.write({'new_return_date': self.return_date.date()})
-            self.ticket_id.travel_id.write({'to_date': self.return_date.date()})
+            self.ticket_id.write({'new_return_date': self.return_date})
+            self.ticket_id.travel_id.write({'to_date': self.return_date})
         elif self.type == 'open_return':
             self.ticket_id.write({'new_return_date': False})
             self.ticket_id.travel_id.write({'to_date': False})
@@ -250,7 +252,7 @@ class HREmployeeChangeTicket(models.Model):
             'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.change.ticket')], limit=1).id,
             'icon': 'fa-pencil-square-o',
             'date_deadline': fields.Date.today(),
-            'user_id': self.project_manager.id,
+            'user_id': self.ticket_id.travel_id.project_manager.user_id.id,
             'note': 'The request for change ticket is approved'
         }
         self.env['mail.activity'].create(notification)

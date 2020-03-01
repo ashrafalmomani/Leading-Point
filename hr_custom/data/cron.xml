@@ -80,4 +80,34 @@
         <field name="numbercall">-1</field>
     </record>
 
+    <record id="check_next_review_date" model="ir.cron">
+        <field name="name">Check next review date</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="state">code</field>
+        <field name="code">model.email_on_next_review_date()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record id="check_before_one_week_from_joining_date" model="ir.cron">
+        <field name="name">Check before one week from joining date</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model.email_before_one_week_from_joining_date()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record id="allocation_every_beginning_year" model="ir.cron">
+        <field name="name">Allocation every beginning year</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model.allocation_every_beginning_year()</field>
+        <field name='interval_number'>12</field>
+        <field name='interval_type'>months</field>
+        <field name="numbercall">-1</field>
+    </record>
+
 </odoo>

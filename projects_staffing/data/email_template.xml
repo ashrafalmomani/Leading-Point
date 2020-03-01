@@ -11,11 +11,11 @@
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear XXXX
+                        Dears,
                         <br /><br />
                         This Project (<strong>${object.number}</strong>) assign to you
                         <br />
-                        Do not hesitate to contact us if you have any question.
+                        Will start on (<strong>${object.start_date}</strong>)
                     </p>
                 </div>
             </field>

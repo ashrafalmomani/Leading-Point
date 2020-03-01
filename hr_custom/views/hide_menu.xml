@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="contacts.menu_contacts" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('contact_menu')])]"/>
+        </record>
+        <record id="hr_timesheet.timesheet_menu_activity_all" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('hr_timesheet.group_timesheet_manager')])]"/>
+        </record>
+        <record id="hr_holidays.menu_open_allocation" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('hr.group_hr_user')])]"/>
+        </record>
+        <record id="hr.menu_open_view_employee_list_my" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('hr.group_hr_user')])]"/>
+        </record>
+
+    </data>
+</odoo>

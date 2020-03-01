@@ -15,9 +15,6 @@ class HREmployeeHotels(models.Model):
                                             limit=1,
                                             order="id desc")
 
-    def _default_manager_id(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-
     hotel_name = fields.Char(string='Hotel Name', track_visibility='always')
     reservation_num = fields.Char(string='Reservation Number', track_visibility='always')
     travel_id = fields.Many2one('hr.travel', string='Travel', track_visibility='always', domain="[('state', '=', 'hr_approved')]")
@@ -26,7 +23,6 @@ class HREmployeeHotels(models.Model):
     cost = fields.Float(string='Cost', track_visibility='always')
     reservation = fields.Binary(string='UPLOAD YOUR FILE', track_visibility='always')
     officer_user_id = fields.Many2one('res.users', default=_default_officer_user_id)
-    project_manager = fields.Many2one('hr.employee', string='Project Manager', default=_default_manager_id, track_visibility='always')
     state = fields.Selection([('draft', 'Draft'), ('submitted', 'Submitted'), ('reserved', 'Reserved'), ('cancelled', 'Cancelled')],
                              default='draft', store=True, track_visibility='always')
 
@@ -98,7 +94,7 @@ class HREmployeeHotels(models.Model):
             'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.hotels')], limit=1).id,
             'icon': 'fa-pencil-square-o',
             'date_deadline': fields.Date.today(),
-            'user_id': self.project_manager.id,
+            'user_id': self.travel_id.project_manager.user_id.id,
             'note': 'The request for hotel is approved'
         }
         self.env['mail.activity'].create(notification)

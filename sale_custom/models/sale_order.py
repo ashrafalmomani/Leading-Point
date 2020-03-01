@@ -1,13 +1,39 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    @api.model
+    def _get_user_receive_email(self):
+        return self.env['res.users'].search([('groups_id', 'in', self.env.ref('sale_custom.group_email_to_account_manager').id)],
+                                            limit=1,
+                                            order="id desc")
+
     payment_ids = fields.One2many('payment.schedule', 'payment_id', string='Payment Schedule')
+    user_receive_email = fields.Many2one('res.users', string='Account Manager receive email', default=_get_user_receive_email)
     is_boolean = fields.Boolean('Boolean', default=False)
+
+    @api.multi
+    def action_confirm(self):
+        if self.client_order_ref == False:
+            raise UserError(_("Please, Fill Customer Reference."))
+        super(SaleOrder, self).action_confirm()
+
+        # template_id = self.env.ref('sale_custom.email_to_account_manager')
+        # composer = self.env['mail.compose.message'].sudo().with_context({
+        #     'default_composition_mode': 'mass_mail',
+        #     'default_notify': False,
+        #     'default_model': 'sale.order',
+        #     'default_res_id': self.id,
+        #     'default_template_id': template_id.id,
+        # }).create({})
+        # values = composer.onchange_template_id(template_id.id, 'mass_mail', 'sale.order', self.id)['value']
+        # composer.write(values)
+        # composer.send_mail()
 
     @api.multi
     def create_project(self):
@@ -54,6 +80,17 @@ class SaleOrder(models.Model):
             'res_id': project_id.id,
             'view_mode': 'form',
         }
+
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    mask_name = fields.Many2one('child.product', string='Child Name', domain="[('product_id', '=', product_id )]")
+
+    @api.onchange('mask_name')
+    def _onchange_description(self):
+        if self.mask_name:
+            self.name = self.mask_name.mask_name
 
 
 class PaymentSchedule(models.Model):

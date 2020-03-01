@@ -132,7 +132,6 @@ class HrAwardedDays(models.Model):
             'target': 'new',
         }
 
-
     @api.multi
     def action_send_to_draft(self):
         self.state = 'draft'

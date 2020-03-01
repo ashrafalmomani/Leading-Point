@@ -35,7 +35,7 @@
 	    	                <field name="project_id" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
 	    	                <field name="manager_id" invisible="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
 	    	                <field name="start_date" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
-	    	                <field name="end_date" required="1" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
+	    	                <field name="end_date" attrs="{'readonly': [('state', 'not in', ('new', 'submit'))]}"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="emails" invisible="1"/>
                         </group>
@@ -151,6 +151,9 @@
         <field name="arch" type="xml">
             <field name="members" position="after">
                 <field name="staffed_projects_ids" widget="many2many_tags" readonly="1"/>
+            </field>
+            <field name="use_pads" position="before">
+                <field name="project_value"/>
             </field>
         </field>
     </record>

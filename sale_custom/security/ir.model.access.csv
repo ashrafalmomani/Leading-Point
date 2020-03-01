@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_payment_schedule,payment.schedule,model_payment_schedule,base.group_user,1,1,1,1
+access_mask_name,mask.name,model_mask_name,base.group_user,1,1,1,1
+access_child_product,child.product,model_child_product,base.group_user,1,1,1,1

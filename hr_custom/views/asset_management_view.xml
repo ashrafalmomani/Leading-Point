@@ -29,9 +29,11 @@
                         <h1><field name="name" readonly="1"/></h1>
                         <group string="Asset Information">
                             <group>
-                                <field name="related_assets" attrs="{'readonly': [['id','!=',False]]}" domain="[('is_tracked','=', False)]" required="1"/>
+                                <field name="related_assets" attrs="{'readonly': [['id','!=',False]]}" domain="[('is_tracked','=', False)]"/>
                                 <field name="serial_num" attrs="{'readonly': [['id','!=',False]]}"/>
                                 <field name="mac_address" attrs="{'readonly': [['id','!=',False]]}"/>
+                                <field name="brand" attrs="{'readonly': [['id','!=',False]]}"/>
+                                <field name="model_name" attrs="{'readonly': [['id','!=',False]]}"/>
                             </group>
                             <group>
                                 <field name="assigned_employee" attrs="{'invisible': [('is_assigned_to_employee', '=', False)], 'required': [('is_assigned_to_employee', '=', True)]}"/>

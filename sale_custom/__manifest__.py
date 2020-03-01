@@ -11,6 +11,7 @@
     'data': [
         'views/sale_order_view.xml',
         'security/ir.model.access.csv',
+        'data/email_template.xml',
     ],
     'installable': True,
 

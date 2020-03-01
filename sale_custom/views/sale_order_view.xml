@@ -9,9 +9,17 @@
             <xpath expr="//field[@name='barcode']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-
             <xpath expr="//field[@name='taxes_id']" position="attributes">
                 <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="before">
+                <page name="mask" string="Child Name">
+                    <field name="mask_ids" >
+                        <tree editable="bottom">
+                            <field name="child_id"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
@@ -34,12 +42,17 @@
                 </button>
             </div>
 
-            <xpath expr="//field[@name='client_order_ref']" position="attributes">
-                <attribute name="required">True</attribute>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="client_order_ref"/>
+                <field name="analytic_account_id"/>
             </xpath>
 
             <xpath expr="//field[@name='team_id']" position="attributes">
                 <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='currency_id']" position="attributes">
+                <attribute name="readonly">False</attribute>
             </xpath>
 
             <xpath expr="//field[@name='payment_term_id']" position="after">
@@ -50,8 +63,16 @@
                     </tree>
                 </field>
                 <field name="is_boolean" invisible="1"/>
-
             </xpath>
+
+            <xpath expr="//tree/field[@name='name']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//tree/field[@name='product_id']" position="after">
+                <field name="mask_name"/>
+            </xpath>
+
         </field>
     </record>
 
@@ -73,6 +94,10 @@
 
     <record id="sale.report_sales_team" model="ir.ui.menu">
         <field name="groups_id" eval="[(6, 0, [ref('group_invisible_sales_menus')] )]"/>
+    </record>
+
+    <record id="group_email_to_account_manager" model="res.groups">
+        <field name="name">Receive Email When Create Invoice</field>
     </record>
 
     <menuitem id="sale.menu_sale_order_invoice"

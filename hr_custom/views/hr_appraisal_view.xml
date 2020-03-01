@@ -72,21 +72,11 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="monthly_survey" string="Monthly Survey">
-                            <field name="monthly_ids">
-                                 <tree editable="bottom">
-                                     <field name="description"/>
-                                     <field name="create_date" readonly="1"/>
-                                     <field name="create_uid" readonly="1"/>
-                                 </tree>
-                            </field>
-                        </page>
-
                         <page name="employee_survey" string="Employee Survey">
                             <field name="survey_ids" context="{'default_appraisal_id': active_id}">
                                  <tree editable="bottom">
                                      <field name="survey_id" required="1"/>
-                                     <field name="employee_id" required="1"/>
+                                     <field name="employee_manager_id" required="1"/>
                                      <field name="from_date"/>
                                      <field name="to_date"/>
                                      <field name="score_percentage"/>
@@ -94,7 +84,17 @@
                                      <field name="num_of_month" required="1"/>
                                      <field name="status" required="1"/>
                                      <field name="response_id" invisible="1"/>
-                                     <button name="action_start_survey" string="Start Survey" type="object" class="oe_highlight"/>
+                                     <button name="action_start_survey" string="Start Survey" type="object" attrs="{'readonly': [('status','!=','draft')]}" class="oe_highlight"/>
+                                 </tree>
+                            </field>
+                        </page>
+
+                        <page name="monthly_survey" string="Monthly Survey">
+                            <field name="monthly_ids">
+                                 <tree editable="bottom">
+                                     <field name="description"/>
+                                     <field name="create_date" readonly="1"/>
+                                     <field name="create_uid" readonly="1"/>
                                  </tree>
                             </field>
                         </page>
@@ -139,16 +139,10 @@
         <field name="arch" type="xml">
             <search string="Appraisal">
                 <field name="employee_id"/>
-                <field name="score_perc"/>
-                <field name="total_score"/>
-                <field name="performance_level"/>
                 <field name="salary"/>
                 <field name="salary_raise"/>
                 <group string="Group By">
                     <filter name="employee_id" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="score_perc" string="Score Percantage" context="{'group_by':'score_perc'}"/>
-                    <filter name="total_score" string="Total Score Percantage" context="{'group_by':'total_score'}"/>
-                    <filter name="performance_level" string="Performance Level" context="{'group_by':'performance_level'}"/>
                     <filter name="salary" string="Salary" context="{'group_by':'salary'}"/>
                     <filter name="salary_raise" string="Salary Raise" context="{'group_by':'salary_raise'}"/>
                 </group>
@@ -239,6 +233,7 @@
               id="hr_appraisal_menu"
               parent="hr.menu_hr_root"
               action="hr_appraisal_action"
+              groups="hr.group_hr_user"
               sequence="88"/>
 
     <record id="action_employee_hr_job_menu" model="ir.actions.act_window">

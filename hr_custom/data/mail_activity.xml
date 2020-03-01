@@ -77,6 +77,7 @@
         <field name="sequence">12</field>
     </record>
 
+
     <record id="notification_after_ticket_submitted" model="mail.activity.type">
         <field name="name">Notify to ticket officer after ticket submitted</field>
         <field name="icon">fa-pencil-square-o</field>

@@ -55,6 +55,7 @@
                                      <field name="departure_date"/>
                                      <field name="return_date"/>
                                      <field name="cost"/>
+                                     <field name="total_costs"/>
                                      <field name="create_uid"/>
                                      <field name="create_date"/>
                                  </tree>

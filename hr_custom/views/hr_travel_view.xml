@@ -29,7 +29,7 @@
                     <button string="HR Approval" type="object" name="action_hr_approve" states="submitted" class="oe_highlight"/>
                     <button string="Reject" type="object" name="action_reject" states="submitted" class="oe_highlight"/>
                     <button string="Send Back To Draft" type="object" name="action_set_to_draft" states="rejected" class="oe_highlight"/>
-                    <button string="Cancelled" type="object" name="action_cancel_travel" states="hr_approved" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="action_cancel_travel" states="hr_approved" class="oe_highlight"/>
                     <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,hr_approved,rejected,cancelled"/>
                 </header>
                 <sheet>

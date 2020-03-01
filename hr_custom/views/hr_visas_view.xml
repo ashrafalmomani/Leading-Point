@@ -30,7 +30,7 @@
                     <button string="Submit" name="action_visa_submitted" type="object" states="draft" class="oe_highlight"/>
                     <button string="Issued" name="action_visa_issued" type="object" states="submitted" class="oe_highlight"/>
                     <button string="Rejected" name="action_visa_rejected" type="object" states="submitted" class="oe_highlight"/>
-                    <button string="Link Visa With Travel" name="action_visa_with_travel" type="object" attrs="{'invisible': ['|', '|', ('state','!=','issued'), ('type', '!=', 'depend_on_travel'), ('linked', '=', True)]}" class="oe_highlight"/>
+                    <button string="Link Visa With Travel" name="action_visa_with_travel" type="object" attrs="{'invisible': [('state','=','issued'),('linked', '=', True)]}" class="oe_highlight"/>
                     <button string="Cancelled" name="action_cancel" type="object" states="submitted,issued" class="oe_highlight"/>
                     <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,issued,rejected,cancelled"/>
                 </header>

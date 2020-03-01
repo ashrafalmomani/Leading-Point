@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="employee_record_rule" model="ir.rule">
+    <!--<record id="employee_record_rule" model="ir.rule">
         <field name="name">RU Employes</field>
         <field name="model_id" ref="model_hr_employee"/>
         <field name="global" eval="False"/>
@@ -23,6 +23,6 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
         <field name="domain_force">[]</field>
-    </record>
+    </record> -->
 
 </odoo>

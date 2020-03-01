@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, exceptions
 
 
 class HREmployeeVisas(models.Model):
@@ -15,9 +15,6 @@ class HREmployeeVisas(models.Model):
                                             limit=1,
                                             order="id desc")
 
-    def _default_manager_id(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-
     type = fields.Selection([('depend_on_travel', 'Depend On Travel'), ('just_visa', 'Just Visa')], string='Type', track_visibility='always')
     travel_id = fields.Many2one('hr.travel', string='Travel', track_visibility='always', domain="[('state', '=', 'hr_approved'), ('visa_required', '=', True)]")
     employee_id = fields.Many2one('hr.employee', string='Employee', track_visibility='always')
@@ -31,35 +28,35 @@ class HREmployeeVisas(models.Model):
     visa = fields.Binary(string='UPLOAD YOUR FILE', track_visibility='always')
     cost = fields.Float(string='Cost', track_visibility='always')
     officer_user_id = fields.Many2one('res.users', default=_default_officer_user_id)
-    project_manager = fields.Many2one('hr.employee', string='Project Manager', default=_default_manager_id, track_visibility='always')
     state = fields.Selection([('draft', 'Draft'), ('submitted', 'Submitted'),
                               ('issued', 'Issued'), ('rejected', 'Rejected'), ('cancelled', 'Cancelled')],
                              default='draft', store=True, track_visibility='always')
 
     @api.multi
     def action_visa_submitted(self):
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_visa_submitted').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.visas')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.officer_user_id.id,
-            'note': 'Request For Visa'
-        }
-        self.env['mail.activity'].create(notification)
+        if self.type == 'depend_on_travel':
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_visa_submitted').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.visas')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.officer_user_id.id,
+                'note': 'Request For Visa'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_visa_submitted')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.visas',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.visas', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
+            template_id = self.env.ref('hr_custom.email_after_visa_submitted')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.visas',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.visas', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
 
         self.state = 'submitted'
 
@@ -92,59 +89,61 @@ class HREmployeeVisas(models.Model):
                     'partner_id': self.travel_id.employee.user_id.partner_id.id,
                 })
 
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_visa_issued').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.visas')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.project_manager.id,
-            'note': 'The request for visa is approved'
-        }
-        self.env['mail.activity'].create(notification)
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_visa_issued').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.visas')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.travel_id.project_manager.user_id.id,
+                'note': 'The request for visa is approved'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_visa_approved')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.visas',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.visas', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
+            template_id = self.env.ref('hr_custom.email_after_visa_approved')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.visas',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.visas', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
 
         self.state = 'issued'
 
     @api.multi
     def action_visa_with_travel(self):
-        if self.type == 'depend_on_travel':
-            projects = []
-            if self.travel_id.reason_for_travel in ('project', 'business_dev'):
-                for rec in self.travel_id.percentage_ids:
-                    projects.append(self.cost * (rec.percentage / 100))
-                    self.env['account.analytic.line'].create({
-                        'name': "Visa for (%s) Travel" % self.travel_id.name,
-                        'project_id': rec.project_id.id or False,
-                        'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
-                        'amount': projects[0],
-                        'unit_amount': 1,
-                        'user_id': self.travel_id.employee.user_id.id,
-                        'date': fields.Date.today(),
-                        'partner_id': self.travel_id.employee.user_id.partner_id.id,
-                    })
-                    projects = []
-            else:
+        if self.type != 'depend_on_travel':
+            raise exceptions.ValidationError(_("You must first change the type of visa to 'Depend on travel' "))
+        projects = []
+        if self.travel_id.reason_for_travel in ('project', 'business_dev'):
+            for rec in self.travel_id.percentage_ids:
+                projects.append(self.cost * (rec.percentage / 100))
                 self.env['account.analytic.line'].create({
                     'name': "Visa for (%s) Travel" % self.travel_id.name,
-                    'account_id': self.travel_id.analytic_id.id,
-                    'amount': self.cost,
+                    'project_id': rec.project_id.id or False,
+                    'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
+                    'amount': projects[0],
                     'unit_amount': 1,
                     'user_id': self.travel_id.employee.user_id.id,
                     'date': fields.Date.today(),
                     'partner_id': self.travel_id.employee.user_id.partner_id.id,
                 })
+                projects = []
+                self.linked = True
+        else:
+            self.env['account.analytic.line'].create({
+                'name': "Visa for (%s) Travel" % self.travel_id.name,
+                'account_id': self.travel_id.analytic_id.id,
+                'amount': self.cost,
+                'unit_amount': 1,
+                'user_id': self.travel_id.employee.user_id.id,
+                'date': fields.Date.today(),
+                'partner_id': self.travel_id.employee.user_id.partner_id.id,
+            })
             self.linked = True
 
     @api.multi

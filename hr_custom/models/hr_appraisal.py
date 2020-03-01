@@ -16,23 +16,38 @@ class AppraisalCustom(models.Model):
     def _compute_total_score(self):
         tot_in_months = 0.0
         total_num_of_month = 0.0
-        for answer in self.answer_ids:
-            question_result = 0.0
-            max_total = 0.0
-            for input in answer.user_input_line_ids:
-                list_marks = []
-                for label in input.question_id.labels_ids:
-                    list_marks.append(label.quizz_mark)
-                max_num = max(list_marks) if list_marks else 0
-                max_total += max_num
-                if max_num > 0.0:
+        if self.answer_ids:
+            for answer in self.answer_ids:
+                question_result = 0.0
+                max_total = 0.0
+                for input in answer.user_input_line_ids:
+                    list_marks = []
+                    for label in input.question_id.labels_ids:
+                        list_marks.append(label.quizz_mark)
+                    max_num = max(list_marks) if list_marks else 0
+                    max_total += max_num
                     question_result += input.quizz_mark
-            tot_question_result = question_result / max_total
-            num_of_month = self.env['employee.survey'].search([('response_id', '=', answer.id)]).num_of_month
-            tot_in_months += tot_question_result * num_of_month
-            total_num_of_month += num_of_month
-            self.score_perc = tot_in_months / total_num_of_month if total_num_of_month > 0.0 else 1
-            self.total_score = self.score_perc + self.extra_points
+                if max_total > 0.0:
+                    tot_question_result = question_result / max_total
+                    num_of_month = self.env['employee.survey'].search([('response_id', '=', answer.id)]).num_of_month
+                    tot_in_months += tot_question_result * num_of_month
+                    total_num_of_month += num_of_month
+                    self.score_perc = tot_in_months / total_num_of_month if total_num_of_month > 0.0 else 1
+                    self.total_score = self.score_perc + self.extra_points
+        else:
+            if len(self.survey_ids) == 1:
+                self.score_perc = self.survey_ids.score_percentage
+                self.total_score = self.score_perc + self.extra_points
+            else:
+                total = 0.0
+                total_month = 0
+                for answer in self.survey_ids:
+                    total_month += answer.num_of_month
+                for rec in self.survey_ids:
+                    total += rec.score_percentage * (rec.num_of_month / total_month)
+                self.score_perc = total
+                self.total_score = self.score_perc + self.extra_points
+
 
     @api.one
     def _compute_performance_level_next_review(self):
@@ -43,13 +58,19 @@ class AppraisalCustom(models.Model):
                 raise exceptions.ValidationError(_("There are two line in appraisal levels has the same score"))
             else:
                 self.performance_level = line.performance_level
-                if self.performance_level in ('far_exceed', 'exceed', 'accomplish'):
+                if self.performance_level in ('far_exceed', 'exceed', 'accomplish', 'under_perf', 'poor'):
                     self.next_review = self.date_to + relativedelta(months=+line.next_review)
 
     @api.depends('total_salary')
     def _compute_total_salary(self):
-        self.total_salary = self.salary + self.salary_raise
+        for rec in self:
+            rec.total_salary = rec.salary + rec.salary_raise
 
+    @api.model
+    def _get_default_hr_manager(self):
+        return self.env['res.users'].search([('groups_id', 'in', self.env.ref('hr.group_hr_manager').id)],
+                                            limit=1,
+                                            order="id desc")
 
     er_seq = fields.Char(string='ER Number', required=True, copy=False, default='New', track_visibility='always')
     employee_id = fields.Many2one('hr.employee', string='Employee', track_visibility='always')
@@ -68,6 +89,7 @@ class AppraisalCustom(models.Model):
     survey_ids = fields.One2many('employee.survey', 'appraisal_id', string='Employee Survey')
     monthly_ids = fields.One2many('monthly.survey', 'monthly_id', string='Monthly Survey')
     answer_ids = fields.One2many('survey.user_input', 'appraisal_id', string='Answers')
+    hr_manager_id = fields.Many2one('res.users', string='HR Manager', default=_get_default_hr_manager)
     state = fields.Selection([('in_progress', 'In Progress'),
                               ('done', 'Done')], string='Status', default='in_progress', track_visibility='always')
     performance_level = fields.Selection([('far_exceed', 'Far Exceed'),
@@ -80,9 +102,9 @@ class AppraisalCustom(models.Model):
     @api.one
     @api.constrains('date_from', 'date_to')
     def check_dates(self):
-        if self.date_from > self.date_to:
-            raise exceptions.ValidationError(_("The date from cannot be greater than date to"))
-
+        if self.date_from and self.date_to:
+            if self.date_from > self.date_to:
+                raise exceptions.ValidationError(_("The date from cannot be greater than date to"))
 
     @api.model
     def create(self, vals):
@@ -123,10 +145,9 @@ class AppraisalCustom(models.Model):
                     'name': "Expense for (%s) Employee" % self.employee_id.name,
                     'employee_id': self.employee_id.id,
                     'unit_amount': self.salary_raise,
-                    'product_id': self.env.ref('hr_custom.product_for_expense').id,
+                    'product_id': 68,
                     'Quantity': 1.0,
                 })
-
 
                 alert_notification = {
                     'activity_type_id': self.env.ref('hr_custom.appraisal_done_notification_for_employee').id,
@@ -151,12 +172,45 @@ class AppraisalCustom(models.Model):
                 composer.write(values)
                 composer.send_mail()
 
+        appraisal_obj = self.env['hr.appraisal']
+        appraisal_obj.sudo().create({
+            'employee_id': self.employee_id.id,
+            'job_id': self.next_job_id.id,
+            'date_from': self.date_to,
+            'date_to': self.next_review,
+            'salary': self.total_salary,
+            'effective_date': self.next_review.replace(day=1),
+        })
+        self.employee_id.job_id = self.next_job_id.id
+
     @api.onchange('employee_id')
     def _onchange_job_and_salary_appraisal(self):
         if self.employee_id:
-            employee = self.env['hr.contract'].search([('employee_id', '=', self.employee_id.id)])
-            self.job_id = employee.job_id
-            self.salary = employee.wage
+            appraisals_id = self.env['hr.appraisal'].search([('employee_id', '=', self.employee_id.id)], order='id desc', limit=1)
+            if appraisals_id:
+                self.date_from = appraisals_id.date_to
+                self.date_to = appraisals_id.next_review
+                self.job_id = appraisals_id.next_job_id.id
+                self.salary = appraisals_id.total_salary
+
+    @api.multi
+    def email_on_next_review_date(self):
+        appraisals = self.env['hr.appraisal'].search([])
+        for rec in appraisals:
+            if rec.next_review:
+                if rec.next_review == fields.Date.today():
+                    template_id = self.env.ref('hr_custom.email_on_next_review_date')
+                    composer = self.env['mail.compose.message'].sudo().with_context({
+                        'default_composition_mode': 'mass_mail',
+                        'default_notify': False,
+                        'default_model': 'hr.appraisal',
+                        'default_res_id': self.id,
+                        'default_template_id': template_id.id,
+                    }).create({})
+                    values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.appraisal', self.id)[
+                        'value']
+                    composer.write(values)
+                    composer.send_mail()
 
 
 class MonthlySurvey(models.Model):
@@ -170,7 +224,7 @@ class EmployeeSurvey(models.Model):
     _name = 'employee.survey'
 
     appraisal_id = fields.Many2one('hr.appraisal', string='Appraisal')
-    employee_id = fields.Many2one('hr.employee', string='Manager')
+    employee_manager_id = fields.Many2one('hr.employee', string='Manager')
     response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null", oldname="response")
     survey_id = fields.Many2one('survey.survey', string="Survey")
     status = fields.Selection([('draft', 'Draft'), ('done', 'Done')], string='Status', default='draft')
@@ -184,18 +238,18 @@ class EmployeeSurvey(models.Model):
                                           ('poor', 'Poor'),
                                           ('under_perf', 'Under Performance')], string='Performance Level', track_visibility='always')
 
-    # @api.onchange('survey_id')
-    # def _onchange_survey_id(self):
-    #     if self.appraisal_id:
-    #         surveys_ids = self.appraisal_id.job_id.surveys_ids.ids
-    #         return {'domain': {'survey_id': [('id', '=', surveys_ids)]}}
+    @api.onchange('survey_id')
+    def _onchange_survey_id(self):
+        if self.appraisal_id:
+            surveys_ids = self.appraisal_id.job_id.surveys_ids.ids
+            return {'domain': {'survey_id': [('id', '=', surveys_ids)]}}
 
     @api.multi
     def action_start_survey(self):
         self.ensure_one()
         if not self.response_id:
             response = self.env['survey.user_input'].create({'survey_id': self.survey_id.id,
-                                                             'partner_id': self.employee_id.user_id.partner_id.id,
+                                                             'partner_id': self.employee_manager_id.user_id.partner_id.id,
                                                              'appraisal_id': self.appraisal_id.id})
             self.response_id = response.id
         else:
@@ -207,8 +261,13 @@ class EmployeeSurvey(models.Model):
 class HRContracts(models.Model):
     _inherit = 'hr.contract'
 
-    department_id = fields.Many2one('hr.department', string="Department", store=True)
-    job_id = fields.Many2one('hr.job', string='Job Position', store=True)
+    @api.onchange('employee_id')
+    def _onchange_employee_id(self):
+        if self.employee_id:
+            self.job_id = self.employee_id.job_id
+            self.department_id = self.employee_id.department_id
+            self.resource_calendar_id = self.employee_id.resource_calendar_id
+            self.date_start = self.employee_id.joining_date
 
     @api.multi
     def create_appraisal(self, vals):

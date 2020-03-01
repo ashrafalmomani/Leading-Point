@@ -182,7 +182,7 @@
                         Dear ${object.officer_user_id.name}
                         <br />
                         <br />
-                        The manager ${object.project_manager.name} request a visa for employee
+                        The manager ${object.travel_id.project_manager.name} request a visa for employee
                         <br />
                         <br />
                          From ${object.valid_form} To ${object.valid_till}
@@ -198,12 +198,12 @@
             <field name="name">Email to project manager after visa approved: Send by email</field>
             <field name="model_id" ref="hr_custom.model_hr_visas"/>
             <field name="email_from">${(user.email or '')|safe}</field>
-            <field name="email_to">${object.project_manager.work_email|safe}</field>
+            <field name="email_to">${object.travel_id.project_manager.work_email|safe}</field>
             <field name="subject">The request for visa is approved</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear ${object.project_manager.name}
+                        Dear ${object.travel_id.project_manager.name}
                         <br />
                         <br />
                         The request to visa for employee is approved
@@ -227,7 +227,7 @@
                         Dear ${object.officer_user_id.name}
                         <br />
                         <br />
-                        The manager ${object.project_manager.name} request a ticket for ${object.travel_id.employee.name} employee
+                        The manager ${object.travel_id.project_manager.name} request a ticket for ${object.travel_id.employee.name} employee
                         <br />
                         <br />
                          From ${object.departure_date} To ${object.return_date}
@@ -251,7 +251,7 @@
                         Dear ${object.officer_user_id.name}
                         <br />
                         <br />
-                        The manager ${object.project_manager.name} request a change ticket employee
+                        The manager ${object.ticket_id.travel_id.project_manager.name} request a change ticket employee
                         <br />
                     </p>
                 </div>
@@ -264,12 +264,12 @@
             <field name="name">Email to project manager after ticket approved: Send by email</field>
             <field name="model_id" ref="hr_custom.model_hr_tickets"/>
             <field name="email_from">${(user.email or '')|safe}</field>
-            <field name="email_to">${object.project_manager.work_email|safe}</field>
+            <field name="email_to">${object.travel_id.project_manager.work_email|safe}</field>
             <field name="subject">The request for ticket is approved</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear ${object.project_manager.name}
+                        Dear ${object.travel_id.project_manager.name}
                         <br />
                         <br />
                         The request to ticket for ${object.travel_id.employee.name} employee is approved
@@ -285,12 +285,12 @@
             <field name="name">Email to project manager after change ticket approved: Send by email</field>
             <field name="model_id" ref="hr_custom.model_hr_change_ticket"/>
             <field name="email_from">${(user.email or '')|safe}</field>
-            <field name="email_to">${object.project_manager.work_email|safe}</field>
+            <field name="email_to">${object.ticket_id.travel_id.project_manager.work_email|safe}</field>
             <field name="subject">The request for change ticket is approved</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear ${object.project_manager.name}
+                        Dear ${object.ticket_id.travel_id.project_manager.name}
                         <br />
                         <br />
                         The request to change ticket for ${object.ticket_id.travel_id.employee.name} employee is approved
@@ -314,7 +314,7 @@
                         Dear ${object.officer_user_id.name}
                         <br />
                         <br />
-                        The manager ${object.project_manager.name} request a hotel for ${object.travel_id.employee.name} employee
+                        The manager ${object.travel_id.project_manager.name} request a hotel for ${object.travel_id.employee.name} employee
                         <br />
                         <br />
                          From ${object.check_in} To ${object.check_out}
@@ -330,16 +330,58 @@
             <field name="name">Email to project manager after hotel approved: Send by email</field>
             <field name="model_id" ref="hr_custom.model_hr_hotels"/>
             <field name="email_from">${(user.email or '')|safe}</field>
-            <field name="email_to">${object.project_manager.work_email|safe}</field>
+            <field name="email_to">${object.travel_id.project_manager.work_email|safe}</field>
             <field name="subject">The request for hotel is approved</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear ${object.project_manager.name}
+                        Dear ${object.travel_id.project_manager.name}
                         <br />
                         <br />
                         The request to hotel for ${object.travel_id.employee.name} employee is approved
                         <br />
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_on_next_review_date" model="mail.template">
+            <field name="name">Email on next review date: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_appraisal"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.hr_manager_id.email|safe}</field>
+            <field name="subject">Next Review Date</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dears,
+                        <br /><br />
+                        Kindly, Note today is the appraisal day for employee ${object.employee_id.name}.
+                        <br /><br />
+                        Best Regards
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_before_one_week_from_joining_date" model="mail.template">
+            <field name="name">Email before one week from joining date: Send by email</field>
+            <field name="model_id" ref="hr_custom.model_hr_employee"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${object.hr_manager_id.email|safe}</field>
+            <field name="subject">After One Week</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dears,
+                        <br /><br />
+                        Kindly, Note That employee ${object.employee_id.name} will end his Probation period on (three months after joining date)
+                        <br /><br />
+                        Best Regards
                     </p>
                 </div>
             </field>
