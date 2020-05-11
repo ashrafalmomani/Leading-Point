@@ -267,7 +267,10 @@
 
     <template id="back_custom" name="Back" inherit_id="survey.back">
         <xpath expr="//a[hasclass('btn-secondary')]" position="replace">
-            <a role="button" t-attf-href="/web#action=559&amp;model=hr.appraisal&amp;view_type=list&amp;menu_id=109" class="btn btn-secondary">Back to Appraisal</a>
+            <a role="button" t-attf-href="#" onclick="if(document.referrer.includes('survey'))
+        history.go(-2) ;
+        else
+        history.back() ;" class="btn btn-secondary">Back to Appraisal</a>
         </xpath>
     </template>
 

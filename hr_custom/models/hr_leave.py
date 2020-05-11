@@ -12,6 +12,13 @@ class HrLeave(models.Model):
     opportunities = fields.Many2one('crm.lead', string='Opportunities')
     unpaid_leave = fields.Boolean('Unpaid Leave', related='holiday_status_id.unpaid')
     working_on = fields.Selection([('project', 'Project'), ('opportunity', 'Opportunity')], string='Working On', track_visibility='always')
+    salary = fields.Float('Salary', store=True)
+
+    @api.onchange('employee_id')
+    def onchange_employee_id(self):
+        if self.employee_id:
+            wage = self.employee_id.contract_id.wage + self.employee_id.contract_id.salary_raise
+            self.salary = wage
 
     @api.onchange('working_on')
     def _onchange_working_on(self):

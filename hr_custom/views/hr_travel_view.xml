@@ -55,8 +55,8 @@
                                      <field name="percentage"/>
                                  </tree>
                             </field>
-                            <field name="analytic_id" attrs="{'required': [('reason_for_travel', 'in', ('visa_renewal', 'other'))], 'invisible':[('reason_for_travel', 'not in', ('visa_renewal', 'other'))], 'readonly':[('state','=', 'hr_approved')]}"/>
                             <field name="other_info" attrs="{'required':[('reason_for_travel', '=', 'other')], 'readonly':[('state','=', 'hr_approved')], 'invisible': [('reason_for_travel','!=', 'other')]}"/>
+                            <field name="analytic_id" invisible="1"/>
                             <field name="project_manager" invisible="1"/>
                             <field name="direct_manager" invisible="1"/>
                         </group>
@@ -78,8 +78,9 @@
                     </group>
                     <notebook>
                         <page string="Visas" attrs="{'invisible': ['|', ('state', '!=', 'hr_approved')]}">
-                            <field name="visa_ids" context="{'default_travel_id': active_id}">
+                            <field name="visa_ids" context="{'default_travel_id': active_id, 'default_type': 'depend_on_travel'}">
                                  <tree>
+                                     <field name="travel_id" invisible="1"/>
                                      <field name="valid_form"/>
                                      <field name="valid_till"/>
                                      <field name="multiple_entry"/>
@@ -91,6 +92,7 @@
                         <page string="Tickets" attrs="{'invisible': [('state', '!=', 'hr_approved')]}">
                             <field name="ticket_ids" context="{'default_travel_id': active_id}">
                                  <tree>
+                                     <field name="travel_id" invisible="1"/>
                                      <field name="ticket_num"/>
                                      <field name="departure_date"/>
                                      <field name="return_date"/>
@@ -102,6 +104,7 @@
                         <page string="Hotels" attrs="{'invisible': ['|', ('state', '!=', 'hr_approved')]}">
                             <field name="hotel_ids" context="{'default_travel_id': active_id}">
                                  <tree>
+                                     <field name="travel_id" invisible="1"/>
                                      <field name="hotel_name"/>
                                      <field name="check_in"/>
                                      <field name="check_out"/>
@@ -323,6 +326,23 @@
                                 <div class="content-group">
                                     <div class="mt16">
                                         <field name="awarded_days_journal_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>General Analytic Account</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="row">
+                                    <div class="text-muted col-lg-8">
+                                        Set General Account For Awarded Days.
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="general_analytic_account"/>
                                     </div>
                                 </div>
                             </div>

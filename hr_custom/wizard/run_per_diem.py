@@ -17,7 +17,7 @@ class RunPerDiem(models.TransientModel):
                 if not travel.per_diem_count:
                     first_day = travel.from_date
                     last_day = first_day + relativedelta(day=1, months=+1, days=-1)
-                    diff_day = (last_day - first_day).days
+                    diff_day = (last_day - first_day).days + 0.5
                 else:
                     today = date.today()
                     first_day = date(today.year, today.month, 1)
@@ -25,18 +25,18 @@ class RunPerDiem(models.TransientModel):
                     last_day = first_day_in_next_month + relativedelta(days=-1)
                     if last_day > travel.to_date:
                         last_day = travel.to_date
-                    diff_day = (last_day - first_day).days
+                    diff_day = (last_day - first_day).days + 1
 
             elif travel.trip_status == 'closed':
                 if travel.per_diem_count:
                     today = date.today()
                     first_day = date(today.year, today.month, 1)
                     last_day = travel.to_date
-                    diff_day = (last_day - first_day).days if last_day > first_day else 1
+                    diff_day = (last_day - first_day).days + 0.5 if last_day > first_day else 1
                 else:
                     first_day = travel.from_date
                     last_day = travel.to_date
-                    diff_day = (last_day - first_day).days
+                    diff_day = (last_day - first_day).days + 0.5
 
             if travel.trip_status in ('open', 'closed') and diff_day > 0:
                 perdiem_amount = self.env['res.config.settings'].search([('per_diem_amount', '>', '0.0')], limit=1, order='id desc').per_diem_amount

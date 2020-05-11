@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _, exceptions
+from odoo.exceptions import UserError
 
 
 class HREmployeeHotels(models.Model):
@@ -38,30 +39,32 @@ class HREmployeeHotels(models.Model):
 
     @api.multi
     def action_submitted(self):
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_hotel_submitted').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.hotels')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.officer_user_id.id,
-            'note': 'Request For Hotel'
-        }
-        self.env['mail.activity'].create(notification)
+        if self.officer_user_id.id:
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_hotel_submitted').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.hotels')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.officer_user_id.id,
+                'note': 'Request For Hotel'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_hotel_submitted')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.hotels',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.hotels', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
-
-        self.state = 'submitted'
+            template_id = self.env.ref('hr_custom.email_after_hotel_submitted')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.hotels',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.hotels', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
+            self.state = 'submitted'
+        else:
+            raise UserError(_('Please set hotel officer user from general settings.'))
 
     @api.multi
     def action_reserved(self):
@@ -78,38 +81,45 @@ class HREmployeeHotels(models.Model):
                     'partner_id': self.travel_id.employee.user_id.partner_id.id,
                 })
         else:
-            self.env['account.analytic.line'].create({
-                'name': "Hotel for (%s) Travel" % self.travel_id.name,
-                'account_id': self.travel_id.analytic_id.id,
-                'amount': self.cost,
-                'unit_amount': 1,
-                'user_id': self.travel_id.employee.user_id.id,
-                'date': fields.Date.today(),
-                'partner_id': self.travel_id.employee.user_id.partner_id.id,
-            })
+            config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
+            if config_id.general_analytic_account.id:
+                self.env['account.analytic.line'].create({
+                    'name': "Hotel for (%s) Travel" % self.travel_id.name,
+                    'account_id': config_id.general_analytic_account.id,
+                    'amount': self.cost,
+                    'unit_amount': 1,
+                    'user_id': self.travel_id.employee.user_id.id,
+                    'date': fields.Date.today(),
+                    'partner_id': self.travel_id.employee.user_id.partner_id.id,
+                })
+            else:
+                raise UserError(_('Please set general analytic account from settings.'))
 
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_hotel_approved').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.hotels')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.travel_id.project_manager.user_id.id,
-            'note': 'The request for hotel is approved'
-        }
-        self.env['mail.activity'].create(notification)
+        if self.travel_id.project_manager.user_id.id:
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_hotel_approved').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.hotels')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.travel_id.project_manager.user_id.id,
+                'note': 'The request for hotel is approved'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_hotel_approved')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.hotels',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.hotels', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
+            template_id = self.env.ref('hr_custom.email_after_hotel_approved')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.hotels',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.hotels', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
+        else:
+            raise UserError(_('Please check projects/leads manager or related user projects/leads manager for this travel.'))
 
         self.state = 'reserved'
 

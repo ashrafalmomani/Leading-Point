@@ -30,10 +30,15 @@ class HumanResourceCustom(models.Model):
     @api.model
     def create(self, vals):
         res = super(HumanResourceCustom, self).create(vals)
-        current_date = fields.Date.today()
+        annual_leave_month = 14 / 12
+        annual_leave_day = annual_leave_month / 30
+        current_date = datetime.datetime.strptime(vals['joining_date'], '%Y-%m-%d').date()
         end_of_year = datetime.date(year=current_date.year, month=12, day=31)
-        diff_months = relativedelta.relativedelta(end_of_year, current_date).months
-        annual_leave = (14 / 12) * diff_months
+        diff_month = relativedelta.relativedelta(end_of_year, current_date).months
+        diff_day = relativedelta.relativedelta(end_of_year, current_date).days
+        diff_days = diff_day * annual_leave_day
+        diff_months = diff_month * annual_leave_month
+        annual_leave = diff_months + diff_days
 
         allocation = self.env['hr.leave.allocation'].create({
             'name': "Legal Annual Leave",
@@ -43,6 +48,15 @@ class HumanResourceCustom(models.Model):
             'employee_id': res.id,
         })
         allocation.action_approve()
+
+        allocation_sick = self.env['hr.leave.allocation'].create({
+            'name': "Sick Leave",
+            'holiday_status_id': 5,
+            'number_of_days': annual_leave,
+            'holiday_type': 'employee',
+            'employee_id': res.id,
+        })
+        allocation_sick.action_approve()
         return res
 
     # @api.multi

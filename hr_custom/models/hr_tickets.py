@@ -2,7 +2,7 @@
 
 from odoo import models, fields, api, _, exceptions
 from datetime import timedelta
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 
 class HREmployeeTickets(models.Model):
@@ -13,9 +13,7 @@ class HREmployeeTickets(models.Model):
 
     @api.model
     def _default_officer_user_id(self):
-        return self.env['res.users'].search([('groups_id', 'in', self.env.ref('hr_custom.group_ticket_officer').id)],
-                                            limit=1,
-                                            order="id desc")
+        return self.env['res.users'].search([('groups_id', 'in', self.env.ref('hr_custom.group_ticket_officer').id)], limit=1, order="id desc")
 
     travel_id = fields.Many2one('hr.travel', string='Travel', track_visibility='always', domain="[('state', '=', 'hr_approved'), ('trip_status', 'in', ['preparing', 'ready', 'open'])]")
     ticket_num = fields.Char(string='Ticket Number', track_visibility='always')
@@ -46,28 +44,31 @@ class HREmployeeTickets(models.Model):
 
     @api.multi
     def action_submitted(self):
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_ticket_submitted').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.tickets')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.officer_user_id.id,
-            'note': 'Request For Ticket'
-        }
-        self.env['mail.activity'].create(notification)
+        if self.officer_user_id.id:
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_ticket_submitted').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.tickets')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.officer_user_id.id,
+                'note': 'Request For Ticket'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_ticket_submitted')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.tickets',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.tickets', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
+            template_id = self.env.ref('hr_custom.email_after_ticket_submitted')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.tickets',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.tickets', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
+        else:
+            raise UserError(_('Please set ticket officer user from general settings.'))
 
         self.state = 'submitted'
 
@@ -87,46 +88,49 @@ class HREmployeeTickets(models.Model):
                     'partner_id': self.travel_id.employee.user_id.partner_id.id,
                 })
         else:
-            self.env['account.analytic.line'].create({
-                'name': "Ticket for (%s) Travel" % self.travel_id.name,
-                'account_id': self.travel_id.analytic_id.id,
-                'amount': self.cost,
-                'unit_amount': 1,
-                'user_id': self.travel_id.employee.user_id.id,
-                'date': fields.Date.today(),
-                'partner_id': self.travel_id.employee.user_id.partner_id.id,
-            })
+            config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
+            if config_id.general_analytic_account.id:
+                self.env['account.analytic.line'].create({'name': "Ticket for (%s) Travel" % self.travel_id.name,
+                                                          'account_id': config_id.general_analytic_account.id,
+                                                          'amount': self.cost,
+                                                          'unit_amount': 1,
+                                                          'user_id': self.travel_id.employee.user_id.id,
+                                                          'date': fields.Date.today(),
+                                                          'partner_id': self.travel_id.employee.user_id.partner_id.id})
+            else:
+                raise UserError(_('Please set general analytic account from settings.'))
 
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_ticket_approved').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.tickets')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.travel_id.project_manager.user_id.id,
-            'note': 'The request for ticket is approved'
-        }
-        self.env['mail.activity'].create(notification)
+        if self.travel_id.project_manager.user_id.id:
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_ticket_approved').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.tickets')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.travel_id.project_manager.user_id.id,
+                'note': 'The request for ticket is approved'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_ticket_approved')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.tickets',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.tickets', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
+            template_id = self.env.ref('hr_custom.email_after_ticket_approved')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.tickets',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.tickets', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
+        else:
+            raise UserError(_('Please check projects/leads manager or related user projects/leads manager for this travel.'))
 
         self.state = 'issued'
-
 
     @api.multi
     def action_cancel(self):
         self.state = 'cancelled'
-
 
     @api.multi
     def _check_ticket_departure_date(self):
@@ -155,9 +159,7 @@ class HREmployeeChangeTicket(models.Model):
 
     @api.model
     def _default_officer_user_id(self):
-        return self.env['res.users'].search([('groups_id', 'in', self.env.ref('hr_custom.group_ticket_officer').id)],
-                                            limit=1,
-                                            order="id desc")
+        return self.env['res.users'].search([('groups_id', 'in', self.env.ref('hr_custom.group_ticket_officer').id)],limit=1, order="id desc")
 
     def _default_manager_id(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
@@ -187,28 +189,31 @@ class HREmployeeChangeTicket(models.Model):
     def action_submitted(self):
         if fields.Date.today() > self.ticket_id.new_departure_date.date() and self.type == 'departure_and_return':
             raise exceptions.ValidationError(_("You cannot change the departure date because he has already traveled"))
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_change_ticket_submitted').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.change.ticket')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.officer_user_id.id,
-            'note': 'Request For Change Ticket'
-        }
-        self.env['mail.activity'].create(notification)
+        if self.officer_user_id.id:
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_change_ticket_submitted').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.change.ticket')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.officer_user_id.id,
+                'note': 'Request For Change Ticket'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_change_ticket_submitted')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.change.ticket',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.change.ticket', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
+            template_id = self.env.ref('hr_custom.email_after_change_ticket_submitted')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.change.ticket',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.change.ticket', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
+        else:
+            raise UserError(_('Please set ticket officer user from general settings.'))
 
         self.state = 'submitted'
 
@@ -223,6 +228,7 @@ class HREmployeeChangeTicket(models.Model):
         elif self.type == 'open_return':
             self.ticket_id.write({'new_return_date': False})
             self.ticket_id.travel_id.write({'to_date': False})
+
         if self.ticket_id.travel_id.reason_for_travel in ('project', 'business_dev'):
             for rec in self.ticket_id.travel_id.percentage_ids:
                 self.env['account.analytic.line'].create({
@@ -236,38 +242,44 @@ class HREmployeeChangeTicket(models.Model):
                     'partner_id': self.ticket_id.travel_id.employee.user_id.partner_id.id,
                 })
         else:
-            self.env['account.analytic.line'].create({
-                'name': "Ticket for (%s) Travel" % self.ticket_id.travel_id.name,
-                'account_id': self.ticket_id.travel_id.analytic_id.id,
-                'amount': self.cost,
-                'unit_amount': 1,
-                'user_id': self.ticket_id.travel_id.employee.user_id.id,
-                'date': fields.Date.today(),
-                'partner_id': self.ticket_id.travel_id.employee.user_id.partner_id.id,
-            })
+            config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
+            if config_id.general_analytic_account.id:
+                self.env['account.analytic.line'].create({
+                    'name': "Ticket for (%s) Travel" % self.ticket_id.travel_id.name,
+                    'account_id': config_id.general_analytic_account.id,
+                    'amount': self.cost,
+                    'unit_amount': 1,
+                    'user_id': self.ticket_id.travel_id.employee.user_id.id,
+                    'date': fields.Date.today(),
+                    'partner_id': self.ticket_id.travel_id.employee.user_id.partner_id.id})
+            else:
+                raise UserError(_('Please set general analytic account from settings.'))
 
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_change_ticket_approved').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.change.ticket')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.ticket_id.travel_id.project_manager.user_id.id,
-            'note': 'The request for change ticket is approved'
-        }
-        self.env['mail.activity'].create(notification)
+        if self.ticket_id.travel_id.project_manager.user_id.id:
+            notification = {
+                'activity_type_id': self.env.ref('hr_custom.notification_after_change_ticket_approved').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.change.ticket')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Date.today(),
+                'user_id': self.ticket_id.travel_id.project_manager.user_id.id,
+                'note': 'The request for change ticket is approved'
+            }
+            self.env['mail.activity'].create(notification)
 
-        template_id = self.env.ref('hr_custom.email_after_change_ticket_approved')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.change.ticket',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.change.ticket', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
+            template_id = self.env.ref('hr_custom.email_after_change_ticket_approved')
+            composer = self.env['mail.compose.message'].sudo().with_context({
+                'default_composition_mode': 'mass_mail',
+                'default_notify': False,
+                'default_model': 'hr.change.ticket',
+                'default_res_id': self.id,
+                'default_template_id': template_id.id,
+            }).create({})
+            values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.change.ticket', self.id)['value']
+            composer.write(values)
+            composer.send_mail()
+        else:
+            raise UserError(_('Please check projects/leads manager or related user projects/leads manager for this travel.'))
 
         self.state = 'issued'
 

@@ -25,7 +25,7 @@
             <field name="project_id" position="replace">
                 <field name="type_id" required="1"/>
                 <field name="project_id" attrs="{'required': [('type_id', '=', 'project')], 'invisible': [('type_id', '!=', 'project')]}"/>
-                <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]" attrs="{'required': [('type_id', '=', 'project')], 'invisible': [('type_id', '!=', 'project')]}"/>
+                <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]" attrs="{'invisible': [('type_id', '!=', 'project')]}"/>
                 <field name="lead_id" attrs="{'required': [('type_id', '=', 'opportunity')], 'invisible': [('type_id', '!=', 'opportunity')]}"/>
             </field>
             <field name="name" position="replace"/>
@@ -34,7 +34,7 @@
                 <field name="work_place" required="1"/>
                 <field name="unit_amount" widget="timesheet_uom"/>
                 <field name="name" required="1"/>
-                <field name="account_id" required="1"/>
+                <field name="account_id" invisible="1"/>
                 <field name="reason"  attrs="{'required':[('state', '=', 'rejected')], 'invisible': [('state', '=', 'draft')]}"/>
             </field>
         </field>

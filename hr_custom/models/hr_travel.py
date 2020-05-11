@@ -120,8 +120,7 @@ class HREmployeeTravel(models.Model):
 
     @api.model
     def _get_default_travel_officer(self):
-        return self.env['res.users'].search([('groups_id', 'in', self.env.ref('hr_custom.group_travel_officer').id)], limit=1,
-                                            order="id desc")
+        return self.env['res.users'].search([('groups_id', 'in', self.env.ref('hr_custom.group_travel_officer').id)], limit=1, order="id desc")
 
     name = fields.Char(string='Name', required=True, copy=False, default='New', track_visibility='always')
     number = fields.Char('Number', required=True, copy=False, default='New', track_visibility='always')
@@ -175,12 +174,24 @@ class HREmployeeTravel(models.Model):
         if self.employee:
             self.direct_manager = self.employee.parent_id.id
 
+    @api.onchange('reason_for_travel')
+    def _onchange_reason_for_travel(self):
+        if self.reason_for_travel in ('other', 'visa_renewal'):
+            config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
+            if config_id.general_analytic_account.id:
+                self.analytic_id = config_id.general_analytic_account.id
+                user_id = self.env['res.users'].search([('groups_id', 'in', self.env.ref('hr.group_hr_manager').id)], limit=1, order="id desc")
+                employee = self.env['hr.employee'].search([('user_id', '=', user_id.id)])
+                self.project_manager = employee.id
+            else:
+                raise UserError(_('Please set general analytic account from settings.'))
+
     @api.onchange('percentage_ids')
     def _onchange_project_lead(self):
         for rec in self.percentage_ids:
             if self.reason_for_travel == 'project':
                 if rec.project_id:
-                    employee = self.env['hr.employee'].search([('user_id', '=', rec.project_id.user_id.id)])
+                    employee = self.env['hr.employee'].search([('user_id', '=', rec.project_id.user_id.id)], limit=1)
                     if employee:
                         self.project_manager = employee.id
             elif self.reason_for_travel == 'business_dev':
@@ -198,46 +209,19 @@ class HREmployeeTravel(models.Model):
 
     @api.multi
     def action_submit(self):
-        notification = {
-            'activity_type_id': self.env.ref('hr_custom.notification_after_travel_submitted').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Date.today(),
-            'user_id': self.travel_officer_id.id,
-            'note': 'Request For Travel'
-        }
-        self.env['mail.activity'].create(notification)
-
-        template_id = self.env.ref('hr_custom.email_after_travel_submitted')
-        composer = self.env['mail.compose.message'].sudo().with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': False,
-            'default_model': 'hr.travel',
-            'default_res_id': self.id,
-            'default_template_id': template_id.id,
-        }).create({})
-        values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.travel', self.id)['value']
-        composer.write(values)
-        composer.send_mail()
-
-        self.state = 'submitted'
-
-    @api.multi
-    def action_hr_approve(self):
-        if self.reason_for_travel in ('project', 'business_dev'):
+        if self.travel_officer_id.id:
             notification = {
-                'activity_type_id': self.env.ref('hr_custom.notification_after_travel_approved').id,
+                'activity_type_id': self.env.ref('hr_custom.notification_after_travel_submitted').id,
                 'res_id': self.id,
                 'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
                 'icon': 'fa-pencil-square-o',
                 'date_deadline': fields.Date.today(),
-                'user_id': self.project_manager.user_id.id,
-                'note': 'The request for travel is approved'
+                'user_id': self.travel_officer_id.id,
+                'note': 'Request For Travel'
             }
             self.env['mail.activity'].create(notification)
 
-            template_id = self.env.ref('hr_custom.email_after_travel_approved')
+            template_id = self.env.ref('hr_custom.email_after_travel_submitted')
             composer = self.env['mail.compose.message'].sudo().with_context({
                 'default_composition_mode': 'mass_mail',
                 'default_notify': False,
@@ -248,6 +232,38 @@ class HREmployeeTravel(models.Model):
             values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.travel', self.id)['value']
             composer.write(values)
             composer.send_mail()
+            self.state = 'submitted'
+        else:
+            raise UserError(_('Please set travel officer user from general settings.'))
+
+    @api.multi
+    def action_hr_approve(self):
+        if self.reason_for_travel in ('project', 'business_dev'):
+            if self.project_manager.user_id.id:
+                notification = {
+                    'activity_type_id': self.env.ref('hr_custom.notification_after_travel_approved').id,
+                    'res_id': self.id,
+                    'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
+                    'icon': 'fa-pencil-square-o',
+                    'date_deadline': fields.Date.today(),
+                    'user_id': self.project_manager.user_id.id,
+                    'note': 'The request for travel is approved'
+                }
+                self.env['mail.activity'].create(notification)
+
+                template_id = self.env.ref('hr_custom.email_after_travel_approved')
+                composer = self.env['mail.compose.message'].sudo().with_context({
+                    'default_composition_mode': 'mass_mail',
+                    'default_notify': False,
+                    'default_model': 'hr.travel',
+                    'default_res_id': self.id,
+                    'default_template_id': template_id.id,
+                }).create({})
+                values = composer.onchange_template_id(template_id.id, 'mass_mail', 'hr.travel', self.id)['value']
+                composer.write(values)
+                composer.send_mail()
+            else:
+                raise UserError(_('Please check projects/leads manager or related user projects/leads manager for this travel.'))
 
         self.state = 'hr_approved'
 
@@ -258,16 +274,19 @@ class HREmployeeTravel(models.Model):
         else:
             self.state = 'rejected'
 
-        reject_notification = {
-            'activity_type_id': self.env.ref('hr_custom.mail_activity_travel_reject_notification').id,
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
-            'icon': 'fa-pencil-square-o',
-            'date_deadline': fields.Datetime.now(),
-            'user_id': self.project_manager.user_id.id,
-            'note': self.reject_des
-        }
-        self.env['mail.activity'].create(reject_notification)
+        if self.project_manager.user_id.id:
+            reject_notification = {
+                'activity_type_id': self.env.ref('hr_custom.mail_activity_travel_reject_notification').id,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.travel')], limit=1).id,
+                'icon': 'fa-pencil-square-o',
+                'date_deadline': fields.Datetime.now(),
+                'user_id': self.project_manager.user_id.id,
+                'note': self.reject_des
+            }
+            self.env['mail.activity'].create(reject_notification)
+        else:
+            raise UserError(_('Please check projects/leads manager or related user projects/leads manager for this travel.'))
 
     @api.multi
     def action_set_to_draft(self):
@@ -336,6 +355,9 @@ class ProjectsTravels(models.Model):
     project_id = fields.Many2one('project.project', string='Project')
     lead_id = fields.Many2one('crm.lead', string='Lead/Opportunity')
     percentage = fields.Integer('Percentage(%)')
+    awarded_id = fields.Many2one('hr.awarded.days', string='Awarded days')
+    expense_id = fields.Many2one('hr.expense', string='Expense')
+    expense_sheet_id = fields.Many2one('hr.expense.sheet', string='Expense sheet')
 
 
 class PerDiemLine(models.Model):
@@ -413,6 +435,7 @@ class ResConfigSettings(models.TransientModel):
     per_diem_journal_id = fields.Many2one('account.journal', string='Per Diem Journal')
     awarded_account_id = fields.Many2one('account.account', string='Awarded Days Account')
     awarded_days_journal_id = fields.Many2one('account.journal', string='Journal')
+    general_analytic_account = fields.Many2one('account.analytic.account', string='Analytic Account')
 
     @api.multi
     def set_values(self):
@@ -426,6 +449,7 @@ class ResConfigSettings(models.TransientModel):
         res['per_diem_journal_id'] = self.search([], limit=1, order='id desc').per_diem_journal_id.id
         res['awarded_account_id'] = self.search([], limit=1, order='id desc').awarded_account_id.id
         res['awarded_days_journal_id'] = self.search([], limit=1, order='id desc').awarded_days_journal_id.id
+        res['general_analytic_account'] = self.search([], limit=1, order='id desc').general_analytic_account.id
         return res
 
 

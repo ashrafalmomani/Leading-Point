@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='holiday_status_id']" position="after">
                 <field name="working_on"/>
+                <field name="salary" invisible="1"/>
                 <field name="project" attrs="{'invisible': [('working_on','!=','project')]}"/>
                 <field name="opportunities" attrs="{'invisible': [('working_on','!=','opportunity')]}"/>
             </xpath>

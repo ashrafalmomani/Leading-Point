@@ -11,8 +11,6 @@
                 <field name="create_date"/>
                 <field name="employee_id"/>
                 <field name="related_to"/>
-                <field name="projects" widget="many2many_tags"/>
-                <field name="lead" widget="many2many_tags"/>
                 <field name="is_paid"/>
                 <field name="include_salary"/>
                 <field name="total_hour"/>
@@ -43,11 +41,18 @@
                             <field name="employee_id" attrs="{'readonly':[('state', '!=', 'draft')]}" required="1"/>
                             <field name="related_to" attrs="{'readonly':[('state', '!=', 'draft')]}" required="1"/>
                             <field name="other_des" attrs="{'required':[('related_to', '=', 'other')], 'readonly':[('state','!=', 'draft')], 'invisible': [('related_to','!=', 'other')]}"/>
-                            <field name="projects" widget="many2many_tags" attrs="{'invisible': [('related_to','!=', 'project')], 'readonly':[('state','!=', 'draft')], 'required':[('related_to','=', 'project')]}"/>
-                            <field name="lead" widget="many2many_tags" attrs="{'invisible': [('related_to','!=', 'business_dev')], 'readonly':[('state','!=', 'draft')], 'required':[('related_to','=', 'business_dev')]}"/>
                             <field name="project_manager" invisible="1"/>
                             <field name="direct_manager" invisible="1"/>
-                            <field name="is_paid"/>
+                            <field name="is_paid" invisible="1"/>
+                            <field name="percentage_ids" attrs="{'readonly':[('state','!=', 'draft')], 'invisible': [('related_to','not in', ('project', 'business_dev'))]}"
+                                   context="{'default_awarded_id': active_id}">
+                                 <tree editable="bottom">
+                                     <field name="awarded_id" invisible="1"/>
+                                     <field name="project_id" attrs="{'column_invisible': [('parent.related_to', '!=', 'project')]}"/>
+                                     <field name="lead_id" attrs="{'column_invisible': [('parent.related_to', '!=', 'business_dev')]}"/>
+                                     <field name="percentage"/>
+                                 </tree>
+                            </field>
                         </group>
                         <group>
                             <field name="reject_des" attrs="{'invisible': [('state','in',['draft','hr_approved'])]}"/>
@@ -60,6 +65,7 @@
                                      <field name="date" required="1"/>
                                      <field name="description" required="1"/>
                                      <field name="reason" required="1"/>
+                                     <field name="salary" invisible="1"/>
                                      <field name="hours" sum="Hours" required="1"/>
                                  </tree>
                             </field>
@@ -98,8 +104,6 @@
             <search string="Awarded Days">
                 <field name="name"/>
                 <field name="employee_id"/>
-                <field name="projects"/>
-                <field name="lead"/>
                 <field name="state"/>
                 <group string="Group By">
                     <filter name="name" string="Travel" context="{'group_by':'name'}"/>

@@ -131,7 +131,7 @@ class AppraisalCustom(models.Model):
         if contract:
             contract.salary_raise += self.salary_raise
 
-        if self.effective_date == False:
+        if not self.effective_date:
             raise UserError(_("Please, Fill the effective date."))
 
         today = fields.Date.today()
@@ -292,12 +292,6 @@ class HRContracts(models.Model):
             vals['department_id'] = employee.department_id.id
         self.create_appraisal(vals)
         return super(HRContracts, self).create(vals)
-
-    @api.multi
-    def add_salary_raise(self):
-        contract = self.search([('state', '=', 'open')])
-        for rec in contract:
-            rec.wage += rec.salary_raise
 
 
 class HRJob(models.Model):
