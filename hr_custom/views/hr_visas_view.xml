@@ -30,7 +30,7 @@
                     <button string="Submit" name="action_visa_submitted" type="object" states="draft" class="oe_highlight"/>
                     <button string="Issued" name="action_visa_issued" type="object" states="submitted" class="oe_highlight"/>
                     <button string="Rejected" name="action_visa_rejected" type="object" states="submitted" class="oe_highlight"/>
-                    <button string="Link Visa With Travel" name="action_visa_with_travel" type="object" attrs="{'invisible': [('state','!=','issued'), ('type','!=','just_visa'), ('linked', '=', True)]}" class="oe_highlight"/>
+                    <button string="Link Visa With Travel" name="action_visa_with_travel" type="object" attrs="{'invisible': ['|', '|', ('state','!=','issued'), ('type','!=','just_visa'), ('linked', '=', True)]}" class="oe_highlight"/>
                     <button string="Cancelled" name="action_cancel" type="object" states="submitted,issued" class="oe_highlight"/>
                     <field name="state" widget="statusbar" class="oe_highlight" statusbar_visible="draft,submitted,issued,rejected,cancelled"/>
                 </header>
@@ -44,8 +44,8 @@
                     </div>
                     <group string="Visa Information">
                         <group>
-                            <field name="type" required="1"/>
-                            <field name="travel_id" domain="[['state','=','hr_approved']]" attrs="{'invisible': [('type','!=','depend_on_travel')], 'required': [('type','!=', 'just_visa')]}"/>
+                            <field name="type" attrs="{'readonly': [('state','=', 'issued')]}" required="1"/>
+                            <field name="travel_id" domain="[['state','=','hr_approved']]" attrs="{'invisible': [('type','!=','depend_on_travel')], 'required': [('type','!=', 'just_visa')], 'readonly': [('state','=', 'issued')]}"/>
                             <field name="employee_id" attrs="{'invisible': [('type','!=','just_visa')], 'required': [('type','!=', 'depend_on_travel')]}"/>
                             <field name="country" attrs="{'invisible': [('type','!=','just_visa')], 'required': [('type','!=', 'depend_on_travel')]}"/>
                             <field name="multiple_entry" attrs="{'invisible': [('state','in','pending')], 'readonly': [('state','=', 'issued')]}"/>

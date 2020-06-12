@@ -77,16 +77,16 @@ class HREmployeeTickets(models.Model):
         self.travel_id.write({'from_date': self.new_departure_date.date(), 'to_date': self.new_return_date.date()})
         if self.travel_id.reason_for_travel in ('project', 'business_dev'):
             for rec in self.travel_id.percentage_ids:
-                self.env['account.analytic.line'].create({
+                analytic_line_id = self.env['account.analytic.line'].create({
                     'name': "Ticket for (%s) Travel" % self.travel_id.name,
                     'project_id': rec.project_id.id or False,
                     'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
-                    'amount': self.cost * (rec.percentage / 100),
                     'unit_amount': 1,
                     'user_id': self.travel_id.employee.user_id.id,
                     'date': fields.Date.today(),
                     'partner_id': self.travel_id.employee.user_id.partner_id.id,
                 })
+                analytic_line_id.write({'amount': self.cost * (rec.percentage / 100)})
         else:
             config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
             if config_id.general_analytic_account.id:
@@ -231,7 +231,7 @@ class HREmployeeChangeTicket(models.Model):
 
         if self.ticket_id.travel_id.reason_for_travel in ('project', 'business_dev'):
             for rec in self.ticket_id.travel_id.percentage_ids:
-                self.env['account.analytic.line'].create({
+                analytic_line_id = self.env['account.analytic.line'].create({
                     'name': "Ticket for (%s) Travel" % self.ticket_id.travel_id.name,
                     'project_id': rec.project_id.id or False,
                     'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
@@ -241,6 +241,7 @@ class HREmployeeChangeTicket(models.Model):
                     'date': fields.Date.today(),
                     'partner_id': self.ticket_id.travel_id.employee.user_id.partner_id.id,
                 })
+                analytic_line_id.write({'amount': self.cost * (rec.percentage / 100)})
         else:
             config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
             if config_id.general_analytic_account.id:

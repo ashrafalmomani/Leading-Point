@@ -23,6 +23,7 @@
         'views/hr_appraisal_view.xml',
         'views/hr_expense_view.xml',
         # 'views/test_salary_rule.xml',
+        'views/report_payslip_batch.xml',
         'views/hide_menu.xml',
         'wizard/run_per_diem_views.xml',
         'data/cron.xml',

@@ -176,6 +176,7 @@ class HREmployeeTravel(models.Model):
 
     @api.onchange('reason_for_travel')
     def _onchange_reason_for_travel(self):
+        self.percentage_ids = False
         if self.reason_for_travel in ('other', 'visa_renewal'):
             config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
             if config_id.general_analytic_account.id:

@@ -48,8 +48,8 @@
                                    context="{'default_awarded_id': active_id}">
                                  <tree editable="bottom">
                                      <field name="awarded_id" invisible="1"/>
-                                     <field name="project_id" attrs="{'column_invisible': [('parent.related_to', '!=', 'project')]}"/>
-                                     <field name="lead_id" attrs="{'column_invisible': [('parent.related_to', '!=', 'business_dev')]}"/>
+                                     <field name="project_id" attrs="{'column_invisible': [('parent.related_to', '!=', 'project')], 'required':[('parent.related_to', '=', 'project')]}"/>
+                                     <field name="lead_id" attrs="{'column_invisible': [('parent.related_to', '!=', 'business_dev')], 'required':[('parent.related_to', '=', 'business_dev')]}"/>
                                      <field name="percentage"/>
                                  </tree>
                             </field>

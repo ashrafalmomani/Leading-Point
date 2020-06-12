@@ -50,8 +50,8 @@
                                    context="{'default_travel_id': active_id}">
                                  <tree editable="bottom">
                                      <field name="travel_id" invisible="1"/>
-                                     <field name="project_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'project')]}"/>
-                                     <field name="lead_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'business_dev')]}"/>
+                                     <field name="project_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'project')], 'required':[('parent.reason_for_travel', '=', 'project')]}"/>
+                                     <field name="lead_id" attrs="{'column_invisible': [('parent.reason_for_travel', '!=', 'business_dev')], 'required':[('parent.reason_for_travel', '=', 'business_dev')]}"/>
                                      <field name="percentage"/>
                                  </tree>
                             </field>

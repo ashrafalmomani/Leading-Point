@@ -69,17 +69,16 @@ class HREmployeeVisas(models.Model):
         if self.type == 'depend_on_travel':
             if self.travel_id.reason_for_travel in ('project', 'business_dev'):
                 for rec in self.travel_id.percentage_ids:
-                    self.env['account.analytic.line'].create({
+                    analytic_line_id = self.env['account.analytic.line'].create({
                         'name': "Visa for (%s) Travel" % self.travel_id.name,
                         'project_id': rec.project_id.id or False,
                         'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
-                        'amount': self.cost * (rec.percentage / 100),
                         'unit_amount': 1,
                         'user_id': self.travel_id.employee.user_id.id,
                         'date': fields.Date.today(),
                         'partner_id': self.travel_id.employee.user_id.partner_id.id,
                     })
-                    projects = []
+                    analytic_line_id.write({'amount': self.cost * (rec.percentage / 100)})
             else:
                 config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
                 if config_id.general_analytic_account.id:
@@ -127,21 +126,18 @@ class HREmployeeVisas(models.Model):
     def action_visa_with_travel(self):
         if self.type != 'depend_on_travel':
             raise exceptions.ValidationError(_("You must first change the type of visa to 'Depend on travel' "))
-        projects = []
         if self.travel_id.reason_for_travel in ('project', 'business_dev'):
             for rec in self.travel_id.percentage_ids:
-                projects.append(self.cost * (rec.percentage / 100))
-                self.env['account.analytic.line'].create({
+                analytic_line_id = self.env['account.analytic.line'].create({
                     'name': "Visa for (%s) Travel" % self.travel_id.name,
                     'project_id': rec.project_id.id or False,
                     'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
-                    'amount': projects[0],
                     'unit_amount': 1,
                     'user_id': self.travel_id.employee.user_id.id,
                     'date': fields.Date.today(),
                     'partner_id': self.travel_id.employee.user_id.partner_id.id,
                 })
-                projects = []
+                analytic_line_id.write({'amount': self.cost * (rec.percentage / 100)})
                 self.linked = True
         else:
             config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
@@ -165,16 +161,16 @@ class HREmployeeVisas(models.Model):
         if config_id.general_analytic_account.id:
             for rec in self.env['hr.visas'].search([('state', '=', 'issued'), ('type', '=', 'just_visa')]):
                 if fields.Date.today() > rec.valid_till:
-                    self.env['account.analytic.line'].create({
+                    analytic_line_id = self.env['account.analytic.line'].create({
                         'name': "Visa for (%s) Employee" % rec.employee_id.name,
                         'project_id': False,
                         'account_id': config_id.general_analytic_account.id,
-                        'amount': rec.cost,
                         'unit_amount': 1,
                         'user_id': self.employee_id.user_id.id,
                         'date': fields.Date.today(),
                         'partner_id': self.employee_id.user_id.partner_id.id,
                     })
+                    analytic_line_id.write({'amount': rec.cost})
         else:
             raise UserError(_('Please set general analytic account from settings.'))
 

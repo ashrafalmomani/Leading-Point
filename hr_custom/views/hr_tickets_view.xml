@@ -38,8 +38,8 @@
                             <field name="airline" attrs="{'readonly': [('state','=', 'issued')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_ticket_officer"/>
                         </group>
                         <group>
-                            <field name="departure_date" required="1"/>
-                            <field name="return_date" required="1"/>
+                            <field name="departure_date" attrs="{'readonly': [('state','=', 'issued')]}" required="1"/>
+                            <field name="return_date" attrs="{'readonly': [('state','=', 'issued')]}" required="1"/>
                             <field name="cost" attrs="{'readonly': [('state','=', 'issued')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_ticket_officer"/>
                             <field name="ticket" string="Ticket" attrs="{'readonly': [('state','=', 'issued')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_ticket_officer"/>
                             <field name="new_departure_date" readonly="1" force_save="1"/>

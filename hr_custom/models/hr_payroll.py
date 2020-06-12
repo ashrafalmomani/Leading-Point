@@ -89,21 +89,30 @@ class HrExpenseSheet(models.Model):
                                      track_visibility='always')
     other_des = fields.Text(string='Other Description')
 
+    @api.constrains('percentage_ids',)
+    def check_percentages(self):
+        if self.related_to in ('project', 'business_dev'):
+            totals = 0
+            for rec in self.percentage_ids:
+                totals += rec.percentage
+            if totals != 100:
+                raise exceptions.ValidationError(_("Total distribution of percentages must be 100%!"))
+
     @api.multi
     def approve_expense_sheets(self):
         super(HrExpenseSheet, self).approve_expense_sheets()
         if self.related_to in ('project', 'business_dev'):
             for rec in self.percentage_ids:
-                self.env['account.analytic.line'].create({
+                analytic_line_id = self.env['account.analytic.line'].create({
                     'name': "Expense For %s" % self.employee_id.name,
                     'project_id': rec.project_id.id or False,
                     'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
-                    'amount': self.total_amount,
                     'unit_amount': 1,
                     'user_id': self.employee_id.user_id.id,
                     'date': fields.Date.today(),
                     'partner_id': self.employee_id.user_id.partner_id.id,
                 })
+                analytic_line_id.write({'amount': self.total_amount * (rec.percentage / 100)})
         else:
             config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
             if config_id.general_analytic_account.id:
@@ -118,6 +127,10 @@ class HrExpenseSheet(models.Model):
                 })
             else:
                 raise UserError(_('Please set general analytic account from settings.'))
+
+    @api.onchange('related_to')
+    def _onchange_related_to(self):
+        self.percentage_ids = False
 
 
 class HrExpense(models.Model):
@@ -138,6 +151,10 @@ class HrExpense(models.Model):
                 totals += rec.percentage
             if totals != 100:
                 raise exceptions.ValidationError(_("Total distribution of percentages must be 100%!"))
+
+    @api.onchange('related_to')
+    def _onchange_related_to(self):
+        self.percentage_ids = False
 
     @api.multi
     def action_submit_expenses(self):
@@ -167,8 +184,15 @@ class HrExpense(models.Model):
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
+    @api.depends('line_ids', 'state')
+    def _compute_salary_amount(self):
+        for rec in self:
+            line = rec.line_ids.filtered(lambda x: x.code == 'NET')
+            rec.total_salary = line.total
+
     include_expense = fields.Boolean('Include Expense')
     include_vacations = fields.Boolean('Include Vacations')
+    total_salary = fields.Float('Salary Amount', store=True, compute='_compute_salary_amount')
 
     @api.multi
     def action_payslip_done(self):

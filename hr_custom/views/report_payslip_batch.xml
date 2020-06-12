@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+     <template id="report_payslip_batches_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="doc.with_context({'lang': 'en_US'})" />
+            <div class="page">
+                <center><h3><b><span t-field="o.name"/></b></h3></center>
+                <div class="row mt32 mb32">
+                    <div class="col-2">
+                        <strong>From Date:</strong> <br/>
+                        <span t-field="o.date_start" />
+                    </div>
+                    <div class="col-2">
+                        <strong>To Date:</strong> <br/>
+                        <span t-esc="o.date_end"/>
+                    </div>
+                    <div class="col-2">
+                        <strong>Print Date: </strong> <br/>
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y %H:%M:%S')"/>
+                    </div>
+                </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr class="text-center" style="white-space:nowrap;">
+                            <th>#</th>
+                            <th>Employee Name</th>
+                            <th>Total Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="n" t-value="1"/>
+                        <t t-set="i" t-value="0"/>
+                        <tr t-foreach="o.slip_ids" t-as="line" class="text-center" style="white-space:nowrap;">
+                            <td><span t-esc="n"/></td>
+                            <td><span t-field="line.employee_id.name"/></td>
+                            <td><span t-field="line.total_salary"/></td>
+                            <t t-set="i" t-value="i+line.total_salary"/>
+                            <t t-set="n" t-value="n+1"/>
+                        </tr>
+                        <tr style="font-weight: bold; font-size:18px">
+                            <td colspan="2" style="background-color:#E8E8E8;">Total</td>
+                            <td style="background-color:#E8E8E8; text-align:center"><span t-esc="i"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_payslip_batches">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="hr_custom.report_payslip_batches_document"/>
+            </t>
+        </t>
+    </template>
+
+    <report id="action_report_payslip_batches"
+            model="hr.payslip.run"
+            string="Payslip Batch"
+            report_type="qweb-pdf"
+            name="hr_custom.report_payslip_batches"
+            file="hr_custom.report_payslip_batches"
+            attachment_use="True"
+    />
+</odoo>

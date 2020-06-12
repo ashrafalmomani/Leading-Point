@@ -83,6 +83,10 @@ class HrAwardedDays(models.Model):
                 employee = self.env['hr.employee'].search([('user_id', '=', rec.lead_id.user_id.id)])
                 self.project_manager = employee.id
 
+    @api.onchange('related_to')
+    def _onchange_related_to(self):
+        self.percentage_ids = False
+
     @api.model
     def create(self, vals):
         if 'awarded_ids' not in vals:
@@ -115,6 +119,7 @@ class HrAwardedDays(models.Model):
     @api.multi
     def action_hr_approved(self):
         self.state = 'hr_approved'
+        self.generate_analytic_line()
 
     @api.multi
     def action_reject(self, data):
@@ -137,16 +142,16 @@ class HrAwardedDays(models.Model):
     def generate_analytic_line(self):
         if self.related_to in ('project', 'business_dev'):
             for rec in self.percentage_ids:
-                self.env['account.analytic.line'].create({
+                analytic_line_id = self.env['account.analytic.line'].create({
                     'name': "Awarded days for %s" % self.employee_id.name,
                     'project_id': rec.project_id.id or False,
                     'account_id': rec.project_id.analytic_account_id.id or rec.lead_id.analytic_id.id,
-                    'amount': (((self.employee_id.contract_id.wage + self.employee_id.contract_id.salary_raise) / 30 / 8) * self.total_hour) * (rec.percentage / 100),
                     'unit_amount': 1,
                     'user_id': self.employee_id.user_id.id,
                     'date': fields.Date.today(),
                     'partner_id': self.employee_id.user_id.partner_id.id,
                 })
+                analytic_line_id.write({'amount': (((self.employee_id.contract_id.wage + self.employee_id.contract_id.salary_raise) / 30 / 8) * self.total_hour) * (rec.percentage / 100)})
         else:
             config_id = self.env['res.config.settings'].search([('general_analytic_account', '!=', False)], limit=1, order='id desc')
             if config_id.general_analytic_account.id:
@@ -200,7 +205,6 @@ class HrAwardedDays(models.Model):
             })
             move_id.post()
         self.is_paid = True
-        self.generate_analytic_line()
 
 
 class HrAwardLine(models.Model):

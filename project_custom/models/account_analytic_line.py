@@ -25,6 +25,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def button_submitted(self):
+        self.amount = self.unit_amount * ((self.employee_id.contract_id.wage + self.employee_id.contract_id.salary_raise) / 30 / 8)
         self.state = 'submitted'
 
     @api.multi
@@ -42,11 +43,6 @@ class AccountAnalyticLine(models.Model):
     def _onchange_project_id(self):
         if self.project_id:
             self.account_id = self.project_id.analytic_account_id.id
-
-    @api.onchange('unit_amount')
-    def _onchange_unit_amount(self):
-        if self.unit_amount:
-            self.amount = self.unit_amount * ((self.employee_id.contract_id.wage + self.employee_id.contract_id.salary_raise) / 30 / 8)
 
     @api.onchange('lead_id')
     def _onchange_lead_id(self):

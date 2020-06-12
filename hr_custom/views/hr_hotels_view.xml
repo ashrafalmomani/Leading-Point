@@ -38,8 +38,8 @@
                             <field name="reservation" string="Reservation" attrs="{'readonly': [('state','=', 'reserved')]}" groups="hr_custom.group_hotel_officer"/>
                         </group>
                         <group>
-                            <field name="check_in" required="1"/>
-                            <field name="check_out" required="1"/>
+                            <field name="check_in" attrs="{'readonly': [('state','=', 'reserved')]}" required="1"/>
+                            <field name="check_out" attrs="{'readonly': [('state','=', 'reserved')]}" required="1"/>
                             <field name="cost" required="1" attrs="{'readonly': [('state','=', 'reserved')], 'required': [('state','=', 'submitted')]}" groups="hr_custom.group_hotel_officer"/>
                         </group>
                     </group>

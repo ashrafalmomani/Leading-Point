@@ -262,7 +262,7 @@
               sequence="89"/>
 
     <record model="ir.ui.menu" id="hr.menu_hr_root">
-        <field name="name">HR</field>
+        <field name="name">Human Resources</field>
     </record>
 
     <template id="back_custom" name="Back" inherit_id="survey.back">

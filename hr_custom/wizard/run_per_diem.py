@@ -17,6 +17,8 @@ class RunPerDiem(models.TransientModel):
                 if not travel.per_diem_count:
                     first_day = travel.from_date
                     last_day = first_day + relativedelta(day=1, months=+1, days=-1)
+                    if last_day > travel.to_date:
+                        last_day = travel.to_date
                     diff_day = (last_day - first_day).days + 0.5
                 else:
                     today = date.today()
@@ -41,11 +43,15 @@ class RunPerDiem(models.TransientModel):
             if travel.trip_status in ('open', 'closed') and diff_day > 0:
                 perdiem_amount = self.env['res.config.settings'].search([('per_diem_amount', '>', '0.0')], limit=1, order='id desc').per_diem_amount
                 amount = (perdiem_amount * 0.708) * diff_day
-                per_diem = self.env['per.diem.line'].create({'travel_id': travel.id,
-                                                             'employee_id': travel.employee.id,
-                                                             'contract_id': travel.employee.contract_id.id,
-                                                             'amount': amount,
-                                                             'from_date': first_day,
-                                                             'to_date': last_day,
-                                                             'state': 'not_paid'})
-                print(per_diem)
+                employee_per_diem = self.env['per.diem.line'].search([('travel_id', '=', travel.id),
+                                                                      ('employee_id', '=', travel.employee.id),
+                                                                      ('from_date', '=', first_day),
+                                                                      ('to_date', '=', last_day)])
+                if not employee_per_diem:
+                    per_diem = self.env['per.diem.line'].create({'travel_id': travel.id,
+                                                                 'employee_id': travel.employee.id,
+                                                                 'contract_id': travel.employee.contract_id.id,
+                                                                 'amount': amount,
+                                                                 'from_date': first_day,
+                                                                 'to_date': last_day,
+                                                                 'state': 'not_paid'})
